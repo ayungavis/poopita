@@ -1,0 +1,57 @@
+name: iOS
+
+on:
+  push:
+    branches: [main]
+    paths: &ios
+      - "apps/ios/**"
+      - "Makefile"
+      - ".swiftlint.yml"
+      - ".swiftformat"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths: *ios
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+
+jobs:
+  lint:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install swiftlint
+      - run: make ios-lint
+
+  test:
+    runs-on: macos-26
+    # `script` gives the test binary a pty so a hang shows its last line.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: script -q /dev/null make ios-test TEST_FLAGS=--no-parallel
+
+  build:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: make ios-generate
+      - name: Resolve packages (retry on flaky release downloads)
+        run: |
+          cd apps/ios
+          for i in 1 2 3; do
+            xcodebuild -project Poopita.xcodeproj -scheme Poopita \
+              -resolvePackageDependencies && exit 0
+            echo "resolve attempt $i failed; retrying in 20s"
+            sleep 20
+          done
+          exit 1
+      - run: make ios-build DEST='generic/platform=iOS Simulator'

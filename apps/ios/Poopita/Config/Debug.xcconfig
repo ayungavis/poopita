@@ -1,0 +1,9 @@
+// Development values. Secrets never live here — CI passes them to xcodebuild.
+
+// `//` starts an xcconfig comment, so URLs need the empty-$() trick.
+API_BASE_URL = http:/$()/localhost:8080
+SENTRY_ENVIRONMENT = development
+
+// Local.xcconfig is untracked and included last, so its assignments win over
+// the ones above: DEVELOPMENT_TEAM, or API_BASE_URL pointed at a local server.
+#include? "Local.xcconfig"

@@ -1,0 +1,21 @@
+included:
+  - apps
+
+excluded:
+  - apps/ios/PoopitaKit/.build
+
+opt_in_rules:
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+
+disabled_rules:
+  - trailing_comma
+  - todo
+
+line_length:
+  warning: 130
+  ignores_comments: true
+
+identifier_name:
+  min_length: 2
+  allowed_symbols: []

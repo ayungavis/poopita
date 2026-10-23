@@ -1,0 +1,3 @@
+// API_BASE_URL and SENTRY_DSN are deliberately absent: CI passes them to
+// xcodebuild from secrets, so they never live in the repository.
+SENTRY_ENVIRONMENT = production

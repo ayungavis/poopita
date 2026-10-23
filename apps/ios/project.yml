@@ -1,0 +1,66 @@
+name: Poopita
+options:
+  bundleIdPrefix: com.ayungavis
+  deploymentTarget:
+    iOS: "27.0"
+
+configFiles:
+  Debug: Poopita/Config/Debug.xcconfig
+  Release: Poopita/Config/Release.xcconfig
+
+packages:
+  PoopitaKit:
+    path: PoopitaKit
+  Sentry:
+    url: https://github.com/getsentry/sentry-cocoa
+    from: "8.0.0"
+
+targets:
+  Poopita:
+    type: application
+    platform: iOS
+    sources:
+      - path: Poopita
+        excludes:
+          - "Config/**"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ayungavis.Poopita
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          DEVELOPMENT_TEAM: QHL64K2LPL
+          PROVISIONING_PROFILE_SPECIFIER: Poopita Apple Distribution
+    info:
+      path: Poopita/Info.plist
+      properties:
+        CFBundleDisplayName: Poopita
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleLocalizations:
+          - en
+          - id
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        SentryDSN: $(SENTRY_DSN)
+        SentryEnvironment: $(SENTRY_ENVIRONMENT)
+        APIBaseURL: $(API_BASE_URL)
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    dependencies:
+      - package: PoopitaKit
+        product: PoopitaKit
+      - package: Sentry
+        product: Sentry
+    scheme:
+      testTargets: []

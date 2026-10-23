@@ -1,0 +1,1 @@
+struct EmptyResponseDTO: Decodable, Sendable {}
