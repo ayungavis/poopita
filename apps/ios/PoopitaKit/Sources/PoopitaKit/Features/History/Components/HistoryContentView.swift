@@ -103,8 +103,12 @@ struct HistoryContentView: View {
                 .buttonStyle(.bordered)
             }
             Button(action: viewModel.addEntry) {
-                Label("history.addEntry", systemImage: "plus")
-                    .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
+                Label {
+                    Text("history.addEntry", bundle: .module)
+                } icon: {
+                    Image(systemName: "plus")
+                }
+                .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
             }
             .buttonStyle(.borderedProminent)
             if viewModel.feedback != nil, data.canUndo {

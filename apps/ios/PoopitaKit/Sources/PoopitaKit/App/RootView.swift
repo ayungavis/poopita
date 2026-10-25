@@ -18,11 +18,23 @@ public struct RootView: View {
                     NavigationStack {
                         TodayView(viewModel: model)
                     }
-                    .tabItem { Label("diary.today", systemImage: "house") }
+                    .tabItem {
+                        Label {
+                            Text("diary.today", bundle: .module)
+                        } icon: {
+                            Image(systemName: "house")
+                        }
+                    }
                     NavigationStack {
                         HistoryView(viewModel: historyModel)
                     }
-                    .tabItem { Label("history.title", systemImage: "calendar") }
+                    .tabItem {
+                        Label {
+                            Text("history.title", bundle: .module)
+                        } icon: {
+                            Image(systemName: "calendar")
+                        }
+                    }
                 }
             } else {
                 VStack(spacing: Spacing.lg) {

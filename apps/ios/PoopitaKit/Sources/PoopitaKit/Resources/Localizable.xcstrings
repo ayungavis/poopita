@@ -260,38 +260,6 @@
         }
       }
     },
-    "error.checkInConflict" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This day already has an entry. Edit or delete its entries before confirming no poop."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hari ini sudah memiliki catatan. Ubah atau hapus catatannya sebelum mengonfirmasi tidak BAB."
-          }
-        }
-      }
-    },
-    "error.invalidCheckIn" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a completed past day to confirm no poop. Today can only be marked as none so far."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pilih hari yang sudah berlalu untuk mengonfirmasi tidak BAB. Hari ini hanya dapat ditandai belum BAB sejauh ini."
-          }
-        }
-      }
-    },
     "diary.deleted" : {
       "localizations" : {
         "en" : {
@@ -1269,6 +1237,22 @@
         }
       }
     },
+    "error.checkInConflict" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This day already has an entry. Edit or delete its entries before confirming no poop."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari ini sudah memiliki catatan. Ubah atau hapus catatannya sebelum mengonfirmasi tidak BAB."
+          }
+        }
+      }
+    },
     "error.conflict" : {
       "localizations" : {
         "en" : {
@@ -1281,6 +1265,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Data ini telah diubah di tempat lain. Muat ulang lalu coba lagi."
+          }
+        }
+      }
+    },
+    "error.invalidCheckIn" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a completed past day to confirm no poop. Today can only be marked as none so far."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih hari yang sudah berlalu untuk mengonfirmasi tidak BAB. Hari ini hanya dapat ditandai belum BAB sejauh ini."
           }
         }
       }
@@ -1525,6 +1525,182 @@
         }
       }
     },
+    "history.addEntry" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add bowel movement"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tambah catatan BAB"
+          }
+        }
+      }
+    },
+    "history.dateLabel %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "history.emptyDay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No entries for this day."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada catatan untuk hari ini."
+          }
+        }
+      }
+    },
+    "history.nextMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next month"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulan berikutnya"
+          }
+        }
+      }
+    },
+    "history.previousMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous month"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulan sebelumnya"
+          }
+        }
+      }
+    },
+    "history.status.completed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No poop that day"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak BAB pada hari itu"
+          }
+        }
+      }
+    },
+    "history.status.logged" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logged"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tercatat"
+          }
+        }
+      }
+    },
+    "history.status.partial" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None so far today"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum BAB hari ini"
+          }
+        }
+      }
+    },
+    "history.status.unrecorded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum dicatat"
+          }
+        }
+      }
+    },
+    "history.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riwayat"
+          }
+        }
+      }
+    },
+    "history.today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari ini"
+          }
+        }
+      }
+    },
     "home.retry" : {
       "localizations" : {
         "en" : {
@@ -1539,72 +1715,6 @@
             "value" : "Periksa lagi"
           }
         }
-      }
-    },
-    "history.title" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Riwayat" } }
-      }
-    },
-    "history.today" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Hari ini" } }
-      }
-    },
-    "history.previousMonth" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Previous month" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Bulan sebelumnya" } }
-      }
-    },
-    "history.nextMonth" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next month" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Bulan berikutnya" } }
-      }
-    },
-    "history.addEntry" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add bowel movement" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tambah catatan BAB" } }
-      }
-    },
-    "history.emptyDay" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "No entries for this day." } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tidak ada catatan untuk hari ini." } }
-      }
-    },
-    "history.status.logged" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Logged" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tercatat" } }
-      }
-    },
-    "history.status.completed" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "No poop that day" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Tidak BAB pada hari itu" } }
-      }
-    },
-    "history.status.partial" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "None so far today" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Belum BAB hari ini" } }
-      }
-    },
-    "history.status.unrecorded" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not recorded" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "Belum dicatat" } }
-      }
-    },
-    "history.dateLabel %1$@, %2$@" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@, %2$@" } },
-        "id" : { "stringUnit" : { "state" : "translated", "value" : "%1$@, %2$@" } }
       }
     },
     "home.status.degraded" : {
@@ -1656,5 +1766,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }
