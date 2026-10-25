@@ -4,7 +4,7 @@ struct EntryChoiceViewData: Equatable, Sendable, Identifiable {
     let id: String
     let title: String
     let detail: String
-    let illustration: EntryIllustrationView.Kind?
+    let illustration: EntryIllustrationKind?
 
     static var types: [Self] {
         [

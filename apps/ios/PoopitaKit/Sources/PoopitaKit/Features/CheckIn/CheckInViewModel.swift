@@ -4,7 +4,7 @@ import Observation
 @MainActor
 @Observable
 final class CheckInViewModel {
-    private(set) var data: CheckInViewData?
+    private(set) var state: Loadable<CheckInViewData> = .idle
     private(set) var selectedDate: Date
     private(set) var errorMessage: String?
     private let repository: any DiaryRepository
@@ -34,8 +34,17 @@ final class CheckInViewModel {
     }
 
     func load() throws {
-        data = try Self.viewData(entries: repository.entries(), checkIns: repository.checkIns(),
-                                 date: now(), selectedDate: selectedDate, timeZone: timeZone())
+        state = .loading
+        do {
+            state = try .loaded(Self.viewData(
+                entries: repository.entries(), checkIns: repository.checkIns(),
+                date: now(), selectedDate: selectedDate, timeZone: timeZone()
+            ))
+        } catch {
+            let failure = AppError(wrapping: error)
+            state = .failed(failure)
+            throw failure
+        }
     }
 
     func selectDate(_ date: Date) {

@@ -12,7 +12,7 @@ struct CheckInView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
-            if let data = viewModel.data {
+            if case let .loaded(data) = viewModel.state {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("checkIn.today", bundle: .module).font(AppFont.body.weight(.semibold)).accessibilityAddTraits(.isHeader)
                     Text(verbatim: data.today.status).font(AppFont.body.weight(.semibold))

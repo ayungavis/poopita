@@ -8,9 +8,11 @@ private let appRoot = URL(filePath: #filePath)
     .deletingLastPathComponent()
 
 private let scannedRoots = [
-    appRoot.appending(path: "PoopitaKit/Sources"),
+    appRoot.appending(path: "PoopitaKit"),
     appRoot.appending(path: "Poopita"),
 ]
+
+private let sourceExceptions: Set<String> = ["PoopitaKit/Package.swift"]
 
 private struct SourceFile {
     let path: String
@@ -100,6 +102,9 @@ private func commentBlocks(in file: SourceFile) -> [CommentBlock] {
 
 private func isAllowed(_ block: CommentBlock, in file: SourceFile) -> Bool {
     guard let opening = block.lines.first else { return true }
+    if sourceExceptions.contains(file.path), block.lines.count == 1, opening.hasPrefix("// swift-tools-version:") {
+        return true
+    }
     if allowedPrefixes.contains(where: opening.hasPrefix) {
         return true
     }
@@ -195,9 +200,6 @@ struct ConventionsTests {
         )
     }
 
-    /// C4: a store file declares stores and storage entities, nothing else. A
-    /// domain-shaped value defined inside `Core/Stores/` is a repository concern
-    /// wearing the wrong address, and the domain layer ends up importing it.
     @Test func storeFilesDeclareOnlyStoresAndEntities() throws {
         var offenders: [String] = []
         for file in try sources() where file.path.contains("/Core/Stores/") {
@@ -227,8 +229,6 @@ struct ConventionsTests {
         }
     }
 
-    /// C5: every file under `Core/Services/` is `<Name>Service.swift`, per the
-    /// layout table. No exceptions.
     @Test func serviceFilesAreNamedService() throws {
         var offenders: [String] = []
         for file in try sources() where file.path.contains("/Core/Services/") {

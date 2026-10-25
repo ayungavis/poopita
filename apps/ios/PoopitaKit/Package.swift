@@ -4,7 +4,6 @@ import PackageDescription
 let package = Package(
     name: "PoopitaKit",
     defaultLocalization: "en",
-    // macOS listed only so `swift test` runs on the host without a simulator.
     platforms: [.iOS(.v26), .macOS(.v26)],
     products: [
         .library(name: "PoopitaKit", targets: ["PoopitaKit"]),

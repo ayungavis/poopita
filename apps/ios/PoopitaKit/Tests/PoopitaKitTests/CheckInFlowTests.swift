@@ -104,6 +104,23 @@ struct CheckInFlowTests {
         #expect(try store.read(LegacyDiaryFixture.self, key: "diary") == malformed)
     }
 
+    @Test func failedLoadExposesTypedLoadableFailure() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let store = try SwiftDataValueStore(directory: directory)
+        try store.write(LegacyDiaryFixture(version: 3, entries: []), key: "diary")
+        let model = try CheckInViewModel(
+            repository: LocalDiaryRepository(store: store), now: { .now }, timeZone: { .current }
+        )
+        #expect(throws: AppError.invalidStoredData) { try model.load() }
+        #expect(model.state == .failed(.invalidStoredData))
+    }
+
+    private static func data(_ state: Loadable<CheckInViewData>) -> CheckInViewData? {
+        guard case let .loaded(data) = state else { return nil }
+        return data
+    }
+
     @Test func midnightRetainsPartialCoverageUntilExplicitConfirmationAndCancellationWritesNothing() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
@@ -112,25 +129,25 @@ struct CheckInFlowTests {
         var clock = try #require(ISO8601DateFormatter().date(from: "2026-10-25T23:59:00+08:00"))
         let model = try CheckInViewModel(repository: repository, now: { clock }, timeZone: { zone })
         try model.load()
-        #expect(model.data?.today.status == "Not recorded")
+        #expect(Self.data(model.state)?.today.status == "Not recorded")
         let cancelled = Task { model.recordToday() }
         cancelled.cancel()
         #expect(await cancelled.value == false)
         #expect(try repository.checkIns().isEmpty)
         #expect(model.recordToday())
         try model.load()
-        #expect(model.data?.today.status == "None so far today")
+        #expect(Self.data(model.state)?.today.status == "None so far today")
         let partial = try #require(try repository.checkIns().first)
         clock = clock.addingTimeInterval(120)
         try model.load()
-        #expect(model.data?.today.status == "Not recorded")
+        #expect(Self.data(model.state)?.today.status == "Not recorded")
         #expect(try repository.checkIns() == [partial])
         model.selectDate(partial.reportedAt.instant)
-        #expect(model.data?.selected.status == "Partial check-in")
-        #expect(model.data?.selected.canRecord == true)
+        #expect(Self.data(model.state)?.selected.status == "Partial check-in")
+        #expect(Self.data(model.state)?.selected.canRecord == true)
         #expect(model.confirmSelectedDay())
         try model.load()
-        #expect(model.data?.selected.status == "No poop that day")
+        #expect(Self.data(model.state)?.selected.status == "No poop that day")
         #expect(try repository.checkIns().first?.coverage == .completed)
         model.selectDate(clock)
         #expect(!model.confirmSelectedDay())

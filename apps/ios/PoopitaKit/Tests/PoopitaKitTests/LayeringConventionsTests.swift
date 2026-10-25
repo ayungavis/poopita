@@ -47,6 +47,23 @@ private func isFeature(_ file: LayerFile, suffix: String) -> Bool {
 private let networkingTokens = ["APIClient", "Endpoint", "DTO"]
 
 struct LayeringConventionsTests {
+    @Test func viewDataDoesNotDependOnAViewType() throws {
+        let views = try files().filter { $0.path.hasSuffix("View.swift") }
+            .compactMap { file -> String? in
+                guard let name = file.path.split(separator: "/").last else { return nil }
+                return String(name.dropLast("View.swift".count)) + "View"
+            }
+        var offenders: [String] = []
+        for file in try files() where file.path.hasSuffix("ViewData.swift") {
+            for (index, line) in file.lines.enumerated() where !line.trimmingCharacters(in: .whitespaces).hasPrefix("//") {
+                for view in views where names(view, in: line) {
+                    offenders.append("\(file.path):\(index + 1) depends on \(view)")
+                }
+            }
+        }
+        #expect(offenders.isEmpty, "ViewData only contains values for Views:\n\(offenders.joined(separator: "\n"))")
+    }
+
     @Test func aViewModelExposesViewDataNeverADomainType() throws {
         let domain = try domainTypes()
         var offenders: [String] = []

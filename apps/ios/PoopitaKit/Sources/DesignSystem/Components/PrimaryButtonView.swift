@@ -13,14 +13,9 @@ public struct PrimaryButtonView: View {
         Button(action: action) {
             title
                 .font(AppFont.body.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 44)
+                .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
         }
         .buttonStyle(.borderedProminent)
         .tint(AppColor.accent)
     }
-}
-
-#Preview {
-    PrimaryButtonView(Text(verbatim: "Continue")) {}
-        .padding()
 }
