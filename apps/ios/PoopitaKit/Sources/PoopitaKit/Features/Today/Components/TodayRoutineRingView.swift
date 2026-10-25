@@ -22,11 +22,18 @@ struct TodayRoutineRingView: View {
 
                 VStack(spacing: Spacing.xs) {
                     centerIcon
-                    Text(verbatim: heroStatus.title)
-                        .font(AppFont.body.weight(.semibold))
-                        .foregroundStyle(AppColor.textPrimary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, Spacing.lg)
+                    VStack(spacing: Spacing.xs) {
+                        Text(verbatim: heroStatus.title)
+                            .font(AppFont.body.weight(.semibold))
+                            .foregroundStyle(AppColor.textPrimary)
+                        if let detail = heroStatus.detail {
+                            Text(verbatim: detail)
+                                .font(AppFont.caption)
+                                .foregroundStyle(AppColor.textSecondary)
+                        }
+                    }
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, Spacing.lg)
                 }
             }
             .frame(width: ringDiameter, height: ringDiameter)
@@ -36,7 +43,7 @@ struct TodayRoutineRingView: View {
                 Button(action: onLog) {
                     HStack(spacing: Spacing.sm) {
                         Image(systemName: "plus")
-                        Text("today.hero.logButton", bundle: .module)
+                        Text("today.hero.recordButton", bundle: .module)
                     }
                     .font(AppFont.body.weight(.semibold))
                     .foregroundStyle(.white)

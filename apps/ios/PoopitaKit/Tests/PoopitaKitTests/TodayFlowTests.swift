@@ -94,6 +94,32 @@ struct TodayFlowTests {
         #expect(try repository.entries().isEmpty)
     }
 
+    @Test func todayHeroShowsTimeSinceLatestEntryWhenThereIsNoEntryToday() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let now = Date(timeIntervalSince1970: 1_792_800_000)
+        let previous = try DiaryEntry(
+            id: UUID(),
+            occurrence: OccurrenceTime(instant: now.addingTimeInterval(-2 * 86400 - 3 * 3600), timeZone: .gmt),
+            stoolType: nil,
+            amount: nil,
+            effort: nil,
+            note: ""
+        )
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        try repository.save(previous)
+        let model = TodayViewModel(repository: repository, now: { now }, timeZone: { .gmt })
+
+        model.load()
+        await model.loadTask?.value
+
+        guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
+        #expect(data.entries.isEmpty)
+        #expect(data.heroStatus.title.contains("2 days"))
+        #expect(data.heroStatus.title.contains("3 hours"))
+        #expect(data.heroStatus.detail == "since your last bowel movement")
+    }
+
     @Test func weekStripContainsSevenDaysAndHeroStatusUpdatesOnSelection() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
@@ -109,6 +135,7 @@ struct TodayFlowTests {
         #expect(todayItem.isSelected)
         #expect(data.heroStatus.isRecorded == false)
         #expect(data.heroStatus.title == "Nothing logged yet")
+        #expect(data.heroStatus.detail == nil)
         #expect(data.canCheckInToday == true)
 
         let composer = try #require(model.composer)

@@ -105,13 +105,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mark none so far today"
+            "value" : "Check in: none so far"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tandai belum BAB sejauh ini"
+            "value" : "Laporkan: belum BAB sejauh ini"
           }
         }
       }
@@ -281,13 +281,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log when you go. No daily target."
+            "value" : "Whenever you’re ready, add a note about your day. There’s no daily goal."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catat saat buang air besar. Tidak ada target harian."
+            "value" : "Saat siap, tambahkan catatan tentang hari Anda. Tidak ada target harian."
           }
         }
       }
@@ -313,13 +313,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your entries"
+            "value" : "Today’s entries"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catatan Anda"
+            "value" : "Catatan hari ini"
           }
         }
       }
@@ -921,13 +921,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "More details"
+            "value" : "Add more details"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Detail lainnya"
+            "value" : "Tambahkan detail"
           }
         }
       }
@@ -969,13 +969,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anything you want to remember"
+            "value" : "Add a note, if you’d like"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apa pun yang ingin Anda ingat"
+            "value" : "Tambahkan catatan jika Anda mau"
           }
         }
       }
@@ -986,13 +986,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Record a bowel movement"
+            "value" : "Add a bowel movement"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catat buang air besar"
+            "value" : "Tambahkan catatan BAB"
           }
         }
       }
@@ -2568,18 +2568,34 @@
         }
       }
     },
-    "today.hero.logButton" : {
+    "today.hero.sinceLast" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log bowel movement"
+            "value" : "since your last bowel movement"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catat BAB"
+            "value" : "sejak BAB terakhir"
+          }
+        }
+      }
+    },
+    "today.hero.recordButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record it"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat sekarang"
           }
         }
       }
@@ -2605,13 +2621,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mark none so far today"
+            "value" : "Check in: none so far"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tandai belum BAB hari ini"
+            "value" : "Laporkan: belum BAB sejauh ini"
           }
         }
       }

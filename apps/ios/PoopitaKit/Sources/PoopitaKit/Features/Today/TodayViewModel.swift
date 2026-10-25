@@ -212,7 +212,13 @@ extension TodayViewModel {
         let selectedEntries = entries.filter { DiaryDay(occurrence: $0.occurrence) == activeDay }
         let checkIn = checkIns.first { $0.day == activeDay }
 
-        let heroStatus = heroStatusViewData(entries: selectedEntries, checkIn: checkIn, isActiveToday: activeDay == today)
+        let heroStatus = heroStatusViewData(
+            entries: selectedEntries,
+            checkIn: checkIn,
+            isActiveToday: activeDay == today,
+            latestEntry: entries.first,
+            now: date
+        )
         let canCheckIn = activeDay == today && selectedEntries.isEmpty && checkIn == nil
 
         var headerStyle = Date.FormatStyle.dateTime.weekday(.wide).month(.abbreviated).day()
@@ -273,33 +279,66 @@ extension TodayViewModel {
     }
 
     private static func heroStatusViewData(
-        entries: [DiaryEntry], checkIn: NoPoopCheckIn?, isActiveToday: Bool
+        entries: [DiaryEntry],
+        checkIn: NoPoopCheckIn?,
+        isActiveToday: Bool,
+        latestEntry: DiaryEntry?,
+        now: Date
     ) -> TodayHeroStatusViewData {
         if !entries.isEmpty {
-            let title = String(localized: "today.hero.logged \(entries.count)", bundle: .module)
             return TodayHeroStatusViewData(
-                title: title, count: entries.count,
-                isRecorded: true, isConfirmedNoPoop: false, isPartialCheckIn: false
+                title: String(localized: "today.hero.logged \(entries.count)", bundle: .module),
+                detail: nil,
+                count: entries.count,
+                isRecorded: true,
+                isConfirmedNoPoop: false,
+                isPartialCheckIn: false
             )
         } else if let checkIn, checkIn.coverage == .completed {
             return TodayHeroStatusViewData(
-                title: String(localized: "checkIn.completed", bundle: .module), count: 0,
-                isRecorded: false, isConfirmedNoPoop: true, isPartialCheckIn: false
+                title: String(localized: "checkIn.completed", bundle: .module),
+                detail: nil,
+                count: 0,
+                isRecorded: false,
+                isConfirmedNoPoop: true,
+                isPartialCheckIn: false
             )
         } else if let checkIn, checkIn.coverage == .partial {
             return TodayHeroStatusViewData(
-                title: String(localized: "checkIn.noneSoFar", bundle: .module), count: 0,
-                isRecorded: false, isConfirmedNoPoop: false, isPartialCheckIn: true
+                title: String(localized: "checkIn.noneSoFar", bundle: .module),
+                detail: nil,
+                count: 0,
+                isRecorded: false,
+                isConfirmedNoPoop: false,
+                isPartialCheckIn: true
+            )
+        } else if isActiveToday, let latestEntry {
+            return TodayHeroStatusViewData(
+                title: elapsedSinceLastEntry(latestEntry, now: now),
+                detail: String(localized: "today.hero.sinceLast", bundle: .module),
+                count: 0,
+                isRecorded: false,
+                isConfirmedNoPoop: false,
+                isPartialCheckIn: false
             )
         } else {
             let title = isActiveToday
                 ? String(localized: "today.hero.empty", bundle: .module)
                 : String(localized: "checkIn.unknown", bundle: .module)
             return TodayHeroStatusViewData(
-                title: title, count: 0,
-                isRecorded: false, isConfirmedNoPoop: false, isPartialCheckIn: false
+                title: title,
+                detail: nil,
+                count: 0,
+                isRecorded: false,
+                isConfirmedNoPoop: false,
+                isPartialCheckIn: false
             )
         }
+    }
+
+    private static func elapsedSinceLastEntry(_ entry: DiaryEntry, now: Date) -> String {
+        let seconds = max(0, now.timeIntervalSince(entry.occurrence.instant))
+        return Duration.seconds(seconds).formatted(.units(allowed: [.days, .hours], width: .wide))
     }
 
     static func row(_ entry: DiaryEntry) throws -> TodayEntryViewData {
