@@ -57,6 +57,7 @@ targets:
         APIBaseURL: $(API_BASE_URL)
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
+        NSFaceIDUsageDescription: "Unlock your private diary."
     dependencies:
       - package: PoopitaKit
         product: PoopitaKit

@@ -2085,6 +2085,480 @@
           }
         }
       }
+    },
+    "settings.about.philosophy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No daily poop targets. No broken streaks. Your observations are here to help you understand yourself."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada target BAB harian. Tidak ada streak yang putus. Catatan ini ada untuk membantu Anda memahami tubuh Anda."
+          }
+        }
+      }
+    },
+    "settings.about.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At your pace"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesuai ritme Anda"
+          }
+        }
+      }
+    },
+    "settings.appLock.disabled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App lock disabled."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci aplikasi dinonaktifkan."
+          }
+        }
+      }
+    },
+    "settings.appLock.disableReason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate to disable app lock."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifikasi untuk menonaktifkan kunci aplikasi."
+          }
+        }
+      }
+    },
+    "settings.appLock.enabled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App lock enabled."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci aplikasi diaktifkan."
+          }
+        }
+      }
+    },
+    "settings.appLock.failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authentication was not successful."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autentikasi tidak berhasil."
+          }
+        }
+      }
+    },
+    "settings.appLock.lockedTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita is locked"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita terkunci"
+          }
+        }
+      }
+    },
+    "settings.appLock.reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock your private diary."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka kunci catatan pribadi Anda."
+          }
+        }
+      }
+    },
+    "settings.appLock.unlockButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock diary"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka kunci catatan"
+          }
+        }
+      }
+    },
+    "settings.backup.explainer1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign into your backup account and use your separately stored recovery key to restore your diary."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masuk ke akun cadangan Anda dan gunakan kunci pemulihan yang disimpan terpisah untuk memulihkan catatan."
+          }
+        }
+      }
+    },
+    "settings.backup.explainer2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep the key somewhere safe. Losing both your phone and the key makes encrypted history unrecoverable."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan kunci di tempat yang aman. Kehilangan ponsel dan kunci membuat riwayat terenkripsi tidak dapat dipulihkan."
+          }
+        }
+      }
+    },
+    "settings.backup.howItWorks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How recovery will work"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cara pemulihan bekerja"
+          }
+        }
+      }
+    },
+    "settings.backup.status" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not set up · Only on this iPhone"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum diatur · Hanya di iPhone ini"
+          }
+        }
+      }
+    },
+    "settings.backup.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan pribadi"
+          }
+        }
+      }
+    },
+    "settings.data.deleteAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all history"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus semua riwayat"
+          }
+        }
+      }
+    },
+    "settings.data.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data management"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kelola data"
+          }
+        }
+      }
+    },
+    "settings.deleteAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus semua"
+          }
+        }
+      }
+    },
+    "settings.deleteHistoryQuestion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all entries and check-ins? You can undo immediately after, but restarting the app makes deletion permanent."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakin ingin menghapus semua catatan dan konfirmasi? Anda dapat langsung membatalkannya (Undo), namun menutup aplikasi akan membuatnya permanen."
+          }
+        }
+      }
+    },
+    "settings.history.deleted" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All history deleted · Undo"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semua riwayat dihapus · Batalkan"
+          }
+        }
+      }
+    },
+    "settings.privacy.appLock" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock with Face ID / Passcode"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci dengan Face ID / Kode Sandi"
+          }
+        }
+      }
+    },
+    "settings.privacy.appSwitcherHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The app switcher preview is always hidden automatically."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pratinjau pengalih aplikasi selalu disembunyikan secara otomatis."
+          }
+        }
+      }
+    },
+    "settings.privacy.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy & Security"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privasi & Keamanan"
+          }
+        }
+      }
+    },
+    "settings.reminder.denied" : {
+      "comment" : "Error message displayed when the user denies the app's daily reminder permission.",
+      "isCommentAutoGenerated" : true
+    },
+    "settings.reminder.notificationBody" : {
+      "comment" : "Notification body text for the daily reminder notification.",
+      "isCommentAutoGenerated" : true
+    },
+    "settings.reminders.dailyCheckIn" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily check-in reminder"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengingat BAB harian"
+          }
+        }
+      }
+    },
+    "settings.reminders.denied" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification permission is not granted. You can enable it in iOS Settings."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izin notifikasi belum diberikan. Anda dapat mengaktifkannya di Pengaturan iOS."
+          }
+        }
+      }
+    },
+    "settings.reminders.discreetHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A quiet reminder. Skipped automatically if you already recorded today."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengingat tenang. Dilewati otomatis jika Anda sudah mencatat hari ini."
+          }
+        }
+      }
+    },
+    "settings.reminders.notificationBody" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time for your daily check-in."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktunya memeriksa catatan hari ini."
+          }
+        }
+      }
+    },
+    "settings.reminders.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder time"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu pengingat"
+          }
+        }
+      }
+    },
+    "settings.reminders.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengingat"
+          }
+        }
+      }
+    },
+    "settings.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengaturan"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

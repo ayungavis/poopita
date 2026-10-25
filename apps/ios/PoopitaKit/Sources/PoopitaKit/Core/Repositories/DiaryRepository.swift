@@ -9,6 +9,7 @@ protocol DiaryRepository {
     @discardableResult
     func save(_ entry: DiaryEntry) throws -> DiaryEntrySaveResult
     func delete(id: UUID) throws
+    func deleteAll() throws
     func undo() throws
 }
 
@@ -68,6 +69,13 @@ final class LocalDiaryRepository: DiaryRepository {
         let previous = try snapshot()
         guard previous.entries.contains(where: { $0.id == id }) else { throw AppError.notFound }
         let updated = DiarySnapshot(entries: previous.entries.filter { $0.id != id }, checkIns: previous.checkIns)
+        try store.write(updated, key: "diary")
+        undoState = (previous, updated)
+    }
+
+    func deleteAll() throws {
+        let previous = try snapshot()
+        let updated = DiarySnapshot(entries: [], checkIns: [])
         try store.write(updated, key: "diary")
         undoState = (previous, updated)
     }

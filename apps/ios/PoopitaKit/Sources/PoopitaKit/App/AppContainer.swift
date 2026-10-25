@@ -18,6 +18,16 @@ public final class AppContainer {
         try PatternsViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
     }
 
+    func makeSettingsViewModel() throws -> SettingsViewModel {
+        try SettingsViewModel(
+            repository: diaryRepository(),
+            reminderService: UserNotificationsReminderService(),
+            biometricService: LocalAuthenticationBiometricService(),
+            now: { .now },
+            timeZone: { .current }
+        )
+    }
+
     private func diaryRepository() throws -> any DiaryRepository {
         if let diary {
             return diary
