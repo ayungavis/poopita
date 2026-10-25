@@ -94,6 +94,22 @@ struct TodayFlowTests {
         #expect(try repository.entries().isEmpty)
     }
 
+    @Test func tabBarLogActionPresentsTheExistingComposer() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let now = Date(timeIntervalSince1970: 1_792_800_000)
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        let model = TodayViewModel(repository: repository, now: { now }, timeZone: { .gmt })
+
+        model.load()
+        await model.loadTask?.value
+        model.presentLogSheet()
+
+        let editor = try #require(model.editor)
+        #expect(editor.id == model.composer?.id)
+        #expect(!editor.isEditing)
+    }
+
     @Test func todayHeroShowsTimeSinceLatestEntryWhenThereIsNoEntryToday() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }

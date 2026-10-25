@@ -10,6 +10,8 @@ public struct RootView: View {
     @State private var settingsModel: SettingsViewModel?
     @State private var isUnlocked = false
     @State private var errorMessage: String?
+    @State private var selectedTab = 0
+    @State private var tabBeforeLog = 0
 
     public init(container: AppContainer) {
         self.container = container
@@ -21,7 +23,7 @@ public struct RootView: View {
                 if settingsModel.state.isAppLockEnabled, !isUnlocked {
                     lockScreen(settingsModel)
                 } else {
-                    TabView {
+                    TabView(selection: $selectedTab) {
                         NavigationStack {
                             TodayView(viewModel: model)
                         }
@@ -32,6 +34,7 @@ public struct RootView: View {
                                 Image(systemName: "house")
                             }
                         }
+                        .tag(0)
                         NavigationStack {
                             HistoryView(viewModel: historyModel)
                         }
@@ -42,6 +45,7 @@ public struct RootView: View {
                                 Image(systemName: "calendar")
                             }
                         }
+                        .tag(1)
                         NavigationStack {
                             PatternsView(viewModel: patternsModel)
                         }
@@ -52,6 +56,7 @@ public struct RootView: View {
                                 Image(systemName: "chart.bar")
                             }
                         }
+                        .tag(2)
                         NavigationStack {
                             SettingsView(viewModel: settingsModel)
                         }
@@ -62,6 +67,30 @@ public struct RootView: View {
                                 Image(systemName: "gearshape")
                             }
                         }
+                        .tag(3)
+                        Button(action: presentLog) {
+                            Label {
+                                Text("tab.log", bundle: .module)
+                            } icon: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                        .tag(4)
+                    }
+                    .onChange(of: selectedTab) { oldTab, newTab in
+                        if newTab == 4 {
+                            tabBeforeLog = oldTab == 4 ? 0 : oldTab
+                            selectedTab = tabBeforeLog
+                            presentLog()
+                        }
+                    }
+                    .sheet(item: editorBinding) { editor in
+                        EntryEditorView(
+                            viewModel: editor,
+                            saved: editor.isEditing ? model.savedEditor : model.savedComposer,
+                            delete: { model.delete(id: editor.id) },
+                            deletionError: model.errorMessage
+                        )
                     }
                 }
             } else {
@@ -85,6 +114,21 @@ public struct RootView: View {
                 isUnlocked = false
             }
         }
+    }
+
+    private var editorBinding: Binding<EntryEditorViewModel?> {
+        Binding(
+            get: { model?.editor },
+            set: {
+                if $0 == nil {
+                    model?.dismissEditor()
+                }
+            }
+        )
+    }
+
+    private func presentLog() {
+        model?.presentLogSheet()
     }
 
     private func lockScreen(_ settings: SettingsViewModel) -> some View {

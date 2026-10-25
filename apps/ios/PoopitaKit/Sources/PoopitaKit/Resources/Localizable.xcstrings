@@ -2568,6 +2568,22 @@
         }
       }
     },
+    "tab.log" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat"
+          }
+        }
+      }
+    },
     "today.hero.sinceLast" : {
       "localizations" : {
         "en" : {

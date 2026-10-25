@@ -4,8 +4,6 @@ import SwiftUI
 struct TodayContentView: View {
     let viewModel: TodayViewModel
     let data: TodayViewData
-    @AccessibilityFocusState private var focusedEntry: UUID?
-    @State private var editedID: UUID?
 
     var body: some View {
         ScrollView {
@@ -51,10 +49,8 @@ struct TodayContentView: View {
                         LazyVStack(spacing: Spacing.md) {
                             ForEach(data.entries) { entry in
                                 TodayEntryRowView(entry: entry) {
-                                    editedID = entry.id
                                     viewModel.edit(id: entry.id)
                                 }
-                                .accessibilityFocused($focusedEntry, equals: entry.id)
                             }
                         }
                     }
@@ -72,14 +68,6 @@ struct TodayContentView: View {
             if let message {
                 AccessibilityNotification.Announcement(message).post()
             }
-        }
-        .sheet(item: editorBinding, onDismiss: dismissed) { editor in
-            EntryEditorView(
-                viewModel: editor,
-                saved: editor.isEditing ? viewModel.savedEditor : viewModel.savedComposer,
-                delete: { viewModel.delete(id: editor.id) },
-                deletionError: viewModel.errorMessage
-            )
         }
     }
 
@@ -103,21 +91,5 @@ struct TodayContentView: View {
             Text(verbatim: error)
                 .foregroundStyle(AppColor.destructive)
         }
-    }
-
-    private var editorBinding: Binding<EntryEditorViewModel?> {
-        Binding(
-            get: { viewModel.editor },
-            set: {
-                if $0 == nil {
-                    viewModel.dismissEditor()
-                }
-            }
-        )
-    }
-
-    private func dismissed() {
-        viewModel.dismissEditor()
-        focusedEntry = editedID
     }
 }
