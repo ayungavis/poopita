@@ -55,9 +55,17 @@ public enum Log {
     static let diagnosticCodes: Set<String> = [
         "network", "sessionExpired", "serverRejected", "badRequest", "notFound", "conflict",
         "rateLimited", "unavailable", "unexpected", "storageUnavailable", "storageRead", "storageWrite",
-        "invalidStoredData", "invalidOccurrence", "invalidObservation", "noteTooLong", "nothingToUndo",
+        "invalidStoredData", "invalidOccurrence", "invalidObservation", "noteTooLong", "nothingToUndo", "invalidCheckIn",
+        "checkInConflict",
     ]
-    static let diagnosticOperations: Set<String> = ["home.load", "diary.load", "diary.save", "diary.delete", "diary.undo"]
+    static let diagnosticOperations: Set<String> = [
+        "home.load",
+        "diary.load",
+        "diary.save",
+        "diary.delete",
+        "diary.undo",
+        "diary.checkIn",
+    ]
 
     public static func diagnostic(_ error: Error, context: Context) -> Diagnostic {
         var fields: [String: String] = [:]

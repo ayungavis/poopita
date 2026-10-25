@@ -33,6 +33,9 @@ struct TodayView: View {
         .task {
             viewModel.load()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            viewModel.load()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 viewModel.load()

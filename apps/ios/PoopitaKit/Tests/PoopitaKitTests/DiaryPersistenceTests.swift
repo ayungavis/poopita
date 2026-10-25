@@ -172,7 +172,7 @@ struct DiaryPersistenceTests {
         defer { Self.removeFixture(directory) }
         let store = try SwiftDataValueStore(directory: directory)
         let entry = try Self.entry(note: "keep this")
-        let future = SnapshotFixture(version: 2, entries: [entry])
+        let future = SnapshotFixture(version: 3, entries: [entry])
         try store.write(future, key: "diary")
         let repository = LocalDiaryRepository(store: store)
         #expect(throws: AppError.invalidStoredData) { try repository.entries() }

@@ -25,6 +25,9 @@ struct TodayContentView: View {
                     .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
                     .id(composer.id)
                 }
+                if let checkIn = viewModel.checkIn {
+                    CheckInView(viewModel: checkIn, saved: viewModel.savedCheckIn)
+                }
                 feedback
                 Label { Text("diary.localOnly", bundle: .module) } icon: {
                     Image(systemName: "iphone.gen3")

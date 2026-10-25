@@ -1,0 +1,135 @@
+import Foundation
+import Observation
+
+@MainActor
+@Observable
+final class CheckInViewModel {
+    private(set) var data: CheckInViewData?
+    private(set) var selectedDate: Date
+    private(set) var errorMessage: String?
+    private let repository: any DiaryRepository
+    private let now: () -> Date
+    private let timeZone: () -> TimeZone
+
+    init(repository: any DiaryRepository, now: @escaping () -> Date, timeZone: @escaping () -> TimeZone) throws {
+        self.repository = repository
+        self.now = now
+        self.timeZone = timeZone
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone()
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: now()) else {
+            throw AppError.invalidOccurrence
+        }
+        selectedDate = yesterday
+    }
+
+    var displayTimeZone: TimeZone {
+        timeZone()
+    }
+
+    var maximumDate: Date {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone()
+        return calendar.startOfDay(for: now()).addingTimeInterval(-1)
+    }
+
+    func load() throws {
+        data = try Self.viewData(entries: repository.entries(), checkIns: repository.checkIns(),
+                                 date: now(), selectedDate: selectedDate, timeZone: timeZone())
+    }
+
+    func selectDate(_ date: Date) {
+        let previous = selectedDate
+        selectedDate = date
+        do {
+            try load()
+            errorMessage = nil
+        } catch {
+            selectedDate = previous
+            errorMessage = AppError(wrapping: error).userMessage
+        }
+    }
+
+    @discardableResult
+    func recordToday() -> Bool {
+        do {
+            let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
+            return try save(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+            return false
+        }
+    }
+
+    @discardableResult
+    func confirmSelectedDay() -> Bool {
+        do {
+            let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
+            let day = try DiaryDay(date: selectedDate, timeZone: timeZone())
+            return try save(NoPoopCheckIn(day: day, reportedAt: report, coverage: .completed))
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+            return false
+        }
+    }
+
+    private func save(_ checkIn: NoPoopCheckIn) throws -> Bool {
+        do {
+            try Task.checkCancellation()
+            try repository.saveCheckIn(checkIn)
+            errorMessage = nil
+            return true
+        } catch is CancellationError {
+            return false
+        } catch {
+            Log.report(error, context: Log.Context(operation: "diary.checkIn"))
+            throw error
+        }
+    }
+
+    static func viewData(
+        entries: [DiaryEntry], checkIns: [NoPoopCheckIn], date: Date, selectedDate: Date, timeZone: TimeZone
+    ) throws -> CheckInViewData {
+        let today = try DiaryDay(date: date, timeZone: timeZone)
+        return try CheckInViewData(
+            today: dayData(entries: entries, checkIns: checkIns, today: today,
+                           date: date, timeZone: timeZone),
+            selected: dayData(entries: entries, checkIns: checkIns, today: today,
+                              date: selectedDate, timeZone: timeZone)
+        )
+    }
+
+    private static func dayData(
+        entries: [DiaryEntry], checkIns: [NoPoopCheckIn], today: DiaryDay, date: Date, timeZone: TimeZone
+    ) throws -> CheckInDayViewData {
+        let day = try DiaryDay(date: date, timeZone: timeZone)
+        var dateStyle = Date.FormatStyle.dateTime.year().month(.abbreviated).day()
+        dateStyle.timeZone = timeZone
+        let label = date.formatted(dateStyle)
+        if entries.contains(where: { DiaryDay(occurrence: $0.occurrence) == day }) {
+            return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.hasEntries", bundle: .module),
+                                      detail: String(localized: "checkIn.entriesDetail", bundle: .module), canRecord: false)
+        }
+        guard let checkIn = checkIns.first(where: { $0.day == day }) else {
+            return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.unknown", bundle: .module),
+                                      detail: String(localized: "checkIn.unknownDetail", bundle: .module),
+                                      canRecord: day <= today)
+        }
+        if checkIn.coverage == .completed {
+            return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.completed", bundle: .module),
+                                      detail: String(localized: "checkIn.completedDetail", bundle: .module), canRecord: false)
+        }
+        guard let zone = TimeZone(secondsFromGMT: checkIn.reportedAt.utcOffsetSeconds) else {
+            throw AppError.invalidStoredData
+        }
+        var timeStyle = Date.FormatStyle.dateTime.year().month(.abbreviated).day().hour().minute()
+        timeStyle.timeZone = zone
+        let reported = checkIn.reportedAt.instant.formatted(timeStyle)
+        return CheckInDayViewData(
+            dateLabel: label,
+            status: day == today ? String(localized: "checkIn.noneSoFar", bundle: .module)
+                : String(localized: "checkIn.partial", bundle: .module),
+            detail: String(localized: "checkIn.partialDetail \(reported)", bundle: .module), canRecord: day < today
+        )
+    }
+}

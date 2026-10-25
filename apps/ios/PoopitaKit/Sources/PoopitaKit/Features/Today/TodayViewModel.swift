@@ -5,6 +5,7 @@ import Observation
 @Observable
 final class TodayViewModel {
     private(set) var state: Loadable<TodayViewData> = .idle
+    private(set) var checkIn: CheckInViewModel?
     private(set) var composer: EntryEditorViewModel?
     private(set) var editor: EntryEditorViewModel?
     private(set) var feedback: TodayFeedbackViewData?
@@ -29,6 +30,10 @@ final class TodayViewModel {
             do {
                 try Task.checkCancellation()
                 let entries = try repository.entries()
+                if checkIn == nil {
+                    checkIn = try CheckInViewModel(repository: repository, now: now, timeZone: timeZone)
+                }
+                try checkIn?.load()
                 if composer == nil || composer?.hasChanges == false {
                     composer = try makeComposer()
                 }
@@ -64,8 +69,9 @@ final class TodayViewModel {
 
     func savedComposer() {
         do {
+            let message = composer?.saveMessage ?? String(localized: "diary.saved", bundle: .module)
             composer = try makeComposer()
-            feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "diary.saved", bundle: .module))
+            feedback = TodayFeedbackViewData(id: UUID(), message: message)
             errorMessage = nil
             load()
         } catch {
@@ -74,7 +80,14 @@ final class TodayViewModel {
     }
 
     func savedEditor() {
-        feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "diary.updated", bundle: .module))
+        let message = editor?.saveMessage ?? String(localized: "diary.updated", bundle: .module)
+        feedback = TodayFeedbackViewData(id: UUID(), message: message)
+        errorMessage = nil
+        load()
+    }
+
+    func savedCheckIn() {
+        feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "checkIn.saved", bundle: .module))
         errorMessage = nil
         load()
     }

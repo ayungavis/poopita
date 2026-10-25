@@ -6,6 +6,7 @@ import Observation
 final class EntryEditorViewModel: Identifiable {
     private(set) var draft: EntryEditorViewData
     private(set) var error: AppError?
+    private(set) var saveMessage: String?
     private(set) var canUndo: Bool
     private let repository: any DiaryRepository
     let id: UUID
@@ -96,7 +97,11 @@ final class EntryEditorViewModel: Identifiable {
                 id: id, occurrence: occurrence, stoolType: draft.stoolType,
                 amount: amount, effort: effort, note: draft.note
             )
-            try repository.save(entry)
+            let result = try repository.save(entry)
+            saveMessage = result == .dayUpdated
+                ? String(localized: "diary.dayUpdated", bundle: .module)
+                : isEditing ? String(localized: "diary.updated", bundle: .module)
+                : String(localized: "diary.saved", bundle: .module)
             original = entry
             error = nil
             return true

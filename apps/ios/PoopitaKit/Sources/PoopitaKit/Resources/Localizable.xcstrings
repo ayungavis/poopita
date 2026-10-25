@@ -4,6 +4,294 @@
     "" : {
 
     },
+    "checkIn.completed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No poop that day"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak BAB pada hari itu"
+          }
+        }
+      }
+    },
+    "checkIn.completedDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You explicitly confirmed no bowel movements for the whole day."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda mengonfirmasi tidak BAB sepanjang hari tersebut."
+          }
+        }
+      }
+    },
+    "checkIn.confirmPast" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm no poop that day"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konfirmasi tidak BAB pada hari itu"
+          }
+        }
+      }
+    },
+    "checkIn.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari"
+          }
+        }
+      }
+    },
+    "checkIn.entriesDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A day with an entry cannot be marked as no poop."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari yang memiliki catatan BAB tidak dapat ditandai tidak BAB."
+          }
+        }
+      }
+    },
+    "checkIn.hasEntries" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entries recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ada catatan BAB"
+          }
+        }
+      }
+    },
+    "checkIn.markToday" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark none so far today"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tandai belum BAB sejauh ini"
+          }
+        }
+      }
+    },
+    "checkIn.noneSoFar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None so far today"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum BAB sejauh ini"
+          }
+        }
+      }
+    },
+    "checkIn.partial" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partial check-in"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laporan sebagian hari"
+          }
+        }
+      }
+    },
+    "checkIn.partialDetail %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None reported by %@. The rest of that day is unconfirmed."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum BAB sampai %@. Sisa hari tersebut belum dikonfirmasi."
+          }
+        }
+      }
+    },
+    "checkIn.pastDay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Past day check-in"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lapor hari sebelumnya"
+          }
+        }
+      }
+    },
+    "checkIn.saved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check-in recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laporan dicatat"
+          }
+        }
+      }
+    },
+    "checkIn.today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today’s check-in"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lapor hari ini"
+          }
+        }
+      }
+    },
+    "checkIn.unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum dicatat"
+          }
+        }
+      }
+    },
+    "checkIn.unknownDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No entry or check-in. What happened is unknown."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum ada catatan atau laporan. Belum diketahui apakah terjadi BAB."
+          }
+        }
+      }
+    },
+    "diary.dayUpdated" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day updated"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari diperbarui"
+          }
+        }
+      }
+    },
+    "error.checkInConflict" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This day already has an entry. Edit or delete its entries before confirming no poop."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hari ini sudah memiliki catatan. Ubah atau hapus catatannya sebelum mengonfirmasi tidak BAB."
+          }
+        }
+      }
+    },
+    "error.invalidCheckIn" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a completed past day to confirm no poop. Today can only be marked as none so far."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih hari yang sudah berlalu untuk mengonfirmasi tidak BAB. Hari ini hanya dapat ditandai belum BAB sejauh ini."
+          }
+        }
+      }
+    },
     "diary.deleted" : {
       "localizations" : {
         "en" : {

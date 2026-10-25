@@ -16,6 +16,8 @@ public enum AppError: Error, Equatable, Sendable {
     case invalidOccurrence
     case invalidObservation
     case noteTooLong
+    case invalidCheckIn
+    case checkInConflict
     case nothingToUndo
     case unexpected
 
@@ -51,6 +53,10 @@ public enum AppError: Error, Equatable, Sendable {
             String(localized: "error.invalidObservation", bundle: .module)
         case .noteTooLong:
             String(localized: "error.noteTooLong", bundle: .module)
+        case .invalidCheckIn:
+            String(localized: "error.invalidCheckIn", bundle: .module)
+        case .checkInConflict:
+            String(localized: "error.checkInConflict", bundle: .module)
         case .nothingToUndo:
             String(localized: "error.nothingToUndo", bundle: .module)
         case .unexpected:
@@ -88,6 +94,8 @@ extension AppError {
         case .invalidOccurrence: "invalidOccurrence"
         case .invalidObservation: "invalidObservation"
         case .noteTooLong: "noteTooLong"
+        case .invalidCheckIn: "invalidCheckIn"
+        case .checkInConflict: "checkInConflict"
         case .nothingToUndo: "nothingToUndo"
         }
     }
