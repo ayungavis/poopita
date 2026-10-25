@@ -125,7 +125,7 @@ final class TodayViewModel {
         )
     }
 
-    private static func row(_ entry: DiaryEntry) throws -> TodayEntryViewData {
+    static func row(_ entry: DiaryEntry) throws -> TodayEntryViewData {
         guard let zone = TimeZone(secondsFromGMT: entry.occurrence.utcOffsetSeconds) else {
             throw AppError.invalidStoredData
         }

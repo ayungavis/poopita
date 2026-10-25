@@ -47,6 +47,19 @@ private func isFeature(_ file: LayerFile, suffix: String) -> Bool {
 private let networkingTokens = ["APIClient", "Endpoint", "DTO"]
 
 struct LayeringConventionsTests {
+    @Test func viewDataDoesNotExposeDomainTypes() throws {
+        let domain = try domainTypes()
+        var offenders: [String] = []
+        for file in try files() where file.path.hasSuffix("ViewData.swift") {
+            for (index, line) in file.lines.enumerated() where !line.trimmingCharacters(in: .whitespaces).hasPrefix("//") {
+                for type in domain where names(type, in: line) {
+                    offenders.append("\(file.path):\(index + 1) exposes \(type)")
+                }
+            }
+        }
+        #expect(offenders.isEmpty, "ViewData is display-ready and names no domain types:\n\(offenders.joined(separator: "\n"))")
+    }
+
     @Test func viewDataDoesNotDependOnAViewType() throws {
         let views = try files().filter { $0.path.hasSuffix("View.swift") }
             .compactMap { file -> String? in

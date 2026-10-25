@@ -1,9 +1,12 @@
 import Foundation
 
-struct DiaryDay: Codable, Hashable, Comparable, Sendable {
+struct DiaryDay: Codable, Hashable, Comparable, Sendable, Identifiable {
     let year: Int
     let month: Int
     let day: Int
+    var id: String {
+        String(format: "%04d-%02d-%02d", year, month, day)
+    }
 
     init(occurrence: OccurrenceTime) {
         year = occurrence.year
