@@ -10,59 +10,57 @@ struct TodayContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xl) {
-                Text(verbatim: data.dateLabel).font(AppFont.body).foregroundStyle(AppColor.textSecondary)
-                if let composer = viewModel.composer {
-                    VStack(alignment: .leading, spacing: Spacing.lg) {
-                        Text("entry.recordTitle", bundle: .module).font(AppFont.title)
-                        EntryFieldsView(viewModel: composer)
-                        PrimaryButtonView(Text("entry.save", bundle: .module)) {
-                            if composer.save() {
-                                viewModel.savedComposer()
-                            }
-                        }
-                    }
-                    .padding(Spacing.lg)
-                    .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
-                    .id(composer.id)
-                }
-                if let checkIn = viewModel.checkIn {
-                    CheckInView(viewModel: checkIn, saved: viewModel.savedCheckIn)
-                }
+                TodayWeekStripView(
+                    weekDays: data.weekDays,
+                    selectDay: viewModel.selectDay(id:)
+                )
+
+                TodayRoutineRingView(
+                    heroStatus: data.heroStatus,
+                    canCheckIn: data.canCheckInToday,
+                    onLog: viewModel.presentLogSheet,
+                    onCheckIn: viewModel.recordCheckInToday
+                )
+
                 feedback
-                Label { Text("diary.localOnly", bundle: .module) } icon: {
+
+                Label {
+                    Text("diary.localOnly", bundle: .module)
+                } icon: {
                     Image(systemName: "iphone.gen3")
                 }
-                .font(AppFont.caption).foregroundStyle(AppColor.textSecondary)
-                Text("diary.entries", bundle: .module).font(AppFont.title).accessibilityAddTraits(.isHeader)
-                if data.entries.isEmpty {
-                    VStack(alignment: .leading, spacing: Spacing.sm) {
-                        Text("diary.emptyTitle", bundle: .module).font(AppFont.body.weight(.semibold))
-                        Text("diary.emptyDetail", bundle: .module).foregroundStyle(AppColor.textSecondary)
-                    }
-                    .padding(Spacing.lg)
-                }
-                LazyVStack(spacing: Spacing.md) {
-                    ForEach(data.entries) { entry in
-                        TodayEntryRowView(entry: entry) {
-                            editedID = entry.id
-                            viewModel.edit(id: entry.id)
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textSecondary)
+
+                VStack(alignment: .leading, spacing: Spacing.md) {
+                    Text("diary.entries", bundle: .module)
+                        .font(AppFont.title)
+                        .accessibilityAddTraits(.isHeader)
+
+                    if data.entries.isEmpty {
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            Text("diary.emptyTitle", bundle: .module)
+                                .font(AppFont.body.weight(.semibold))
+                            Text("diary.emptyDetail", bundle: .module)
+                                .foregroundStyle(AppColor.textSecondary)
                         }
-                        .accessibilityFocused($focusedEntry, equals: entry.id)
+                        .padding(Spacing.lg)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
+                    } else {
+                        LazyVStack(spacing: Spacing.md) {
+                            ForEach(data.entries) { entry in
+                                TodayEntryRowView(entry: entry) {
+                                    editedID = entry.id
+                                    viewModel.edit(id: entry.id)
+                                }
+                                .accessibilityFocused($focusedEntry, equals: entry.id)
+                            }
+                        }
                     }
                 }
             }
             .padding(Spacing.lg)
-        }
-        .safeAreaInset(edge: .bottom) {
-            if let composer = viewModel.composer {
-                PrimaryButtonView(Text("entry.save", bundle: .module)) {
-                    if composer.save() {
-                        viewModel.savedComposer()
-                    }
-                }
-                .padding(Spacing.lg)
-                .background(AppColor.surface)
-            }
         }
         .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.feedback) { _, message in
@@ -77,8 +75,10 @@ struct TodayContentView: View {
         }
         .sheet(item: editorBinding, onDismiss: dismissed) { editor in
             EntryEditorView(
-                viewModel: editor, saved: viewModel.savedEditor,
-                delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage
+                viewModel: editor,
+                saved: editor.isEditing ? viewModel.savedEditor : viewModel.savedComposer,
+                delete: { viewModel.delete(id: editor.id) },
+                deletionError: viewModel.errorMessage
             )
         }
     }
@@ -89,22 +89,31 @@ struct TodayContentView: View {
             VStack(alignment: .leading, spacing: Spacing.sm) {
                 Text(verbatim: message.message)
                 if data.canUndo {
-                    Button(action: viewModel.undo) { Text("diary.undo", bundle: .module) }
-                        .frame(minHeight: Spacing.touchTarget)
+                    Button(action: viewModel.undo) {
+                        Text("diary.undo", bundle: .module)
+                    }
+                    .frame(minHeight: Spacing.touchTarget)
                 }
             }
+            .padding(Spacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
         }
         if let error = viewModel.errorMessage {
-            Text(verbatim: error).foregroundStyle(AppColor.destructive)
+            Text(verbatim: error)
+                .foregroundStyle(AppColor.destructive)
         }
     }
 
     private var editorBinding: Binding<EntryEditorViewModel?> {
-        Binding(get: { viewModel.editor }, set: {
-            if $0 == nil {
-                viewModel.dismissEditor()
+        Binding(
+            get: { viewModel.editor },
+            set: {
+                if $0 == nil {
+                    viewModel.dismissEditor()
+                }
             }
-        })
+        )
     }
 
     private func dismissed() {

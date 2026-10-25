@@ -47,7 +47,7 @@ final class SettingsViewModel {
                 authorized = await reminderService.requestAuthorization()
             }
             guard authorized else {
-                errorMessage = String(localized: "settings.reminder.denied", bundle: .module)
+                errorMessage = String(localized: "settings.reminders.denied", bundle: .module)
                 return
             }
             await scheduleCurrentReminder()

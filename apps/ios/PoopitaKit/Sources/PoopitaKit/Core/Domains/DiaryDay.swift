@@ -8,6 +8,12 @@ struct DiaryDay: Codable, Hashable, Comparable, Sendable, Identifiable {
         String(format: "%04d-%02d-%02d", year, month, day)
     }
 
+    init(year: Int, month: Int, day: Int) {
+        self.year = year
+        self.month = month
+        self.day = day
+    }
+
     init(occurrence: OccurrenceTime) {
         year = occurrence.year
         month = occurrence.month

@@ -93,4 +93,42 @@ struct TodayFlowTests {
         #expect(composer.error == .invalidOccurrence)
         #expect(try repository.entries().isEmpty)
     }
+
+    @Test func weekStripContainsSevenDaysAndHeroStatusUpdatesOnSelection() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let date = Date(timeIntervalSince1970: 1_792_800_000)
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        let model = TodayViewModel(repository: repository, now: { date }, timeZone: { .gmt })
+        model.load()
+        await model.loadTask?.value
+        guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
+        #expect(data.weekDays.count == 7)
+        let foundToday = data.weekDays.first(where: { $0.isToday })
+        let todayItem = try #require(foundToday)
+        #expect(todayItem.isSelected)
+        #expect(data.heroStatus.isRecorded == false)
+        #expect(data.heroStatus.title == "Nothing logged yet")
+        #expect(data.canCheckInToday == true)
+
+        let composer = try #require(model.composer)
+        #expect(composer.save())
+        model.savedComposer()
+        await model.loadTask?.value
+        guard case let .loaded(updated) = model.state else { Issue.record("Expected loaded diary"); return }
+        #expect(updated.heroStatus.isRecorded == true)
+        #expect(updated.heroStatus.count == 1)
+        #expect(updated.canCheckInToday == false)
+
+        let yesterday = data.weekDays.first(where: { !$0.isToday })
+        if let yesterday {
+            model.selectDay(id: yesterday.dayID)
+            await model.loadTask?.value
+            guard case let .loaded(pastData) = model.state else { Issue.record("Expected loaded diary"); return }
+            let foundSelected = pastData.weekDays.first(where: { $0.dayID == yesterday.dayID })
+            let selectedItem = try #require(foundSelected)
+            #expect(selectedItem.isSelected)
+            #expect(pastData.entries.isEmpty)
+        }
+    }
 }

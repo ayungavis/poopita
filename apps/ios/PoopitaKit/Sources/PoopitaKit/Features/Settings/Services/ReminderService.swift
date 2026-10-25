@@ -36,7 +36,7 @@ final class UserNotificationsReminderService: ReminderService {
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
         let content = UNMutableNotificationContent()
         content.title = "Poopita"
-        content.body = String(localized: "settings.reminder.notificationBody", bundle: .module)
+        content.body = String(localized: "settings.reminders.notificationBody", bundle: .module)
         content.sound = .default
         let request = UNNotificationRequest(identifier: Self.identifier, content: content, trigger: trigger)
         try await center.add(request)
