@@ -5,6 +5,7 @@ public struct RootView: View {
     private let container: AppContainer
     @State private var model: TodayViewModel?
     @State private var historyModel: HistoryViewModel?
+    @State private var patternsModel: PatternsViewModel?
     @State private var errorMessage: String?
 
     public init(container: AppContainer) {
@@ -13,7 +14,7 @@ public struct RootView: View {
 
     public var body: some View {
         Group {
-            if let model, let historyModel {
+            if let model, let historyModel, let patternsModel {
                 TabView {
                     NavigationStack {
                         TodayView(viewModel: model)
@@ -33,6 +34,16 @@ public struct RootView: View {
                             Text("history.title", bundle: .module)
                         } icon: {
                             Image(systemName: "calendar")
+                        }
+                    }
+                    NavigationStack {
+                        PatternsView(viewModel: patternsModel)
+                    }
+                    .tabItem {
+                        Label {
+                            Text("patterns.title", bundle: .module)
+                        } icon: {
+                            Image(systemName: "chart.bar")
                         }
                     }
                 }
@@ -58,6 +69,7 @@ public struct RootView: View {
         do {
             model = try container.makeTodayViewModel()
             historyModel = try container.makeHistoryViewModel()
+            patternsModel = try container.makePatternsViewModel()
             errorMessage = nil
         } catch {
             errorMessage = AppError(wrapping: error).userMessage

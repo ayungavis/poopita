@@ -14,6 +14,10 @@ public final class AppContainer {
         try HistoryViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
     }
 
+    func makePatternsViewModel() throws -> PatternsViewModel {
+        try PatternsViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
+    }
+
     private func diaryRepository() throws -> any DiaryRepository {
         if let diary {
             return diary
