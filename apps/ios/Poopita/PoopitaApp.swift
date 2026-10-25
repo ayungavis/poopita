@@ -24,23 +24,20 @@ struct PoopitaApp: App {
             return
         }
 
-        SentrySDK.start { options in
-            options.dsn = dsn
-            options.environment = Bundle.main
-                .object(forInfoDictionaryKey: "SentryEnvironment") as? String ?? "development"
+        do {
+            let cache = try ProtectedStorage.directory(named: "Diagnostics")
+            try ProtectedStorage.prepare(cache)
+            let environment = Bundle.main.object(forInfoDictionaryKey: "SentryEnvironment") as? String ?? "development"
+            SentrySDK.start(options: SentryPrivacy.options(dsn: dsn, environment: environment, cacheDirectory: cache))
+        } catch {
+            Log.report(AppError.storageUnavailable)
+            return
         }
-        Log.breadcrumbRecorder = { error, context in
-            let crumb = Breadcrumb(level: .warning, category: "http")
-            crumb.message = String(describing: error)
-            crumb.data = context.fields
-            SentrySDK.addBreadcrumb(crumb)
-        }
-        Log.errorReporter = { error, context in
-            SentrySDK.capture(error: error) { scope in
-                for (key, value) in context.fields {
-                    scope.setTag(value: value, key: key)
-                }
-            }
+        Log.errorReporter = { diagnostic in
+            let event = Event(level: .error)
+            event.exceptions = [Exception(value: "Technical failure", type: diagnostic.code)]
+            event.tags = diagnostic.fields.merging(["code": diagnostic.code]) { _, value in value }
+            SentrySDK.capture(event: event)
         }
     }
 }

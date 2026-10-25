@@ -47,13 +47,38 @@ public enum Log {
         }
     }
 
-    // The app assigns these hooks once at startup before the first report.
-    public nonisolated(unsafe) static var errorReporter: (@Sendable (Error, Context) -> Void)?
-    public nonisolated(unsafe) static var breadcrumbRecorder: (@Sendable (Error, Context) -> Void)?
+    public struct Diagnostic: Equatable, Sendable {
+        public let code: String
+        public let fields: [String: String]
+    }
+
+    static let diagnosticCodes: Set<String> = [
+        "network", "sessionExpired", "serverRejected", "badRequest", "notFound", "conflict",
+        "rateLimited", "unavailable", "unexpected", "storageUnavailable", "storageRead", "storageWrite",
+        "invalidStoredData", "invalidOccurrence", "invalidObservation", "noteTooLong", "nothingToUndo",
+    ]
+    static let diagnosticOperations: Set<String> = ["home.load", "diary.load", "diary.save", "diary.delete", "diary.undo"]
+
+    public static func diagnostic(_ error: Error, context: Context) -> Diagnostic {
+        var fields: [String: String] = [:]
+        if let operation = context.operation, diagnosticOperations.contains(operation) {
+            fields["operation"] = operation
+        }
+        if let status = context.status, (100 ... 599).contains(status) {
+            fields["status"] = String(status)
+        }
+        return Diagnostic(code: AppError(wrapping: error).diagnosticCode, fields: fields)
+    }
+
+    /// Assigned once at startup before reporting begins.
+    public nonisolated(unsafe) static var errorReporter: (@Sendable (Diagnostic) -> Void)?
+    /// Assigned once at startup before reporting begins.
+    public nonisolated(unsafe) static var breadcrumbRecorder: (@Sendable (Diagnostic) -> Void)?
 
     public static func trail(_ error: Error, context: Context, logger: Logger = Log.network) {
-        logger.error("\(String(describing: error), privacy: .public) \(context.summary, privacy: .public)")
-        breadcrumbRecorder?(error, context)
+        let safe = diagnostic(error, context: context)
+        write(safe, logger: logger)
+        breadcrumbRecorder?(safe)
     }
 
     public static func report(
@@ -61,7 +86,17 @@ public enum Log {
         context: Context = Context(),
         logger: Logger = Log.app
     ) {
-        logger.error("\(String(describing: error), privacy: .public) \(context.summary, privacy: .public)")
-        errorReporter?(error, context)
+        let safe = diagnostic(error, context: context)
+        write(safe, logger: logger)
+        errorReporter?(safe)
+    }
+
+    private static func write(_ diagnostic: Diagnostic, logger: Logger) {
+        let operation = diagnostic.fields["operation", default: "none"]
+        let status = diagnostic.fields["status", default: "none"]
+        logger.error("""
+        Failure code=\(diagnostic.code, privacy: .public) \
+        operation=\(operation, privacy: .public) status=\(status, privacy: .public)
+        """)
     }
 }

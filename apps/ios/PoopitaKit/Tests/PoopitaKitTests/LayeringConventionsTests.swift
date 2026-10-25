@@ -53,7 +53,8 @@ struct LayeringConventionsTests {
         for file in try files() where isFeature(file, suffix: "ViewModel.swift") {
             for (index, line) in file.lines.enumerated() {
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
-                guard !trimmed.hasPrefix("private "), !trimmed.hasPrefix("init"),
+                guard line.prefix(while: { $0 == " " }).count == 4,
+                      !trimmed.hasPrefix("private "), !trimmed.hasPrefix("init"),
                       trimmed.contains("var ") || trimmed.contains("let ")
                 else { continue }
                 for type in domain where names(type, in: trimmed) {

@@ -2,24 +2,17 @@ import Foundation
 
 @MainActor
 public final class AppContainer {
-    private let client: any APIClient
+    private var diary: (any DiaryRepository)?
 
-    public init(client: (any APIClient)? = nil) {
-        self.client = client ?? URLSessionAPIClient(baseURL: Self.apiBaseURL)
-    }
+    public init() {}
 
-    public func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(repository: ServerServiceStatusRepository(client: client))
-    }
-
-    private static var apiBaseURL: URL {
-        let configured = Bundle.main.object(forInfoDictionaryKey: "APIBaseURL") as? String
-        guard let configured, let url = URL(string: configured), url.host()?.isEmpty == false else {
-            Log.network.error("APIBaseURL is missing or unusable; requests will fail")
-            // A compile-time constant that provably parses; every request against
-            // it fails and surfaces as AppError.network, which is the intent.
-            return URL(string: "http://localhost")!
+    func makeTodayViewModel() throws -> TodayViewModel {
+        if let diary {
+            return TodayViewModel(repository: diary, now: { .now }, timeZone: { .current })
         }
-        return url
+        let directory = try ProtectedStorage.directory(named: "Diary")
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        diary = repository
+        return TodayViewModel(repository: repository, now: { .now }, timeZone: { .current })
     }
 }

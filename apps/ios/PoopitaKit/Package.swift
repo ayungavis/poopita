@@ -10,6 +10,9 @@ let package = Package(
         .library(name: "PoopitaKit", targets: ["PoopitaKit"]),
         .library(name: "DesignSystem", targets: ["DesignSystem"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/getsentry/sentry-cocoa", exact: "8.58.4"),
+    ],
     targets: [
         .target(
             name: "DesignSystem",
@@ -17,12 +20,12 @@ let package = Package(
         ),
         .target(
             name: "PoopitaKit",
-            dependencies: ["DesignSystem"],
+            dependencies: ["DesignSystem", .product(name: "Sentry", package: "sentry-cocoa")],
             resources: [.process("Resources")]
         ),
         .testTarget(
             name: "PoopitaKitTests",
-            dependencies: ["PoopitaKit", "DesignSystem"]
+            dependencies: ["PoopitaKit", "DesignSystem", .product(name: "Sentry", package: "sentry-cocoa")]
         ),
     ]
 )

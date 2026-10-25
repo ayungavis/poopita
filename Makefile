@@ -9,7 +9,7 @@ TEST_FLAGS ?=
 .DEFAULT_GOAL := help
 
 .PHONY: help \
-        ios-generate ios-format ios-lint ios-test ios-build ios-run ios-validate
+        ios-generate ios-format ios-lint ios-test ios-build ios-storage-smoke ios-startup-smoke ios-run ios-validate
 
 ## Descriptions come from the `##` comments below, so this list cannot go stale.
 help:
@@ -38,7 +38,27 @@ ios-build: ios-generate ## Build for the iPhone simulator
 		&& grep -E '^\*\* BUILD' $(BUILD_LOG) \
 		|| (tail -30 $(BUILD_LOG); exit 1)
 
-ios-run: ios-build ## Build, install, and launch on the booted simulator
+ios-storage-smoke: ## Check real storage on the booted simulator
+	@set -eu; \
+	SMOKE_DIR=$$(mktemp -d /tmp/poopita-storage-smoke.XXXXXX); \
+	trap 'rm -rf "$$SMOKE_DIR"' EXIT; \
+	SDK_PATH=$$(xcrun --sdk iphonesimulator --show-sdk-path); \
+	xcrun --sdk iphonesimulator swiftc -swift-version 6 \
+		-target "$$(uname -m)-apple-ios26.0-simulator" -sdk "$$SDK_PATH" \
+		$(PACKAGE)/Sources/PoopitaKit/Core/AppError.swift \
+		$(PACKAGE)/Sources/PoopitaKit/Core/Stores/SwiftDataValueStore.swift \
+		$(PACKAGE)/Sources/PoopitaKit/Utilities/ProtectedStorage.swift \
+		apps/ios/SmokeTests/StorageSmoke.swift -o "$$SMOKE_DIR/StorageSmoke"; \
+	xcrun simctl spawn booted "$$SMOKE_DIR/StorageSmoke"
+
+ios-startup-smoke: ## Read-only Today startup check; app must be running without a debugger
+	@set -eu; \
+	APP_PID=$$(xcrun simctl spawn booted launchctl list \
+		| awk '$$3 ~ /^UIKitApplication:com\.ayungavis\.Poopita\[/ { print $$1 }'); \
+	test -n "$$APP_PID" || { echo "Poopita is not running on the booted simulator"; exit 1; }; \
+	xcrun lldb --batch -p "$$APP_PID" -s apps/ios/SmokeTests/StartupSmoke.lldb
+
+ios-run: ios-build ios-storage-smoke ## Build, check storage, install, and launch on the booted simulator
 	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -showBuildSettings 2>/dev/null \
 		| awk '$$1 == "BUILT_PRODUCTS_DIR" { print $$3; exit }'); \
 	xcrun simctl install booted "$$APP/$(SCHEME).app" && \

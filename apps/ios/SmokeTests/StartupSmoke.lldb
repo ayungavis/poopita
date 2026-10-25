@@ -1,0 +1,11 @@
+thread select 1
+expression -l objc++ -- @import UIKit
+expression -l objc++ -- UIWindowScene *$scene = (UIWindowScene *)[[[UIApplication sharedApplication] connectedScenes] anyObject]
+expression -l objc++ -- UIWindow *$window = $scene.windows.firstObject
+expression -l objc++ -- NSUInteger $fields = 0; NSUInteger $scrolls = 0; NSMutableArray *$pending = [NSMutableArray new]; if ($window != nil) { [$pending addObject:$window]; } while ($pending.count > 0) { UIView *v = $pending.lastObject; [$pending removeLastObject]; if ([v isKindOfClass:[UIDatePicker class]] || [v isKindOfClass:[UITextField class]]) { $fields++; } if ([v isKindOfClass:[UIScrollView class]] && !v.hidden && v.alpha > 0 && v.bounds.size.width > 0 && v.bounds.size.height > 0) { $scrolls++; } [$pending addObjectsFromArray:v.subviews]; }
+script target = lldb.debugger.GetSelectedTarget(); opts = lldb.SBExpressionOptions(); opts.SetLanguage(lldb.eLanguageTypeObjC_plus_plus)
+script scroll_count = target.EvaluateExpression("(unsigned long)$scrolls", opts).GetValueAsUnsigned(); field_count = target.EvaluateExpression("(unsigned long)$fields", opts).GetValueAsUnsigned(); active = target.EvaluateExpression("(long)$scene.activationState", opts).GetValueAsSigned()
+script covered = target.EvaluateExpression('(BOOL)[$window.subviews.lastObject.accessibilityLabel isEqualToString:@"Poopita"]', opts).GetValueAsUnsigned() != 0
+process detach
+script print("STARTUP_CHECK active=%s form_controls=%d scroll_views=%d privacy_cover=%s" % (active == 0, field_count, scroll_count, covered))
+script lldb.debugger.HandleCommand("quit 1") if active != 0 or scroll_count < 1 or field_count < 2 or covered else None
