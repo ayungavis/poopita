@@ -2,128 +2,126 @@ import DesignSystem
 import SwiftUI
 
 struct PatternsContentView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let viewModel: PatternsViewModel
     let data: PatternsViewData
+    @State private var selectedBucketID: String?
+    @State private var selectedDayID: String?
+
+    private var selectedBucket: PatternsActivityBucketViewData? {
+        data.activityBuckets.first(where: { $0.id == selectedBucketID }) ?? data.activityBuckets.last
+    }
+
+    private var visibleDays: [PatternsDayDetailViewData] {
+        guard data.range == .oneYear else { return data.dayDetails }
+        guard let selectedBucket else { return [] }
+        let ids = Set(selectedBucket.dayIDs)
+        return data.dayDetails.filter { ids.contains($0.dayID) }
+    }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Spacing.xl) {
+            LazyVStack(alignment: .leading, spacing: Spacing.xl) {
                 rangePicker
-                summarySection
-                PatternsActivityChartView(activity: data.dailyActivity, range: data.range)
-                timeOfDayCard
-                consistencyCard
+                summary
+                PatternsActivityChartView(data: data, selectedBucketID: $selectedBucketID)
+                bucketSelector
+                coverage(data.coverage)
+                PatternsAnalyticsSectionsView(data: data)
+                PatternsDayDetailSectionView(days: visibleDays, selectedDayID: $selectedDayID)
             }
             .padding(Spacing.lg)
+        }
+        .animation(reduceMotion ? nil : .easeInOut, value: data.range)
+        .onChange(of: data.range) { _, _ in
+            selectedBucketID = nil
+            selectedDayID = nil
+        }
+        .onChange(of: selectedBucketID) { _, _ in selectedDayID = selectedBucket?.dayIDs.last }
+        .onChange(of: selectedDayID) { _, dayID in
+            if data.range != .oneYear, let dayID {
+                selectedBucketID = data.activityBuckets.first { $0.dayIDs.contains(dayID) }?.id
+            }
         }
     }
 
     private var rangePicker: some View {
-        HStack(spacing: Spacing.sm) {
-            rangeButton(.sevenDays, titleKey: "patterns.range.sevenDays")
-            rangeButton(.thirtyDays, titleKey: "patterns.range.thirtyDays")
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Picker(selection: Binding(get: { data.range }, set: viewModel.selectRange)) {
+            ForEach(PatternsRange.allCases, id: \.self) { range in
+                Text(LocalizedStringKey(range.displayKey), bundle: .module)
+                    .tag(range)
+                    .accessibilityLabel(Text(LocalizedStringKey(range.displayKey + ".accessibility"), bundle: .module))
+            }
+        } label: { Text("patterns.chart.period", bundle: .module) }
+            .pickerStyle(.segmented)
+            .frame(minHeight: Spacing.touchTarget)
     }
 
-    private func rangeButton(_ range: PatternsRange, titleKey: LocalizedStringKey) -> some View {
-        let isSelected = data.range == range
-        return Button {
-            viewModel.selectRange(range)
-        } label: {
-            Text(titleKey, bundle: .module)
-                .font(AppFont.body.weight(isSelected ? .semibold : .regular))
-                .foregroundStyle(isSelected ? AppColor.accent : AppColor.textPrimary)
-                .padding(.horizontal, Spacing.lg)
-                .frame(minHeight: Spacing.touchTarget)
-                .background(
-                    isSelected ? AppColor.accent.opacity(0.15) : AppColor.surface,
-                    in: RoundedRectangle(cornerRadius: Spacing.md)
-                )
-                .overlay {
-                    RoundedRectangle(cornerRadius: Spacing.md)
-                        .stroke(
-                            isSelected ? AppColor.accent : AppColor.textSecondary.opacity(0.2),
-                            lineWidth: Spacing.borderWidth
-                        )
-                }
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-    }
-
-    private var summarySection: some View {
-        VStack(alignment: .leading, spacing: Spacing.xs) {
-            Text(verbatim: "\(data.totalEntries)")
-                .font(AppFont.largeTitle)
-                .foregroundStyle(AppColor.textPrimary)
-            Text(verbatim: data.summaryLabel)
-                .font(AppFont.body)
-                .foregroundStyle(AppColor.textPrimary)
+    private var summary: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             Text(verbatim: data.dateRangeLabel)
+                .font(AppFont.body)
+                .foregroundStyle(AppColor.textSecondary)
+            Text(verbatim: data.totalEntries.formatted())
+                .font(AppFont.largeTitle)
+                .monospacedDigit()
+            Text("patterns.dashboard.entries", bundle: .module).font(AppFont.body)
+            Text("patterns.dashboard.context", bundle: .module)
                 .font(AppFont.caption)
                 .foregroundStyle(AppColor.textSecondary)
         }
         .accessibilityElement(children: .combine)
     }
 
-    private var timeOfDayCard: some View {
-        VStack(alignment: .leading, spacing: Spacing.lg) {
-            Text("patterns.timeOfDay.title", bundle: .module)
-                .font(AppFont.title)
-                .foregroundStyle(AppColor.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-
-            if data.timeOfDay.hasEntries {
-                VStack(spacing: Spacing.md) {
-                    ForEach(data.timeOfDay.periods) { period in
-                        PatternsDistributionRowView(
-                            title: period.title,
-                            count: period.count,
-                            ratio: period.ratio
-                        )
-                    }
+    private var bucketSelector: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Picker(selection: Binding(get: { selectedBucket?.id ?? "" }, set: { selectedBucketID = $0 })) {
+                ForEach(data.activityBuckets) { bucket in Text(verbatim: bucket.detailLabel).tag(bucket.id) }
+            } label: { Text("patterns.chart.period", bundle: .module) }
+                .pickerStyle(.menu)
+            if let selectedBucket {
+                Text(verbatim: selectedBucket.detailLabel).font(AppFont.body.weight(.semibold))
+                Text("patterns.status.logged \(selectedBucket.count)", bundle: .module)
+                if selectedBucket.isPartial {
+                    Text("patterns.chart.partial", bundle: .module).foregroundStyle(AppColor.textSecondary)
                 }
-            } else {
-                Text("patterns.timeOfDay.empty", bundle: .module)
-                    .font(AppFont.body)
-                    .foregroundStyle(AppColor.textSecondary)
+                if data.range == .oneYear {
+                    coverageRows(selectedBucket.coverage)
+                }
             }
         }
+        .font(AppFont.caption)
+    }
+
+    private func coverage(_ values: PatternsCoverageViewData) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Text("patterns.coverage.title", bundle: .module).font(AppFont.title).accessibilityAddTraits(.isHeader)
+            coverageRows(values)
+            Text("patterns.coverage.detail", bundle: .module)
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textSecondary)
+        }
         .padding(Spacing.lg)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
     }
 
-    private var consistencyCard: some View {
-        VStack(alignment: .leading, spacing: Spacing.lg) {
-            Text("patterns.consistency.title", bundle: .module)
-                .font(AppFont.title)
-                .foregroundStyle(AppColor.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-
-            if data.consistency.hasEntries {
-                VStack(spacing: Spacing.md) {
-                    ForEach(data.consistency.items) { item in
-                        PatternsDistributionRowView(
-                            title: item.title,
-                            count: item.count,
-                            ratio: item.ratio
-                        )
-                    }
-                }
-                Text(verbatim: data.consistency.ratioLabel)
-                    .font(AppFont.caption)
-                    .foregroundStyle(AppColor.textSecondary)
-                    .padding(.top, Spacing.xs)
-            } else {
-                Text("patterns.consistency.empty", bundle: .module)
-                    .font(AppFont.body)
-                    .foregroundStyle(AppColor.textSecondary)
-            }
+    private func coverageRows(_ values: PatternsCoverageViewData) -> some View {
+        let columns = Array(repeating: GridItem(.flexible()), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2)
+        return LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
+            coverageValue("patterns.coverage.logged", count: values.loggedDays, symbol: "circle.fill")
+            coverageValue("patterns.coverage.confirmed", count: values.confirmedNoPoopDays, symbol: "circle")
+            coverageValue("patterns.coverage.partial", count: values.partialDays, symbol: "diamond.fill")
+            coverageValue("patterns.coverage.unknown", count: values.unrecordedDays, symbol: "minus")
         }
-        .padding(Spacing.lg)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
+    }
+
+    private func coverageValue(_ key: LocalizedStringKey, count: Int, symbol: String) -> some View {
+        HStack(spacing: Spacing.sm) {
+            Image(systemName: symbol).foregroundStyle(AppColor.accent).accessibilityHidden(true)
+            Text(verbatim: count.formatted()).font(AppFont.body.weight(.semibold)).monospacedDigit()
+            Text(key, bundle: .module).font(AppFont.caption)
+        }
+        .accessibilityElement(children: .combine)
     }
 }

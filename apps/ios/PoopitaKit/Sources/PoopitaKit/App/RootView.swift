@@ -11,7 +11,6 @@ public struct RootView: View {
     @State private var isUnlocked = false
     @State private var errorMessage: String?
     @State private var selectedTab = 0
-    @State private var tabBeforeLog = 0
 
     public init(container: AppContainer) {
         self.container = container
@@ -46,6 +45,21 @@ public struct RootView: View {
                             }
                         }
                         .tag(1)
+                        Button(action: presentLog) {
+                            Label {
+                                Text("tab.log", bundle: .module)
+                            } icon: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                        .tabItem {
+                            Label {
+                                Text("tab.log", bundle: .module)
+                            } icon: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                        .tag(4)
                         NavigationStack {
                             PatternsView(viewModel: patternsModel)
                         }
@@ -68,19 +82,10 @@ public struct RootView: View {
                             }
                         }
                         .tag(3)
-                        Button(action: presentLog) {
-                            Label {
-                                Text("tab.log", bundle: .module)
-                            } icon: {
-                                Image(systemName: "plus")
-                            }
-                        }
-                        .tag(4)
                     }
                     .onChange(of: selectedTab) { oldTab, newTab in
                         if newTab == 4 {
-                            tabBeforeLog = oldTab == 4 ? 0 : oldTab
-                            selectedTab = tabBeforeLog
+                            selectedTab = oldTab
                             presentLog()
                         }
                     }
