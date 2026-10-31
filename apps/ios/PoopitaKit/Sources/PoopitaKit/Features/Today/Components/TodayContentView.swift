@@ -7,58 +7,16 @@ struct TodayContentView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Spacing.xl) {
-                TodayWeekStripView(
-                    weekDays: data.weekDays,
-                    selectDay: viewModel.selectDay(id:)
-                )
-
-                TodayRoutineRingView(
-                    heroStatus: data.heroStatus,
-                    canCheckIn: data.canCheckInToday,
-                    onLog: viewModel.presentLogSheet,
-                    onCheckIn: viewModel.recordCheckInToday
-                )
-
+            VStack(alignment: .leading, spacing: Spacing.lg) {
+                TodayHeaderView(data: data)
+                TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
+                summary
                 feedback
-
-                Label {
-                    Text("diary.localOnly", bundle: .module)
-                } icon: {
-                    Image(systemName: "iphone.gen3")
-                }
-                .font(AppFont.caption)
-                .foregroundStyle(AppColor.textSecondary)
-
-                VStack(alignment: .leading, spacing: Spacing.md) {
-                    Text("diary.entries", bundle: .module)
-                        .font(AppFont.title)
-                        .accessibilityAddTraits(.isHeader)
-
-                    if data.entries.isEmpty {
-                        VStack(alignment: .leading, spacing: Spacing.sm) {
-                            Text("diary.emptyTitle", bundle: .module)
-                                .font(AppFont.body.weight(.semibold))
-                            Text("diary.emptyDetail", bundle: .module)
-                                .foregroundStyle(AppColor.textSecondary)
-                        }
-                        .padding(Spacing.lg)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
-                    } else {
-                        LazyVStack(spacing: Spacing.md) {
-                            ForEach(data.entries) { entry in
-                                TodayEntryRowView(entry: entry) {
-                                    viewModel.edit(id: entry.id)
-                                }
-                            }
-                        }
-                    }
-                }
+                day
             }
-            .padding(Spacing.lg)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
         }
-        .scrollDismissesKeyboard(.interactively)
         .onChange(of: viewModel.feedback) { _, message in
             if let message {
                 AccessibilityNotification.Announcement(message.message).post()
@@ -71,20 +29,71 @@ struct TodayContentView: View {
         }
     }
 
+    private var summary: some View {
+        HStack {
+            Text(verbatim: data.weekSummary)
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textSecondary)
+            Spacer()
+            if let fillIn = data.fillIn {
+                Button {
+                    viewModel.selectDay(id: fillIn.dayID)
+                } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Text(verbatim: fillIn.label)
+                        Image(systemName: "chevron.right").accessibilityHidden(true)
+                    }
+                    .font(AppFont.caption.weight(.semibold))
+                    .foregroundStyle(AppColor.accent)
+                    .frame(minHeight: Spacing.touchTarget)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var day: some View {
+        switch data.dayState {
+        case .logged:
+            TodayTimelineView(
+                timeline: data.timeline, startMinute: 0, edit: viewModel.edit(id:), log: viewModel.presentLogSheet
+            )
+        case let .waiting(headline, detail, partialNote):
+            let nowMinute = data.timeline.now?.minute ?? 0
+            VStack(spacing: 0) {
+                TodayWaitingView(
+                    headline: headline, detail: detail, partialNote: partialNote, hours: data.timeline.hours,
+                    nowMinute: nowMinute, checkIn: viewModel.recordCheckInToday
+                )
+                TodayTimelineView(
+                    timeline: data.timeline, startMinute: nowMinute, edit: viewModel.edit(id:),
+                    log: viewModel.presentLogSheet
+                )
+            }
+        case let .pastDay(status, detail, logLabel, canConfirm):
+            TodayPastDayView(
+                status: status, detail: detail, logLabel: logLabel, canConfirm: canConfirm,
+                log: viewModel.presentLogForSelectedDay, confirm: viewModel.confirmNoPoopForSelectedDay
+            )
+        }
+    }
+
     @ViewBuilder
     private var feedback: some View {
         if let message = viewModel.feedback {
-            VStack(alignment: .leading, spacing: Spacing.sm) {
+            HStack {
                 Text(verbatim: message.message)
+                Spacer()
                 if data.canUndo {
                     Button(action: viewModel.undo) {
                         Text("diary.undo", bundle: .module)
+                            .font(AppFont.body.weight(.semibold))
                     }
                     .frame(minHeight: Spacing.touchTarget)
                 }
             }
-            .padding(Spacing.md)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Spacing.md)
             .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
         }
         if let error = viewModel.errorMessage {

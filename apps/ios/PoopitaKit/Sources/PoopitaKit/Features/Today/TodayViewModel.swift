@@ -60,17 +60,8 @@ final class TodayViewModel {
     func selectDay(id: String) {
         let parts = id.split(separator: "-").compactMap { Int($0) }
         guard parts.count == 3 else { return }
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone()
-        guard let dayDate = calendar.date(from: DateComponents(
-            timeZone: timeZone(),
-            year: parts[0],
-            month: parts[1],
-            day: parts[2]
-        )),
-            let day = try? DiaryDay(date: dayDate, timeZone: timeZone()),
-            day <= todayDay()
-        else { return }
+        let day = DiaryDay(year: parts[0], month: parts[1], day: parts[2])
+        guard (try? day.validate()) != nil, day <= todayDay() else { return }
         selectedDay = day
         load()
     }
@@ -81,6 +72,38 @@ final class TodayViewModel {
                 composer = try makeComposer()
             }
             editor = composer
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+        }
+    }
+
+    func presentLogForSelectedDay() {
+        guard let day = selectedDay, day < todayDay() else {
+            presentLogSheet()
+            return
+        }
+        do {
+            let calendar = Self.calendar(timeZone())
+            let start = try Self.start(of: day, calendar: calendar)
+            let elapsedToday = now().timeIntervalSince(calendar.startOfDay(for: now()))
+            if composer == nil || composer?.hasChanges == false {
+                composer = try makeComposer(at: start.addingTimeInterval(elapsedToday))
+            }
+            editor = composer
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+        }
+    }
+
+    func confirmNoPoopForSelectedDay() {
+        guard let checkIn, let day = selectedDay, day < todayDay() else { return }
+        do {
+            try checkIn.selectDate(Self.start(of: day, calendar: Self.calendar(timeZone())))
+            if checkIn.confirmSelectedDay() {
+                savedCheckIn()
+            } else {
+                errorMessage = checkIn.errorMessage
+            }
         } catch {
             errorMessage = AppError(wrapping: error).userMessage
         }
@@ -160,11 +183,11 @@ final class TodayViewModel {
         }
     }
 
-    private func makeComposer() throws -> EntryEditorViewModel {
+    private func makeComposer(at date: Date? = nil) throws -> EntryEditorViewModel {
         try EntryEditorViewModel(
             repository: repository, entryID: UUID(),
             draft: EntryEditorViewData(
-                occurrenceDate: now(), timeZoneIdentifier: timeZone().identifier,
+                occurrenceDate: date ?? now(), timeZoneIdentifier: timeZone().identifier,
                 stoolType: nil, amount: nil, effort: nil, note: ""
             ), now: now
         )
@@ -196,48 +219,88 @@ extension TodayViewModel {
         timeZone: TimeZone,
         canUndo: Bool
     ) throws -> TodayViewData {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone
+        let calendar = calendar(timeZone)
         let today = try DiaryDay(date: date, timeZone: timeZone)
         let activeDay = selectedDay ?? today
-
+        let activeDate = try start(of: activeDay, calendar: calendar)
         let weekDays = try weekDayItems(
-            date: date,
-            activeDay: activeDay,
-            entries: entries,
-            checkIns: checkIns,
-            timeZone: timeZone
+            date: date, activeDay: activeDay, entries: entries, checkIns: checkIns, calendar: calendar
         )
+        let dayEntries = entries
+            .filter { DiaryDay(occurrence: $0.occurrence) == activeDay }
+            .sorted { $0.occurrence.instant < $1.occurrence.instant }
+        let weekLogs = weekDays.reduce(0) { total, item in
+            if case let .logs(count) = item.mark {
+                total + count
+            } else {
+                total
+            }
+        }
+        let fillIn = weekDays.first { $0.mark == .unrecorded && !$0.isSelected }.map {
+            TodayFillInViewData(dayID: $0.dayID, label: String(localized: "today.fillIn \($0.weekdayName)", bundle: .module))
+        }
 
-        let selectedEntries = entries.filter { DiaryDay(occurrence: $0.occurrence) == activeDay }
-        let checkIn = checkIns.first { $0.day == activeDay }
-
-        let heroStatus = heroStatusViewData(
-            entries: selectedEntries,
-            checkIn: checkIn,
-            isActiveToday: activeDay == today,
-            latestEntry: entries.first,
-            now: date
-        )
-        let canCheckIn = activeDay == today && selectedEntries.isEmpty && checkIn == nil
-
-        var headerStyle = Date.FormatStyle.dateTime.weekday(.wide).month(.abbreviated).day()
-        headerStyle.timeZone = timeZone
-        let activeDate = calendar.date(from: DateComponents(
-            timeZone: timeZone,
-            year: activeDay.year,
-            month: activeDay.month,
-            day: activeDay.day
-        )) ?? date
+        var monthStyle = Date.FormatStyle.dateTime.month(.wide).year()
+        monthStyle.timeZone = timeZone
+        var weekdayStyle = Date.FormatStyle.dateTime.weekday(.wide)
+        weekdayStyle.timeZone = timeZone
 
         return try TodayViewData(
-            dateLabel: activeDate.formatted(headerStyle),
-            weekDays: weekDays,
-            heroStatus: heroStatus,
-            canCheckInToday: canCheckIn,
-            entries: selectedEntries.map(row),
+            monthLabel: activeDate.formatted(monthStyle),
+            title: activeDay == today ? String(localized: "diary.today", bundle: .module)
+                : activeDate.formatted(weekdayStyle),
+            dayNumber: "\(activeDay.day)",
+            weekDays: weekDays.map(\.item),
+            weekSummary: String(localized: "today.thisWeek \(logCount(weekLogs))", bundle: .module),
+            fillIn: fillIn,
+            dayState: dayState(
+                hasLogs: !dayEntries.isEmpty,
+                latestEntry: entries.max { $0.occurrence.instant < $1.occurrence.instant },
+                checkIn: checkIns.first { $0.day == activeDay },
+                pastWeekday: activeDay == today ? nil : activeDate.formatted(weekdayStyle),
+                now: date
+            ),
+            timeline: timeline(
+                dayEntries: dayEntries, isToday: activeDay == today, now: date,
+                activeDate: activeDate, calendar: calendar
+            ),
             canUndo: canUndo
         )
+    }
+
+    static func logCount(_ count: Int) -> String {
+        count == 1 ? String(localized: "today.logCount.one", bundle: .module)
+            : String(localized: "today.logCount \(count)", bundle: .module)
+    }
+
+    static func calendar(_ timeZone: TimeZone) -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        calendar.firstWeekday = 2
+        return calendar
+    }
+
+    static func start(of day: DiaryDay, calendar: Calendar) throws -> Date {
+        guard let date = calendar.date(from: DateComponents(year: day.year, month: day.month, day: day.day)) else {
+            throw AppError.invalidOccurrence
+        }
+        return date
+    }
+
+    private struct WeekDay {
+        let item: TodayWeekDayViewData
+        let weekdayName: String
+        var mark: TodayWeekDayViewData.Mark {
+            item.mark
+        }
+
+        var dayID: String {
+            item.dayID
+        }
+
+        var isSelected: Bool {
+            item.isSelected
+        }
     }
 
     private static func weekDayItems(
@@ -245,133 +308,59 @@ extension TodayViewModel {
         activeDay: DiaryDay,
         entries: [DiaryEntry],
         checkIns: [NoPoopCheckIn],
-        timeZone: TimeZone
-    ) throws -> [TodayWeekDayViewData] {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone
+        calendar: Calendar
+    ) throws -> [WeekDay] {
         guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: date) else {
             throw AppError.invalidOccurrence
         }
-        let today = try DiaryDay(date: date, timeZone: timeZone)
+        let today = try DiaryDay(date: date, timeZone: calendar.timeZone)
+        var labelStyle = Date.FormatStyle.dateTime.weekday(.wide).month(.abbreviated).day()
+        var symbolStyle = Date.FormatStyle.dateTime.weekday(.narrow)
+        var nameStyle = Date.FormatStyle.dateTime.weekday(.wide)
+        labelStyle.timeZone = calendar.timeZone
+        symbolStyle.timeZone = calendar.timeZone
+        nameStyle.timeZone = calendar.timeZone
         return try (0 ..< 7).map { offset in
             let dayDate = calendar.date(byAdding: .day, value: offset, to: weekInterval.start) ?? date
-            let day = try DiaryDay(date: dayDate, timeZone: timeZone)
-            let dayEntries = entries.filter { DiaryDay(occurrence: $0.occurrence) == day }
-            let dayCheckIn = checkIns.first { $0.day == day }
-            let hasEntries = !dayEntries.isEmpty
-            let isConfirmed = dayCheckIn?.coverage == .completed
-            let isPartial = dayCheckIn?.coverage == .partial
-            let isToday = day == today
-            let isSelected = day == activeDay
-            let a11y = dayDate.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
-            return TodayWeekDayViewData(
-                dayID: day.id,
-                dayNumber: "\(day.day)",
-                weekdaySymbol: dayDate.formatted(.dateTime.weekday(.narrow)),
-                isToday: isToday,
-                isSelected: isSelected,
-                hasEntries: hasEntries,
-                isConfirmedNoPoop: isConfirmed,
-                isPartialCheckIn: isPartial,
-                accessibilityLabel: a11y
-            )
-        }
-    }
-
-    private static func heroStatusViewData(
-        entries: [DiaryEntry],
-        checkIn: NoPoopCheckIn?,
-        isActiveToday: Bool,
-        latestEntry: DiaryEntry?,
-        now: Date
-    ) -> TodayHeroStatusViewData {
-        if !entries.isEmpty {
-            return TodayHeroStatusViewData(
-                title: String(localized: "today.hero.logged \(entries.count)", bundle: .module),
-                detail: nil,
-                count: entries.count,
-                isRecorded: true,
-                isConfirmedNoPoop: false,
-                isPartialCheckIn: false
-            )
-        } else if let checkIn, checkIn.coverage == .completed {
-            return TodayHeroStatusViewData(
-                title: String(localized: "checkIn.completed", bundle: .module),
-                detail: nil,
-                count: 0,
-                isRecorded: false,
-                isConfirmedNoPoop: true,
-                isPartialCheckIn: false
-            )
-        } else if let checkIn, checkIn.coverage == .partial {
-            return TodayHeroStatusViewData(
-                title: String(localized: "checkIn.noneSoFar", bundle: .module),
-                detail: nil,
-                count: 0,
-                isRecorded: false,
-                isConfirmedNoPoop: false,
-                isPartialCheckIn: true
-            )
-        } else if isActiveToday, let latestEntry {
-            return TodayHeroStatusViewData(
-                title: elapsedSinceLastEntry(latestEntry, now: now),
-                detail: String(localized: "today.hero.sinceLast", bundle: .module),
-                count: 0,
-                isRecorded: false,
-                isConfirmedNoPoop: false,
-                isPartialCheckIn: false
-            )
-        } else {
-            let title = isActiveToday
-                ? String(localized: "today.hero.empty", bundle: .module)
-                : String(localized: "checkIn.unknown", bundle: .module)
-            return TodayHeroStatusViewData(
-                title: title,
-                detail: nil,
-                count: 0,
-                isRecorded: false,
-                isConfirmedNoPoop: false,
-                isPartialCheckIn: false
-            )
-        }
-    }
-
-    private static func elapsedSinceLastEntry(_ entry: DiaryEntry, now: Date) -> String {
-        let seconds = max(0, now.timeIntervalSince(entry.occurrence.instant))
-        return Duration.seconds(seconds).formatted(.units(allowed: [.days, .hours], width: .wide))
-    }
-
-    static func row(_ entry: DiaryEntry) throws -> TodayEntryViewData {
-        guard let zone = TimeZone(secondsFromGMT: entry.occurrence.utcOffsetSeconds) else {
-            throw AppError.invalidStoredData
-        }
-        var dateStyle = Date.FormatStyle.dateTime.year().month(.abbreviated).day()
-        var timeStyle = Date.FormatStyle.dateTime.hour().minute()
-        dateStyle.timeZone = zone
-        timeStyle.timeZone = zone
-        var observations: [String] = []
-        if let type = entry.stoolType {
-            guard let choice = EntryChoiceViewData.types.first(where: { $0.id == String(type) }) else {
-                throw AppError.invalidStoredData
+            let day = try DiaryDay(date: dayDate, timeZone: calendar.timeZone)
+            let logs = entries.count { DiaryDay(occurrence: $0.occurrence) == day }
+            let coverage = checkIns.first { $0.day == day }?.coverage
+            let mark: TodayWeekDayViewData.Mark = if logs > 0 {
+                .logs(logs)
+            } else if coverage == .completed {
+                .noPoop
+            } else if coverage == .partial {
+                .noneSoFar
+            } else if day > today {
+                .future
+            } else if day == today {
+                .open
+            } else {
+                .unrecorded
             }
-            observations.append(choice.title + " · " + choice.detail)
-        } else {
-            observations.append(String(localized: "entry.typeSkipped", bundle: .module))
+            let label = [dayDate.formatted(labelStyle), markLabel(mark)].compactMap(\.self).joined(separator: ", ")
+            return WeekDay(
+                item: TodayWeekDayViewData(
+                    dayID: day.id,
+                    dayNumber: "\(day.day)",
+                    weekdaySymbol: dayDate.formatted(symbolStyle),
+                    isToday: day == today,
+                    isSelected: day == activeDay,
+                    mark: mark,
+                    accessibilityLabel: label
+                ),
+                weekdayName: dayDate.formatted(nameStyle)
+            )
         }
-        if let amount = entry.amount {
-            let choice = EntryChoiceViewData.amounts.first { $0.id == amount.rawValue }
-            guard let choice else { throw AppError.invalidStoredData }
-            observations.append(String(localized: "entry.amountLabel", bundle: .module) + ": " + choice.title)
+    }
+
+    private static func markLabel(_ mark: TodayWeekDayViewData.Mark) -> String? {
+        switch mark {
+        case let .logs(count): logCount(count)
+        case .noPoop: String(localized: "checkIn.completed", bundle: .module)
+        case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
+        case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
+        case .future, .open: nil
         }
-        if let effort = entry.effort {
-            let choice = EntryChoiceViewData.efforts.first { $0.id == effort.rawValue }
-            guard let choice else { throw AppError.invalidStoredData }
-            observations.append(String(localized: "entry.effortLabel", bundle: .module) + ": " + choice.title)
-        }
-        return TodayEntryViewData(
-            id: entry.id, dateLabel: entry.occurrence.instant.formatted(dateStyle),
-            timeLabel: entry.occurrence.instant.formatted(timeStyle),
-            observations: observations.joined(separator: " · "), note: entry.note
-        )
     }
 }

@@ -1,10 +1,18 @@
 import Foundation
 
 struct TodayViewData: Equatable, Sendable {
-    let dateLabel: String
+    let monthLabel: String
+    let title: String
+    let dayNumber: String
     let weekDays: [TodayWeekDayViewData]
-    let heroStatus: TodayHeroStatusViewData
-    let canCheckInToday: Bool
-    let entries: [TodayEntryViewData]
+    let weekSummary: String
+    let fillIn: TodayFillInViewData?
+    let dayState: TodayDayStateViewData
+    let timeline: TodayTimelineViewData
     let canUndo: Bool
+}
+
+struct TodayFillInViewData: Equatable, Sendable {
+    let dayID: String
+    let label: String
 }

@@ -27,9 +27,10 @@ struct TodayFlowTests {
         #expect(next.draft.stoolType == nil && next.draft.amount == nil && next.draft.effort == nil)
         #expect(next.draft.note.isEmpty)
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
-        #expect(data.entries.count == 1)
-        #expect(!data.entries[0].timeLabel.isEmpty)
-        #expect(data.entries[0].observations.contains("Small"))
+        let logged = data.timeline.blocks.map(\.entry)
+        #expect(logged.count == 1)
+        #expect(!logged[0].timeLabel.isEmpty)
+        #expect(logged[0].observations.contains("Small"))
         let reopened = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         #expect(try reopened.entries().first?.note == "remember")
         model.edit(id: composer.id)
@@ -112,7 +113,7 @@ struct TodayFlowTests {
         #expect(!editor.isEditing)
     }
 
-    @Test func todayHeroShowsTimeSinceLatestEntryWhenThereIsNoEntryToday() async throws {
+    @Test func todayShowsTimeSinceLatestEntryWhenThereIsNoEntryToday() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let now = Date(timeIntervalSince1970: 1_792_800_000)
@@ -132,13 +133,14 @@ struct TodayFlowTests {
         await model.loadTask?.value
 
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
-        #expect(data.entries.isEmpty)
-        #expect(data.heroStatus.title.contains("2 days"))
-        #expect(data.heroStatus.title.contains("3 hours"))
-        #expect(data.heroStatus.detail == "since your last bowel movement")
+        #expect(data.timeline.blocks.isEmpty)
+        guard case let .waiting(headline, detail, _) = data.dayState else { Issue.record("Expected waiting"); return }
+        #expect(headline.contains("2 days"))
+        #expect(headline.contains("3 hours"))
+        #expect(detail?.hasPrefix("since your last log") == true)
     }
 
-    @Test func weekStripContainsSevenDaysAndHeroStatusUpdatesOnSelection() async throws {
+    @Test func weekStripContainsSevenDaysAndDayStateUpdatesOnSelection() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let date = Date(timeIntervalSince1970: 1_792_800_000)
@@ -151,10 +153,7 @@ struct TodayFlowTests {
         let foundToday = data.weekDays.first(where: { $0.isToday })
         let todayItem = try #require(foundToday)
         #expect(todayItem.isSelected)
-        #expect(data.heroStatus.isRecorded == false)
-        #expect(data.heroStatus.title == "Nothing logged yet")
-        #expect(data.heroStatus.detail == nil)
-        #expect(data.canCheckInToday == true)
+        #expect(data.dayState == .waiting(headline: "Nothing logged yet", detail: nil, partialNote: nil))
 
         let composer = try #require(model.composer)
         composer.pickRequiredObservations()
@@ -162,9 +161,8 @@ struct TodayFlowTests {
         model.savedComposer()
         await model.loadTask?.value
         guard case let .loaded(updated) = model.state else { Issue.record("Expected loaded diary"); return }
-        #expect(updated.heroStatus.isRecorded == true)
-        #expect(updated.heroStatus.count == 1)
-        #expect(updated.canCheckInToday == false)
+        #expect(updated.dayState == .logged)
+        #expect(updated.timeline.blocks.count == 1)
 
         let yesterday = data.weekDays.first(where: { !$0.isToday })
         if let yesterday {
@@ -174,7 +172,7 @@ struct TodayFlowTests {
             let foundSelected = pastData.weekDays.first(where: { $0.dayID == yesterday.dayID })
             let selectedItem = try #require(foundSelected)
             #expect(selectedItem.isSelected)
-            #expect(pastData.entries.isEmpty)
+            #expect(pastData.timeline.blocks.isEmpty)
         }
     }
 }

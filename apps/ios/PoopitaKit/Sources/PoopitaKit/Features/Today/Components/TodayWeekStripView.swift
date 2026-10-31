@@ -6,14 +6,11 @@ struct TodayWeekStripView: View {
     let selectDay: (String) -> Void
 
     var body: some View {
-        HStack(spacing: Spacing.xs) {
+        HStack(spacing: 0) {
             ForEach(weekDays) { item in
                 dayButton(item)
             }
         }
-        .padding(.horizontal, Spacing.xs)
-        .padding(.vertical, Spacing.sm)
-        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
     }
 
     private func dayButton(_ item: TodayWeekDayViewData) -> some View {
@@ -23,50 +20,38 @@ struct TodayWeekStripView: View {
             VStack(spacing: Spacing.xs) {
                 Text(verbatim: item.weekdaySymbol)
                     .font(AppFont.caption)
-                    .foregroundStyle(item.isSelected ? AppColor.accent : AppColor.textSecondary)
+                    .foregroundStyle(item.isSelected ? AppColor.onInk : AppColor.textSecondary)
                 Text(verbatim: item.dayNumber)
-                    .font(AppFont.body.weight(item.isSelected ? .semibold : .regular))
-                    .foregroundStyle(item.isSelected ? AppColor.accent : AppColor.textPrimary)
-                marker(item)
-                    .frame(width: Spacing.xs, height: Spacing.xs)
+                    .font(AppFont.title.weight(.regular))
+                    .foregroundStyle(numberColor(item))
+                TodayDayMarkView(mark: item.mark, isSelected: item.isSelected)
+                    .frame(height: Spacing.sm)
             }
+            .padding(.vertical, Spacing.sm)
             .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
-            .background(
-                item.isSelected ? AppColor.accent.opacity(0.15) : .clear,
-                in: RoundedRectangle(cornerRadius: Spacing.md)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: Spacing.md)
-                    .stroke(item.isSelected ? AppColor.accent : .clear, lineWidth: Spacing.borderWidth)
-            }
-            .overlay(alignment: .bottom) {
-                if item.isToday {
-                    Capsule()
-                        .fill(AppColor.accent)
-                        .frame(width: Spacing.md, height: Spacing.borderWidth * 2)
-                        .offset(y: Spacing.xs / 2)
+            .background {
+                if item.isSelected {
+                    Capsule().fill(AppColor.ink)
+                } else if item.isToday {
+                    Capsule().stroke(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .disabled(item.mark == .future)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: item.accessibilityLabel))
         .accessibilityAddTraits(item.isSelected ? .isSelected : [])
     }
 
-    @ViewBuilder
-    private func marker(_ item: TodayWeekDayViewData) -> some View {
-        if item.hasEntries {
-            Circle().fill(AppColor.accent)
-        } else if item.isConfirmedNoPoop {
-            Circle().stroke(AppColor.accent, lineWidth: Spacing.borderWidth)
-        } else if item.isPartialCheckIn {
-            Image(systemName: "diamond.fill")
-                .font(AppFont.caption)
-                .foregroundStyle(AppColor.accent)
+    private func numberColor(_ item: TodayWeekDayViewData) -> Color {
+        if item.isSelected {
+            AppColor.onInk
+        } else if item.mark == .future {
+            AppColor.marker
         } else {
-            Color.clear
+            AppColor.textPrimary
         }
     }
 }

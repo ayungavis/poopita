@@ -25,21 +25,23 @@ struct TodayView: View {
             }
         }
         .background(AppColor.background)
-        .navigationTitle(Text("diary.today", bundle: .module))
-        .font(AppFont.body)
-        .foregroundStyle(AppColor.textPrimary)
-        .tint(AppColor.accent)
-        .privacySensitive()
-        .task {
-            viewModel.load()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-            viewModel.load()
-        }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
+        #if os(iOS)
+            .toolbarVisibility(.hidden, for: .navigationBar)
+        #endif
+            .font(AppFont.body)
+            .foregroundStyle(AppColor.textPrimary)
+            .tint(AppColor.accent)
+            .privacySensitive()
+            .task {
                 viewModel.load()
             }
-        }
+            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+                viewModel.load()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    viewModel.load()
+                }
+            }
     }
 }

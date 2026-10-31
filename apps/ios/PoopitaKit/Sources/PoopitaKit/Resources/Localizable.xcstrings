@@ -1,9 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
+    "" : {},
     "checkIn.completed" : {
       "localizations" : {
         "en" : {
@@ -289,70 +287,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Catatan dihapus"
-          }
-        }
-      }
-    },
-    "diary.emptyDetail" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Whenever you’re ready, add a note about your day. There’s no daily goal."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saat siap, tambahkan catatan tentang hari Anda. Tidak ada target harian."
-          }
-        }
-      }
-    },
-    "diary.emptyTitle" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing recorded yet."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum ada catatan."
-          }
-        }
-      }
-    },
-    "diary.entries" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today’s entries"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Catatan hari ini"
-          }
-        }
-      }
-    },
-    "diary.localOnly" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only on this iPhone"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hanya di iPhone ini"
           }
         }
       }
@@ -1233,40 +1167,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pilih salah satu untuk menyimpan"
-          }
-        }
-      }
-    },
-    "entry.recordTitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a bowel movement"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tambahkan catatan BAB"
-          }
-        }
-      }
-    },
-    "entry.save" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save entry"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simpan catatan"
           }
         }
       }
@@ -3675,6 +3575,22 @@
         }
       }
     },
+    "today.fillIn %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill in %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lengkapi %@"
+          }
+        }
+      }
+    },
     "today.hero.empty" : {
       "localizations" : {
         "en" : {
@@ -3691,66 +3607,130 @@
         }
       }
     },
-    "today.hero.logged %lld" : {
+    "today.logCount %lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld logged today"
+            "value" : "%lld logs"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld tercatat hari ini"
+            "value" : "%lld catatan"
           }
         }
       }
     },
-    "today.hero.markNone" : {
+    "today.logCount.one" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Check in: none so far"
+            "value" : "1 log"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Laporkan: belum BAB sejauh ini"
+            "value" : "1 catatan"
           }
         }
       }
     },
-    "today.hero.recordButton" : {
+    "today.logFor %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Record it"
+            "value" : "Log for %@"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catat sekarang"
+            "value" : "Catat untuk %@"
           }
         }
       }
     },
-    "today.hero.sinceLast" : {
+    "today.notYet" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "since your last bowel movement"
+            "value" : "I haven't gone yet"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "sejak BAB terakhir"
+            "value" : "Saya belum BAB"
+          }
+        }
+      }
+    },
+    "today.notYetNote %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You said you hadn't gone yet at %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kamu bilang belum BAB pukul %@"
+          }
+        }
+      }
+    },
+    "today.since %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since %1$@ · %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sejak %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "today.sinceLastLog %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "since your last log, %1$@ at %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sejak catatan terakhir, %1$@ pukul %2$@"
+          }
+        }
+      }
+    },
+    "today.thisWeek %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ this week"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ minggu ini"
           }
         }
       }
