@@ -1,10 +1,13 @@
+import DesignSystem
 import Foundation
 
 @MainActor
 public final class AppContainer {
     private var diary: (any DiaryRepository)?
 
-    public init() {}
+    public init() {
+        AppFont.registerFonts()
+    }
 
     func makeTodayViewModel() throws -> TodayViewModel {
         try TodayViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })

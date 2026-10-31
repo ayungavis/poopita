@@ -7,4 +7,11 @@ public enum AppColor {
     public static let textSecondary = Color("textSecondary", bundle: .module)
     public static let accent = Color("accent", bundle: .module)
     public static let destructive = Color("destructive", bundle: .module)
+    public static let ink = Color("ink", bundle: .module)
+    public static let onInk = Color("onInk", bundle: .module)
+    public static let hairline = Color("hairline", bundle: .module)
+    public static let track = Color("track", bundle: .module)
+    public static let entry = Color("entry", bundle: .module)
+    public static let marker = Color("marker", bundle: .module)
+    public static let partial = Color("partial", bundle: .module)
 }

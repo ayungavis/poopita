@@ -1,8 +1,25 @@
+import CoreText
 import SwiftUI
 
 public enum AppFont {
-    public static let largeTitle = Font.system(.largeTitle, design: .rounded).weight(.bold)
-    public static let title = Font.system(.title2, design: .rounded).weight(.semibold)
-    public static let body = Font.system(.body, design: .rounded)
-    public static let caption = Font.system(.caption, design: .rounded)
+    public static let largeTitle = Font.custom(sans, size: 30, relativeTo: .largeTitle).weight(.semibold)
+    public static let title = Font.custom(sans, size: 22, relativeTo: .title2).weight(.semibold)
+    public static let body = Font.custom(sans, size: 16, relativeTo: .body)
+    public static let caption = Font.custom(sans, size: 13, relativeTo: .footnote)
+    public static let display = Font.custom(serif, size: 48, relativeTo: .largeTitle)
+    public static let wordmark = Font.custom(serif, size: 34, relativeTo: .title)
+
+    private static let sans = "DM Sans"
+    private static let serif = "Instrument Serif"
+
+    private static let registration: Void = {
+        let urls = ["Fonts", nil].flatMap { Bundle.module.urls(forResourcesWithExtension: "ttf", subdirectory: $0) ?? [] }
+        for url in urls {
+            CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        }
+    }()
+
+    public static func registerFonts() {
+        registration
+    }
 }

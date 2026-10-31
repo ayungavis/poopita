@@ -5,7 +5,7 @@ struct EntryIllustrationView: View {
     let kind: EntryIllustrationKind
 
     var body: some View {
-        image.renderingMode(.original).resizable().scaledToFit()
+        image.renderingMode(.template).resizable().scaledToFit()
             .frame(width: Spacing.illustrationWidth, height: Spacing.illustrationHeight)
             .accessibilityHidden(true)
     }

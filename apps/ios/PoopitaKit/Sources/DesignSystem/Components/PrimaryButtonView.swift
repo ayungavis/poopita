@@ -13,9 +13,11 @@ public struct PrimaryButtonView: View {
         Button(action: action) {
             title
                 .font(AppFont.body.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
+                .foregroundStyle(AppColor.onInk)
+                .frame(maxWidth: .infinity, minHeight: Spacing.buttonHeight)
         }
         .buttonStyle(.borderedProminent)
-        .tint(AppColor.accent)
+        .buttonBorderShape(.capsule)
+        .tint(AppColor.ink)
     }
 }
