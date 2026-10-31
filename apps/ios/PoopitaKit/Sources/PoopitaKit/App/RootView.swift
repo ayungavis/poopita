@@ -89,7 +89,7 @@ public struct RootView: View {
                             presentLog()
                         }
                     }
-                    .sheet(item: editorBinding) { editor in
+                    .fullScreenModal(item: editorBinding) { editor in
                         EntryEditorView(
                             viewModel: editor,
                             saved: editor.isEditing ? model.savedEditor : model.savedComposer,

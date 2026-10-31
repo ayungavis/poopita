@@ -73,6 +73,7 @@ struct HistoryFlowTests {
         model.addEntry()
         let editor = try #require(model.editor)
         try editor.setDate(date("2026-10-03T08:00:00Z"))
+        editor.pickRequiredObservations()
         #expect(editor.save())
         model.savedEditor()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-03")

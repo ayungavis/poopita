@@ -453,22 +453,6 @@
         }
       }
     },
-    "entry.amount" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amount · Optional"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jumlah · Opsional"
-          }
-        }
-      }
-    },
     "entry.amount.large" : {
       "localizations" : {
         "en" : {
@@ -565,6 +549,54 @@
         }
       }
     },
+    "entry.blood.none" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No blood"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada darah"
+          }
+        }
+      }
+    },
+    "entry.blood.seen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood seen"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ada darah"
+          }
+        }
+      }
+    },
+    "entry.bloodLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darah"
+          }
+        }
+      }
+    },
     "entry.cancel" : {
       "localizations" : {
         "en" : {
@@ -581,50 +613,162 @@
         }
       }
     },
-    "entry.clearAmount" : {
+    "entry.close" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear amount"
+            "value" : "Close"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hapus jumlah"
+            "value" : "Tutup"
           }
         }
       }
     },
-    "entry.clearEffort" : {
+    "entry.color.black" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear effort"
+            "value" : "Black"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hapus usaha"
+            "value" : "Hitam"
           }
         }
       }
     },
-    "entry.date" : {
+    "entry.color.brown" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Date"
+            "value" : "Brown"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tanggal"
+            "value" : "Cokelat"
+          }
+        }
+      }
+    },
+    "entry.color.green" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hijau"
+          }
+        }
+      }
+    },
+    "entry.color.orange" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oranye"
+          }
+        }
+      }
+    },
+    "entry.color.pale" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pale"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pucat"
+          }
+        }
+      }
+    },
+    "entry.color.red" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merah"
+          }
+        }
+      }
+    },
+    "entry.color.tan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tan"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cokelat muda"
+          }
+        }
+      }
+    },
+    "entry.color.yellow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yellow"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuning"
+          }
+        }
+      }
+    },
+    "entry.colorLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warna"
           }
         }
       }
@@ -805,6 +949,86 @@
         }
       }
     },
+    "entry.duration.fiveToTen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5–10 min"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5–10 mnt"
+          }
+        }
+      }
+    },
+    "entry.duration.overTen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10+ min"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10+ mnt"
+          }
+        }
+      }
+    },
+    "entry.duration.twoToFive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2–5 min"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2–5 mnt"
+          }
+        }
+      }
+    },
+    "entry.duration.underTwo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "< 2 min"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "< 2 mnt"
+          }
+        }
+      }
+    },
+    "entry.durationLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durasi"
+          }
+        }
+      }
+    },
     "entry.editHint" : {
       "localizations" : {
         "en" : {
@@ -833,22 +1057,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit catatan"
-          }
-        }
-      }
-    },
-    "entry.effort" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effort · Optional"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usaha · Opsional"
           }
         }
       }
@@ -933,50 +1141,50 @@
         }
       }
     },
-    "entry.moreDetails" : {
+    "entry.missing %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add more details"
+            "value" : "Pick %@ to save"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tambahkan detail"
+            "value" : "Pilih %@ untuk menyimpan"
           }
         }
       }
     },
-    "entry.note" : {
+    "entry.newTitle" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Note · Optional"
+            "value" : "New log"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catatan · Opsional"
+            "value" : "Catatan baru"
           }
         }
       }
     },
-    "entry.noteLimit" : {
+    "entry.noteLabel" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Up to 500 characters"
+            "value" : "Note"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maksimal 500 karakter"
+            "value" : "Catatan"
           }
         }
       }
@@ -993,6 +1201,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tambahkan catatan jika Anda mau"
+          }
+        }
+      }
+    },
+    "entry.optional" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opsional"
+          }
+        }
+      }
+    },
+    "entry.pickOne" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick one to save"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih salah satu untuk menyimpan"
           }
         }
       }
@@ -1047,50 +1287,130 @@
         }
       }
     },
-    "entry.skipType" : {
+    "entry.saveLog" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skip type"
+            "value" : "Save log"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lewati jenis"
+            "value" : "Simpan catatan"
           }
         }
       }
     },
-    "entry.stoolType" : {
+    "entry.suggestion.bloating" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stool type · Optional"
+            "value" : "Bloating"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jenis tinja · Opsional"
+            "value" : "Kembung"
           }
         }
       }
     },
-    "entry.time" : {
+    "entry.suggestion.cramp" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Time"
+            "value" : "Stomach cramp"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Waktu"
+            "value" : "Kram perut"
+          }
+        }
+      }
+    },
+    "entry.suggestion.gassy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gassy"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banyak gas"
+          }
+        }
+      }
+    },
+    "entry.suggestion.incomplete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Felt incomplete"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terasa belum tuntas"
+          }
+        }
+      }
+    },
+    "entry.suggestion.rectalPain" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rectal pain"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyeri dubur"
+          }
+        }
+      }
+    },
+    "entry.suggestion.smelly" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smelly"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bau"
+          }
+        }
+      }
+    },
+    "entry.suggestion.sticky" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sticky"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lengket"
           }
         }
       }
@@ -1203,6 +1523,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jenis 7"
+          }
+        }
+      }
+    },
+    "entry.typeLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipe"
           }
         }
       }
@@ -1368,22 +1704,6 @@
         }
       }
     },
-    "error.noteTooLong" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep your note to 500 characters or fewer."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batasi catatan hingga 500 karakter."
-          }
-        }
-      }
-    },
     "error.notFound" : {
       "localizations" : {
         "en" : {
@@ -1396,6 +1716,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kami tidak dapat menemukan yang Anda cari."
+          }
+        }
+      }
+    },
+    "error.noteTooLong" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep your note to 500 characters or fewer."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batasi catatan hingga 500 karakter."
           }
         }
       }
@@ -1962,6 +2298,22 @@
         }
       }
     },
+    "patterns.chart.timeLocal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Times are shown as recorded at the occurrence location."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu ditampilkan sesuai catatan di lokasi kejadian."
+          }
+        }
+      }
+    },
     "patterns.chart.timeline" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1975,22 +2327,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Waktu BAB yang dicatat hari ini"
-          }
-        }
-      }
-    },
-    "patterns.chart.timeLocal" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Times are shown as recorded at the occurrence location."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waktu ditampilkan sesuai catatan di lokasi kejadian."
           }
         }
       }
@@ -2891,22 +3227,6 @@
         }
       }
     },
-    "settings.appLock.disabled" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App lock disabled."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kunci aplikasi dinonaktifkan."
-          }
-        }
-      }
-    },
     "settings.appLock.disableReason" : {
       "localizations" : {
         "en" : {
@@ -2919,6 +3239,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifikasi untuk menonaktifkan kunci aplikasi."
+          }
+        }
+      }
+    },
+    "settings.appLock.disabled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App lock disabled."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci aplikasi dinonaktifkan."
           }
         }
       }

@@ -103,7 +103,7 @@ struct DiaryPersistenceTests {
         )
         let draft = EntryEditorViewData(
             occurrenceDate: entry.occurrence.instant, timeZoneIdentifier: entry.occurrence.timeZoneIdentifier,
-            stoolType: nil, amount: nil, effort: nil, note: "preserve this input"
+            stoolType: 4, amount: "small", effort: "easy", blood: "none", note: "preserve this input"
         )
         model.updateDraft(draft)
         model.save()
@@ -192,7 +192,7 @@ struct DiaryPersistenceTests {
     static func entry(note: String) throws -> DiaryEntry {
         try DiaryEntry(
             id: UUID(), occurrence: OccurrenceTime(instant: Date(timeIntervalSince1970: 1_793_511_000), timeZone: .gmt),
-            stoolType: 4, amount: .small, effort: .easy, note: note
+            stoolType: 4, amount: .small, effort: .easy, blood: DiaryEntry.Blood.none, note: note
         )
     }
 }

@@ -30,7 +30,7 @@ struct HistoryContentView: View {
                 Button(action: viewModel.showToday) { Text("history.today", bundle: .module) }
             }
         }
-        .sheet(item: editorBinding, onDismiss: dismissed) { editor in
+        .fullScreenModal(item: editorBinding, onDismiss: dismissed) { editor in
             EntryEditorView(
                 viewModel: editor, saved: viewModel.savedEditor,
                 delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage

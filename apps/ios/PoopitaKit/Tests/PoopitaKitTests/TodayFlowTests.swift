@@ -18,6 +18,7 @@ struct TodayFlowTests {
         composer.setAmount("small")
         composer.setEffort("moderate")
         composer.setNote("remember")
+        composer.pickRequiredObservations()
         #expect(composer.save())
         model.savedComposer()
         await model.loadTask?.value
@@ -34,12 +35,12 @@ struct TodayFlowTests {
         model.edit(id: composer.id)
         let editor = try #require(model.editor)
         #expect(editor.isEditing)
-        editor.setAmount(nil)
+        editor.setAmount("large")
         #expect(editor.draft.effort == "moderate" && editor.draft.note == "remember")
         #expect(editor.save())
         model.savedEditor()
         await model.loadTask?.value
-        #expect(try repository.entries().first?.amount == nil)
+        #expect(try repository.entries().first?.amount == .large)
         model.undo()
         await model.loadTask?.value
         #expect(try repository.entries().first?.amount == .small)
@@ -84,6 +85,7 @@ struct TodayFlowTests {
         await model.loadTask?.value
         let composer = try #require(model.composer)
         composer.setNote("keep my draft")
+        composer.pickRequiredObservations()
         #expect(!composer.save())
         #expect(composer.draft.note == "keep my draft")
         #expect(model.feedback == nil)
@@ -155,6 +157,7 @@ struct TodayFlowTests {
         #expect(data.canCheckInToday == true)
 
         let composer = try #require(model.composer)
+        composer.pickRequiredObservations()
         #expect(composer.save())
         model.savedComposer()
         await model.loadTask?.value

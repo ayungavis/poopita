@@ -15,3 +15,14 @@ public enum AppColor {
     public static let marker = Color("marker", bundle: .module)
     public static let partial = Color("partial", bundle: .module)
 }
+
+public enum StoolSwatch {
+    public static let pale = Color("stoolPale", bundle: .module)
+    public static let yellow = Color("stoolYellow", bundle: .module)
+    public static let tan = Color("stoolTan", bundle: .module)
+    public static let orange = Color("stoolOrange", bundle: .module)
+    public static let brown = Color("stoolBrown", bundle: .module)
+    public static let green = Color("stoolGreen", bundle: .module)
+    public static let black = Color("stoolBlack", bundle: .module)
+    public static let red = Color("stoolRed", bundle: .module)
+}

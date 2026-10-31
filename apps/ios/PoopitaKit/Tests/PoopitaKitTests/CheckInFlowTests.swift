@@ -197,6 +197,7 @@ struct CheckInFlowTests {
         await model.loadTask?.value
         let checkIn = try #require(try repository.checkIns().first)
         let composer = try #require(model.composer)
+        composer.pickRequiredObservations()
         #expect(composer.save())
         model.savedComposer()
         await model.loadTask?.value
@@ -212,6 +213,7 @@ struct CheckInFlowTests {
         model.edit(id: entry.id)
         let editor = try #require(model.editor)
         editor.setDate(date)
+        editor.pickRequiredObservations()
         #expect(editor.save())
         model.savedEditor()
         await model.loadTask?.value

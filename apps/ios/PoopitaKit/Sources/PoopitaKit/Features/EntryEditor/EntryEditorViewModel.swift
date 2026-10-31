@@ -8,6 +8,7 @@ final class EntryEditorViewModel: Identifiable {
     private(set) var error: AppError?
     private(set) var saveMessage: String?
     private(set) var canUndo: Bool
+    private(set) var attemptedSave = false
     private let repository: any DiaryRepository
     let id: UUID
     let displayTimeZone: TimeZone
@@ -50,53 +51,74 @@ final class EntryEditorViewModel: Identifiable {
         error?.userMessage
     }
 
+    var missingFields: [EntryRequiredField] {
+        guard attemptedSave else { return [] }
+        return EntryRequiredField.allCases.filter { $0.isMissing(in: draft) }
+    }
+
+    var missingSummary: String? {
+        let names = missingFields.map(\.title)
+        guard !names.isEmpty else { return nil }
+        return String(localized: "entry.missing \(names.formatted(.list(type: .and)))", bundle: .module)
+    }
+
     func selectType(_ value: String) {
-        if value == "skip" {
-            setType(nil); return
-        }
         guard let type = Int(value), (1 ... 7).contains(type) else {
             error = .invalidObservation
             return
         }
-        setType(type)
+        setType(draft.stoolType == type ? nil : type)
     }
 
     func setDate(_ date: Date) {
-        updateDraft(draft.replacingDate(date))
+        updateDraft(draft.replacing(\.occurrenceDate, with: date))
     }
 
     func setType(_ value: Int?) {
-        updateDraft(draft.replacingType(value))
+        updateDraft(draft.replacing(\.stoolType, with: value))
     }
 
     func setAmount(_ value: String?) {
-        updateDraft(draft.replacingAmount(value))
+        updateDraft(draft.replacing(\.amount, with: toggled(value, from: draft.amount)))
     }
 
     func setEffort(_ value: String?) {
-        updateDraft(draft.replacingEffort(value))
+        updateDraft(draft.replacing(\.effort, with: toggled(value, from: draft.effort)))
+    }
+
+    func setBlood(_ value: String?) {
+        updateDraft(draft.replacing(\.blood, with: toggled(value, from: draft.blood)))
+    }
+
+    func setColor(_ value: String?) {
+        updateDraft(draft.replacing(\.color, with: toggled(value, from: draft.color)))
+    }
+
+    func setDuration(_ value: String?) {
+        updateDraft(draft.replacing(\.duration, with: toggled(value, from: draft.duration)))
     }
 
     func setNote(_ value: String) {
-        updateDraft(draft.replacingNote(value))
+        updateDraft(draft.replacing(\.note, with: value))
+    }
+
+    func hasSuggestion(_ phrase: String) -> Bool {
+        NoteSuggestions.contains(phrase, in: draft.note)
+    }
+
+    func toggleSuggestion(_ phrase: String) {
+        setNote(NoteSuggestions.toggling(phrase, in: draft.note))
     }
 
     @discardableResult
     func save() -> Bool {
         defer { canUndo = repository.canUndo }
+        attemptedSave = true
+        guard missingFields.isEmpty else { return false }
         do {
             try Task.checkCancellation()
             guard draft.occurrenceDate <= now() else { throw AppError.invalidOccurrence }
-            let occurrence = try occurrence()
-            let amount = draft.amount.flatMap(DiaryEntry.Amount.init(rawValue:))
-            let effort = draft.effort.flatMap(DiaryEntry.Effort.init(rawValue:))
-            guard draft.amount == nil || amount != nil, draft.effort == nil || effort != nil else {
-                throw AppError.invalidObservation
-            }
-            let entry = DiaryEntry(
-                id: id, occurrence: occurrence, stoolType: draft.stoolType,
-                amount: amount, effort: effort, note: draft.note
-            )
+            let entry = try makeEntry()
             let result = try repository.save(entry)
             saveMessage = result == .dayUpdated
                 ? String(localized: "diary.dayUpdated", bundle: .module)
@@ -117,8 +139,32 @@ final class EntryEditorViewModel: Identifiable {
     static func viewData(for entry: DiaryEntry) -> EntryEditorViewData {
         EntryEditorViewData(
             occurrenceDate: entry.occurrence.instant, timeZoneIdentifier: entry.occurrence.timeZoneIdentifier,
-            stoolType: entry.stoolType, amount: entry.amount?.rawValue, effort: entry.effort?.rawValue, note: entry.note
+            stoolType: entry.stoolType, amount: entry.amount?.rawValue, effort: entry.effort?.rawValue,
+            blood: entry.blood?.rawValue, color: entry.color?.rawValue, duration: entry.duration?.rawValue,
+            note: entry.note
         )
+    }
+
+    private func makeEntry() throws -> DiaryEntry {
+        let amount = draft.amount.flatMap(DiaryEntry.Amount.init(rawValue:))
+        let effort = draft.effort.flatMap(DiaryEntry.Effort.init(rawValue:))
+        let blood = draft.blood.flatMap(DiaryEntry.Blood.init(rawValue:))
+        let color = draft.color.flatMap(DiaryEntry.StoolColor.init(rawValue:))
+        let duration = draft.duration.flatMap(DiaryEntry.Duration.init(rawValue:))
+        guard draft.amount == nil || amount != nil, draft.effort == nil || effort != nil,
+              draft.blood == nil || blood != nil, draft.color == nil || color != nil,
+              draft.duration == nil || duration != nil
+        else {
+            throw AppError.invalidObservation
+        }
+        return try DiaryEntry(
+            id: id, occurrence: occurrence(), stoolType: draft.stoolType, amount: amount, effort: effort,
+            blood: blood, color: color, duration: duration, note: draft.note
+        )
+    }
+
+    private func toggled(_ value: String?, from current: String?) -> String? {
+        value == current ? nil : value
     }
 
     private func occurrence() throws -> OccurrenceTime {

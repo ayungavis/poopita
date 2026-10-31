@@ -3,46 +3,84 @@ import SwiftUI
 
 struct EntryFieldsView: View {
     let viewModel: EntryEditorViewModel
-    @State private var detailsExpanded = false
-    @AccessibilityFocusState private var errorFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xl) {
-            DatePicker(
-                selection: Binding(get: { viewModel.draft.occurrenceDate }, set: viewModel.setDate),
-                in: ...viewModel.maximumDate, displayedComponents: [.date]
-            ) { Text("entry.date", bundle: .module) }
-                .environment(\.timeZone, viewModel.displayTimeZone)
-            DatePicker(
-                selection: Binding(get: { viewModel.draft.occurrenceDate }, set: viewModel.setDate),
-                in: ...viewModel.maximumDate, displayedComponents: [.hourAndMinute]
-            ) { Text("entry.time", bundle: .module) }
-                .environment(\.timeZone, viewModel.displayTimeZone)
-            Text(verbatim: viewModel.draft.timeZoneIdentifier)
-                .font(AppFont.caption).foregroundStyle(AppColor.textSecondary)
-            VStack(alignment: .leading, spacing: Spacing.sm) {
-                Text("entry.stoolType", bundle: .module).font(AppFont.body.weight(.semibold))
-                EntryChoiceGridView(
-                    choices: EntryChoiceViewData.types,
-                    selected: viewModel.draft.stoolType.map(String.init) ?? "skip", select: viewModel.selectType
+            section(.type, title: Text("entry.typeLabel", bundle: .module)) {
+                EntryTileGridView(
+                    choices: EntryChoiceViewData.types, selected: viewModel.draft.stoolType.map(String.init),
+                    columns: 4, select: viewModel.selectType
+                )
+                selectionLine(EntryChoiceViewData.types, viewModel.draft.stoolType.map(String.init))
+            }
+            section(.amount, title: Text("entry.amountLabel", bundle: .module)) {
+                EntryTileGridView(
+                    choices: EntryChoiceViewData.amounts, selected: viewModel.draft.amount, columns: 5,
+                    select: viewModel.setAmount
+                )
+                selectionLine(EntryChoiceViewData.amounts, viewModel.draft.amount)
+            }
+            section(.effort, title: Text("entry.effortLabel", bundle: .module)) {
+                EntryTileGridView(
+                    choices: EntryChoiceViewData.efforts, selected: viewModel.draft.effort, columns: 3,
+                    select: viewModel.setEffort
                 )
             }
-            if viewModel.isEditing {
-                EntryDetailsView(viewModel: viewModel)
-            } else {
-                DisclosureGroup(isExpanded: $detailsExpanded) {
-                    EntryDetailsView(viewModel: viewModel).padding(.top, Spacing.md)
-                } label: {
-                    Text("entry.moreDetails", bundle: .module)
-                        .font(AppFont.body).frame(minHeight: Spacing.touchTarget)
-                }
+            section(.blood, title: Text("entry.bloodLabel", bundle: .module)) {
+                EntryTileGridView(
+                    choices: EntryChoiceViewData.bloods, selected: viewModel.draft.blood, columns: 2,
+                    select: viewModel.setBlood
+                )
             }
-            if let error = viewModel.errorMessage {
-                Text(verbatim: error).foregroundStyle(AppColor.destructive)
-                    .accessibilityFocused($errorFocused)
+            EntryFieldSectionView(title: Text("entry.colorLabel", bundle: .module), isOptional: true, isMissing: false) {
+                EntrySwatchRowView(
+                    choices: EntryChoiceViewData.colors,
+                    selected: viewModel.draft.color,
+                    select: viewModel.setColor
+                )
+                selectionLine(EntryChoiceViewData.colors, viewModel.draft.color)
+            }
+            EntryFieldSectionView(title: Text("entry.durationLabel", bundle: .module), isOptional: true, isMissing: false) {
+                EntryTileGridView(
+                    choices: EntryChoiceViewData.durations, selected: viewModel.draft.duration, columns: 4,
+                    select: viewModel.setDuration
+                )
+            }
+            EntryFieldSectionView(title: Text("entry.noteLabel", bundle: .module), isOptional: true, isMissing: false) {
+                TextField(
+                    "", text: Binding(get: { viewModel.draft.note }, set: viewModel.setNote),
+                    prompt: Text("entry.notePrompt", bundle: .module), axis: .vertical
+                )
+                .lineLimit(3 ... 6)
+                .padding(Spacing.md)
+                .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
+                .accessibilityLabel(Text("entry.noteLabel", bundle: .module))
+                EntrySuggestionChipsView(
+                    suggestions: EntryChoiceViewData.suggestions, isAdded: viewModel.hasSuggestion,
+                    toggle: viewModel.toggleSuggestion
+                )
             }
         }
-        .font(AppFont.body)
-        .onChange(of: viewModel.errorMessage) { _, value in errorFocused = value != nil }
+    }
+
+    private func section(
+        _ field: EntryRequiredField, title: Text, @ViewBuilder content: () -> some View
+    ) -> some View {
+        EntryFieldSectionView(
+            title: title,
+            isOptional: false,
+            isMissing: viewModel.missingFields.contains(field),
+            content: content
+        )
+        .id(field)
+    }
+
+    @ViewBuilder
+    private func selectionLine(_ choices: [EntryChoiceViewData], _ selected: String?) -> some View {
+        if let choice = choices.first(where: { $0.id == selected }) {
+            Text(verbatim: [choice.title, choice.detail].filter { !$0.isEmpty }.joined(separator: " · "))
+                .font(AppFont.body.weight(.medium))
+                .foregroundStyle(AppColor.textPrimary)
+        }
     }
 }
