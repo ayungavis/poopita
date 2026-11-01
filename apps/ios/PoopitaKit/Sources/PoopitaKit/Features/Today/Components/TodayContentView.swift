@@ -6,31 +6,36 @@ struct TodayContentView: View {
     let data: TodayViewData
     @State private var headerHeight: CGFloat = 0
     @State private var isHeaderHidden = false
+    @State private var position = ScrollPosition()
+    @State private var scroll = TodayScrollState()
 
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        ScrollViewReader { proxy in
-            scrollView
-                .onAppear { proxy.scrollTo(TodayTimelineView.focusID, anchor: .center) }
-                .onChange(of: scenePhase) { _, phase in
-                    if phase == .active {
-                        proxy.scrollTo(TodayTimelineView.focusID, anchor: .center)
-                    }
+        scrollView
+            .id(selectedDayID)
+            .onChange(of: selectedDayID) { scroll = TodayScrollState() }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    scroll = TodayScrollState(focusY: scroll.focusY, offset: scroll.offset, height: scroll.height)
+                    centerOnFocus()
                 }
-        }
-        .id(data.weekDays.first(where: \.isSelected)?.dayID)
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                TodayToolbarTitleView(monthLabel: data.monthLabel, title: data.title, isCompact: isHeaderHidden)
             }
-            .sharedBackgroundVisibility(.hidden)
-        }
-        .onChange(of: viewModel.errorMessage) { _, message in
-            if let message {
-                AccessibilityNotification.Announcement(message).post()
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    TodayToolbarTitleView(monthLabel: data.monthLabel, title: data.title, isCompact: isHeaderHidden)
+                }
+                .sharedBackgroundVisibility(.hidden)
             }
-        }
+            .onChange(of: viewModel.errorMessage) { _, message in
+                if let message {
+                    AccessibilityNotification.Announcement(message).post()
+                }
+            }
+    }
+
+    private var selectedDayID: String? {
+        data.weekDays.first(where: \.isSelected)?.dayID
     }
 
     private var scrollView: some View {
@@ -52,10 +57,31 @@ struct TodayContentView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xl)
         }
+        .scrollPosition($position)
+        .onScrollGeometryChange(for: TodayScrollState.Geometry.self) { geometry in
+            TodayScrollState.Geometry(
+                offset: geometry.contentOffset.y + geometry.contentInsets.top, height: geometry.containerSize.height
+            )
+        } action: { _, geometry in
+            scroll.offset = geometry.offset
+            scroll.height = geometry.height
+            centerOnFocus()
+        }
         .onScrollGeometryChange(for: Bool.self) { geometry in
             geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
         } action: { _, isHidden in
             isHeaderHidden = isHidden
+        }
+    }
+
+    private func focusMoved(_ focusY: CGFloat) {
+        scroll.focusY = focusY
+        centerOnFocus()
+    }
+
+    private func centerOnFocus() {
+        if let target = scroll.nextTarget() {
+            position.scrollTo(y: target)
         }
     }
 
@@ -87,7 +113,8 @@ struct TodayContentView: View {
         switch data.dayState {
         case .logged:
             TodayTimelineView(
-                timeline: data.timeline, startMinute: 0, edit: viewModel.edit(id:), log: viewModel.presentLogSheet
+                timeline: data.timeline, startMinute: 0, edit: viewModel.edit(id:), log: viewModel.presentLogSheet,
+                focusMoved: focusMoved
             )
         case let .waiting(headline, detail, partialNote):
             let nowMinute = data.timeline.now?.minute ?? 0
@@ -98,7 +125,7 @@ struct TodayContentView: View {
                 )
                 TodayTimelineView(
                     timeline: data.timeline, startMinute: nowMinute, edit: viewModel.edit(id:),
-                    log: viewModel.presentLogSheet
+                    log: viewModel.presentLogSheet, focusMoved: focusMoved
                 )
             }
         case let .pastDay(status, detail, logLabel, canConfirm):

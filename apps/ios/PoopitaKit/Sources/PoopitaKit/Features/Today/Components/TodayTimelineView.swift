@@ -6,19 +6,20 @@ struct TodayTimelineView: View {
     let startMinute: Int
     let edit: (UUID) -> Void
     let log: () -> Void
+    var focusMoved: (CGFloat) -> Void = { _ in }
     @ScaledMetric(relativeTo: .body) private var hourHeight = Spacing.timelineHour
     @ScaledMetric(relativeTo: .body) private var blockHeight = Spacing.timelineBlock
     @ScaledMetric(relativeTo: .caption) private var labelWidth = Spacing.timelineLabel
-
-    static let focusID = "today.timeline.focus"
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             if let minute = timeline.blocks.last?.minute ?? timeline.now?.minute {
                 Color.clear
                     .frame(height: Spacing.borderWidth)
+                    .onGeometryChange(for: CGFloat.self) { proxy in
+                        proxy.frame(in: .scrollView(axis: .vertical)).minY
+                    } action: { focusMoved($0) }
                     .padding(.top, max(0, offset(minute)))
-                    .id(Self.focusID)
             }
             ForEach(timeline.hours.filter { $0.minute >= startMinute }) { hour in
                 HStack(spacing: Spacing.sm) {
