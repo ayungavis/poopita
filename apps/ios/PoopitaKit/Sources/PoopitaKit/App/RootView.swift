@@ -7,7 +7,7 @@ public struct RootView: View {
     private let container: AppContainer
     @State private var model: TodayViewModel?
     @State private var historyModel: HistoryViewModel?
-    @State private var patternsModel: PatternsViewModel?
+    @State private var insightsModel: InsightsViewModel?
     @State private var settingsModel: SettingsViewModel?
     @State private var remindersModel: RemindersViewModel?
     @State private var undoModel: UndoModel?
@@ -16,6 +16,7 @@ public struct RootView: View {
     @State private var errorMessage: String?
     @State private var selectedTab = RootTab.today
     @State private var isShowingSettings = false
+    @State private var isShowingFrequency = false
 
     public init(container: AppContainer) {
         self.container = container
@@ -24,7 +25,7 @@ public struct RootView: View {
 
     public var body: some View {
         Group {
-            if let model, let historyModel, let patternsModel, let settingsModel, let remindersModel {
+            if let model, let historyModel, let insightsModel, let settingsModel, let remindersModel {
                 if settingsModel.state.isAppLockEnabled, !isUnlocked {
                     lockScreen(settingsModel)
                 } else {
@@ -49,14 +50,17 @@ public struct RootView: View {
                             }
                             Tab(value: RootTab.insights) {
                                 NavigationStack {
-                                    PatternsView(viewModel: patternsModel)
+                                    InsightsView(viewModel: insightsModel, isShowingFrequency: $isShowingFrequency) { dayID in
+                                        historyModel.open(id: dayID)
+                                        selectedTab = .history
+                                    }
                                 }
                                 .hidesSystemTabBar()
                             }
                         }
                         .overlay(alignment: .bottom) { undoToast }
                         .animation(reduceMotion ? .default : .snappy, value: undoModel?.toast?.id)
-                        if !isShowingSettings {
+                        if !isShowingSettings, !isShowingFrequency {
                             AppTabBarView(
                                 selection: $selectedTab,
                                 items: [
@@ -75,6 +79,7 @@ public struct RootView: View {
                         }
                     }
                     .animation(reduceMotion ? .default : .snappy, value: isShowingSettings)
+                    .animation(reduceMotion ? .default : .snappy, value: isShowingFrequency)
                     .fullScreenModal(item: editorBinding) { editor in
                         EntryEditorView(
                             viewModel: editor,
@@ -105,12 +110,13 @@ public struct RootView: View {
         .onChange(of: remindersModel?.revision) {
             model?.load()
             historyModel?.load()
-            patternsModel?.load()
+            insightsModel?.load()
         }
         .onChange(of: remindersModel?.route, initial: true) { _, route in
             guard let route else { return }
             remindersModel?.consumeRoute()
             isShowingSettings = false
+            isShowingFrequency = false
             switch route {
             case .log:
                 selectedTab = .today
@@ -122,7 +128,7 @@ public struct RootView: View {
         .onChange(of: undoModel?.revision) {
             model?.load()
             historyModel?.load()
-            patternsModel?.load()
+            insightsModel?.load()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
@@ -198,7 +204,7 @@ public struct RootView: View {
         do {
             model = try container.makeTodayViewModel()
             historyModel = try container.makeHistoryViewModel()
-            patternsModel = try container.makePatternsViewModel()
+            insightsModel = try container.makeInsightsViewModel()
             settingsModel = try container.makeSettingsViewModel()
             remindersModel = try container.remindersViewModel()
             undoModel = try container.undoModel()

@@ -28,8 +28,8 @@ public final class AppContainer {
         try HistoryViewModel(repository: diaryRepository(), undoModel: undoModel(), now: { .now }, timeZone: { .current })
     }
 
-    func makePatternsViewModel() throws -> PatternsViewModel {
-        try PatternsViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
+    func makeInsightsViewModel() throws -> InsightsViewModel {
+        try InsightsViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
     }
 
     func makeSettingsViewModel() throws -> SettingsViewModel {

@@ -11,8 +11,11 @@ struct HistoryContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                HistoryMonthHeaderView(data: data, move: viewModel.moveMonth)
-                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                PeriodHeaderView(
+                    title: data.monthName, detail: data.yearLabel, accessibilityLabel: data.monthLabel,
+                    canMoveNext: data.canMoveNext, move: viewModel.moveMonth
+                )
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }

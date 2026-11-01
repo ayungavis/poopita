@@ -57,6 +57,19 @@ final class HistoryViewModel {
         load()
     }
 
+    func open(id: String) {
+        guard let day = Self.day(id: id), (try? day.validate()) != nil, day <= todayDay() else { return }
+        selectedDay = day
+        month = Self.monthStart(Self.date(for: day, calendar: calendar()), timeZone: timeZone())
+        load()
+    }
+
+    private static func day(id: String) -> DiaryDay? {
+        let parts = id.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3 else { return nil }
+        return DiaryDay(year: parts[0], month: parts[1], day: parts[2])
+    }
+
     func moveMonth(_ amount: Int) {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone()
@@ -158,9 +171,8 @@ final class HistoryViewModel {
               let monthRange = calendar.range(of: .day, in: .month, for: monthStart)
         else { throw AppError.invalidOccurrence }
         let today = try DiaryDay(date: source.today, timeZone: source.timeZone)
-        let logs = Dictionary(grouping: source.entries) { DiaryDay(occurrence: $0.occurrence) }
-        let checkIns = Dictionary(source.checkIns.map { ($0.day, $0.coverage) }) { first, _ in first }
-        let marks = MarkSource(logs: logs.mapValues(\.count), checkIns: checkIns, today: today)
+        let marks = DayMarks(entries: source.entries, checkIns: source.checkIns, today: today)
+        let logs = marks.logs
         let days = try (1 ... monthRange.count).map { offset in
             try DiaryDay(date: calendar.date(byAdding: .day, value: offset - 1, to: monthStart) ?? monthStart,
                          timeZone: source.timeZone)
@@ -192,23 +204,6 @@ final class HistoryViewModel {
             selected: selection(source, logs: logs[source.selectedDay] ?? [], today: today, calendar: calendar),
             isShowingToday: source.selectedDay == today
         )
-    }
-
-    private struct MarkSource {
-        let logs: [DiaryDay: Int]
-        let checkIns: [DiaryDay: NoPoopCheckIn.Coverage]
-        let today: DiaryDay
-
-        func mark(_ day: DiaryDay) -> DayMarkViewData {
-            if let count = logs[day] {
-                return .logs(count)
-            }
-            switch checkIns[day] {
-            case .completed: return .noPoop
-            case .partial: return .noneSoFar
-            case nil: return day > today ? .future : day == today ? .open : .unrecorded
-            }
-        }
     }
 
     private static func unrecordedLabel(_ count: Int) -> String {

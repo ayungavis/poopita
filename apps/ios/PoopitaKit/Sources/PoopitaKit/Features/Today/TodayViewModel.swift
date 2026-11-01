@@ -294,14 +294,14 @@ extension TodayViewModel {
             : String(localized: "today.logCount \(count)", bundle: .module)
     }
 
-    static func calendar(_ timeZone: TimeZone) -> Calendar {
+    nonisolated static func calendar(_ timeZone: TimeZone) -> Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
         calendar.firstWeekday = 2
         return calendar
     }
 
-    static func start(of day: DiaryDay, calendar: Calendar) throws -> Date {
+    nonisolated static func start(of day: DiaryDay, calendar: Calendar) throws -> Date {
         guard let date = calendar.date(from: DateComponents(year: day.year, month: day.month, day: day.day)) else {
             throw AppError.invalidOccurrence
         }
