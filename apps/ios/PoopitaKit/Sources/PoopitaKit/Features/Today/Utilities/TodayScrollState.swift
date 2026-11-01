@@ -1,6 +1,6 @@
 import CoreGraphics
 
-struct TodayScrollState {
+struct TodayScrollState: Equatable {
     struct Geometry: Equatable {
         let offset: CGFloat
         let height: CGFloat
@@ -10,7 +10,7 @@ struct TodayScrollState {
     var focusY: CGFloat?
     var offset: CGFloat = 0
     var height: CGFloat = 0
-    private var dayID: String?
+    private(set) var dayID: String?
     private var requestedY: CGFloat?
     private var offsetAtRequest: CGFloat?
     private var passes = 0

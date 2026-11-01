@@ -38,20 +38,20 @@ extension TodayViewModel {
             return .pastDay(
                 status: String(localized: "checkIn.completed", bundle: .module),
                 detail: String(localized: "checkIn.completedDetail", bundle: .module),
-                logLabel: logLabel, canConfirm: false
+                logLabel: logLabel, canConfirm: false, mark: .noPoop
             )
         case .partial:
             let reported = try checkIn.map { try timeLabel($0.reportedAt) } ?? ""
             return .pastDay(
                 status: String(localized: "checkIn.partial", bundle: .module),
                 detail: String(localized: "checkIn.partialDetail \(reported)", bundle: .module),
-                logLabel: logLabel, canConfirm: true
+                logLabel: logLabel, canConfirm: true, mark: .noneSoFar
             )
         case nil:
             return .pastDay(
                 status: String(localized: "checkIn.unknown", bundle: .module),
                 detail: String(localized: "checkIn.unknownDetail", bundle: .module),
-                logLabel: logLabel, canConfirm: true
+                logLabel: logLabel, canConfirm: true, mark: .unrecorded
             )
         }
     }

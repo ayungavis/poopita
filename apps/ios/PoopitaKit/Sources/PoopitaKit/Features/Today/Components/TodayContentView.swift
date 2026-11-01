@@ -14,6 +14,13 @@ struct TodayContentView: View {
 
     var body: some View {
         scrollView
+            .onChange(of: selectedDayID) {
+                updateScroll { _ in }
+                let pinnedOffset = headerHeight + Spacing.lg
+                if dayKind == "pastDay", scroll.offset > pinnedOffset {
+                    position.scrollTo(y: pinnedOffset)
+                }
+            }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active {
                     scroll.restart()
@@ -52,9 +59,12 @@ struct TodayContentView: View {
                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 Section {
                     error
-                    ZStack(alignment: .top) { day }
-                        .frame(maxWidth: .infinity, minHeight: scroll.height, alignment: .top)
-                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: dayKind)
+                    ZStack(alignment: .top) {
+                        Color.clear.containerRelativeFrame(.vertical)
+                        day
+                    }
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: dayKind)
                 } header: {
                     VStack(alignment: .leading, spacing: Spacing.lg) {
                         TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
@@ -73,9 +83,10 @@ struct TodayContentView: View {
                 contentHeight: geometry.contentSize.height
             )
         } action: { _, geometry in
-            scroll.prepare(for: selectedDayID)
-            scroll.offset = geometry.offset
-            scroll.height = geometry.height
+            updateScroll {
+                $0.offset = geometry.offset
+                $0.height = geometry.height
+            }
             centerOnFocus()
         }
         .onScrollGeometryChange(for: Bool.self) { geometry in
@@ -91,16 +102,33 @@ struct TodayContentView: View {
     }
 
     private func focusMoved(_ focusY: CGFloat, dayID: String?) {
-        guard dayID == selectedDayID else { return }
-        scroll.prepare(for: selectedDayID)
-        scroll.focusY = focusY
+        guard scroll.dayID == nil || scroll.dayID == dayID else { return }
+        var next = scroll
+        next.prepare(for: dayID)
+        next.focusY = focusY
+        if next != scroll {
+            scroll = next
+        }
         centerOnFocus()
     }
 
     private func centerOnFocus() {
-        scroll.prepare(for: selectedDayID)
-        if let target = scroll.nextTarget() {
+        var next = scroll
+        let target = next.nextTarget()
+        if next != scroll {
+            scroll = next
+        }
+        if let target {
             position.scrollTo(y: target)
+        }
+    }
+
+    private func updateScroll(_ change: (inout TodayScrollState) -> Void) {
+        var next = scroll
+        next.prepare(for: selectedDayID)
+        change(&next)
+        if next != scroll {
+            scroll = next
         }
     }
 
@@ -151,12 +179,12 @@ struct TodayContentView: View {
                 )
             }
             .transition(.opacity)
-        case let .pastDay(status, detail, logLabel, canConfirm):
+        case let .pastDay(status, detail, logLabel, canConfirm, mark):
             TodayPastDayView(
-                status: status, detail: detail, logLabel: logLabel, canConfirm: canConfirm,
+                status: status, detail: detail, logLabel: logLabel, canConfirm: canConfirm, mark: mark,
                 log: viewModel.presentLogForSelectedDay, confirm: viewModel.confirmNoPoopForSelectedDay
             )
-            .transition(.opacity.combined(with: .offset(y: Spacing.sm)))
+            .transition(.opacity)
         }
     }
 

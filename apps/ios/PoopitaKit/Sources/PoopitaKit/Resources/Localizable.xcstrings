@@ -233,13 +233,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No entry or check-in. What happened is unknown."
+            "value" : "No log and no check-in. Until you add one, this day counts as unknown, not as a day without poop."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Belum ada catatan atau laporan. Belum diketahui apakah terjadi BAB."
+            "value" : "Belum ada catatan maupun laporan. Sampai Anda menambahkannya, hari ini dihitung belum diketahui, bukan hari tanpa BAB."
           }
         }
       }

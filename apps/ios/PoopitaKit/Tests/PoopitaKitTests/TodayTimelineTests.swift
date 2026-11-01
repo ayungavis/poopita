@@ -112,10 +112,11 @@ struct TodayTimelineTests {
         model.selectDay(id: "2026-10-29")
         await model.loadTask?.value
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
-        guard case let .pastDay(status, _, logLabel, canConfirm) = data.dayState else {
+        guard case let .pastDay(status, _, logLabel, canConfirm, mark) = data.dayState else {
             Issue.record("Expected a past-day card"); return
         }
         #expect(status == "Not recorded")
+        #expect(mark == .unrecorded)
         #expect(logLabel == "Log for Thursday")
         #expect(canConfirm)
         #expect(data.title == "Thursday")
@@ -143,10 +144,11 @@ struct TodayTimelineTests {
         model.selectDay(id: "2026-10-30")
         await model.loadTask?.value
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
-        guard case let .pastDay(status, _, _, canConfirm) = data.dayState else {
+        guard case let .pastDay(status, _, _, canConfirm, mark) = data.dayState else {
             Issue.record("Expected a past-day card"); return
         }
         #expect(status == "Partial check-in")
+        #expect(mark == .noneSoFar)
         #expect(canConfirm)
         #expect(data.weekDays[4].mark == .noneSoFar)
     }

@@ -12,6 +12,7 @@ public struct PrimaryButtonView: View {
     public var body: some View {
         Button(action: action) {
             title
+                .lineLimit(1)
                 .font(AppFont.body.weight(.semibold))
                 .foregroundStyle(AppColor.onInk)
                 .frame(maxWidth: .infinity, minHeight: Spacing.buttonHeight)
