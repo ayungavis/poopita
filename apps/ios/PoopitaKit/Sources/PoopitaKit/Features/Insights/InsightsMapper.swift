@@ -58,10 +58,6 @@ struct InsightsContext {
         return (date(first) ..< date(last)).formatted(style)
     }
 
-    func hasUnknown(_ days: [DiaryDay]) -> Bool {
-        days.contains { [.unrecorded, .untracked].contains(marks.mark($0)) }
-    }
-
     private static func days(in interval: DateInterval, calendar: Calendar) throws -> [DiaryDay] {
         var days: [DiaryDay] = []
         var date = interval.start

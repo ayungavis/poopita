@@ -23,16 +23,6 @@ final class CheckInViewModel {
         selectedDate = yesterday
     }
 
-    var displayTimeZone: TimeZone {
-        timeZone()
-    }
-
-    var maximumDate: Date {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone()
-        return calendar.startOfDay(for: now()).addingTimeInterval(-1)
-    }
-
     func load() throws {
         state = .loading
         do {

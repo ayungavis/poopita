@@ -7,9 +7,6 @@ public enum Spacing {
     public static let chipHeight: CGFloat = 36
     public static let swatch: CGFloat = 36
     public static let selectionWidth: CGFloat = 2
-    public static let choiceWidth: CGFloat = 72
-    public static let accessibleChoiceWidth: CGFloat = 160
-    public static let choiceHeight: CGFloat = 88
     public static let illustrationWidth: CGFloat = 44
     public static let illustrationHeight: CGFloat = 32
     public static let borderWidth: CGFloat = 1
