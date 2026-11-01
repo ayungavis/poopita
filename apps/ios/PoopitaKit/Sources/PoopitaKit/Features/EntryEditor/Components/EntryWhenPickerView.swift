@@ -17,32 +17,36 @@ struct EntryWhenPickerView: View {
     let viewModel: EntryEditorViewModel
     let field: Field
     @Environment(\.dismiss) private var dismiss
-    @State private var height: CGFloat = 0
+    @State private var contentHeight: CGFloat = 0
+    @State private var barHeight: CGFloat = 0
 
     var body: some View {
-        VStack(spacing: Spacing.md) {
-            ZStack {
-                Text(field.title, bundle: .module).font(AppFont.body.weight(.semibold))
-                    .foregroundStyle(AppColor.textPrimary)
-                    .accessibilityAddTraits(.isHeader)
-                HStack {
-                    Spacer()
-                    Button { dismiss() } label: {
-                        Text("entry.done", bundle: .module).font(AppFont.body.weight(.semibold))
-                            .frame(minHeight: Spacing.touchTarget)
-                    }
-                }
-            }
+        NavigationStack {
             picker
                 .labelsHidden()
                 .environment(\.timeZone, viewModel.displayTimeZone)
+                .padding(.horizontal, Spacing.lg)
+                .padding(.bottom, Spacing.sm)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+                .frame(maxHeight: .infinity, alignment: .top)
+                .background {
+                    Color.clear
+                        .ignoresSafeArea()
+                        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { barHeight = $0 }
+                }
+                .navigationTitle(Text(field.title, bundle: .module))
+                .inlineTitle()
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button { dismiss() } label: {
+                            Text("entry.done", bundle: .module)
+                        }
+                    }
+                }
+                .background(AppColor.background)
         }
-        .padding(.horizontal, Spacing.lg)
-        .padding(.top, Spacing.lg)
-        .padding(.bottom, Spacing.sm)
         .tint(AppColor.accent)
-        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
-        .presentationDetents(height > 0 ? [.height(height)] : [.medium])
+        .presentationDetents(contentHeight > 0 ? [.height(contentHeight + barHeight)] : [.medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(AppColor.background)
     }
@@ -65,6 +69,14 @@ struct EntryWhenPickerView: View {
 }
 
 private extension View {
+    func inlineTitle() -> some View {
+        #if os(iOS)
+            navigationBarTitleDisplayMode(.inline)
+        #else
+            self
+        #endif
+    }
+
     func wheelStyle() -> some View {
         #if os(iOS)
             datePickerStyle(.wheel)
