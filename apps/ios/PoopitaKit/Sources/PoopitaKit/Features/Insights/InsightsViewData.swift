@@ -20,6 +20,7 @@ struct InsightsWhenViewData: Equatable, Sendable {
     let endMinute: Int
     let hourMarks: [InsightsHourMarkViewData]
     let columns: [InsightsColumnViewData]
+    let isAggregated: Bool
 }
 
 struct InsightsHourMarkViewData: Equatable, Sendable, Identifiable {

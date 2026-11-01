@@ -39,8 +39,8 @@ struct InsightsContext {
         return date.formatted(style)
     }
 
-    func hasUnrecorded(_ days: [DiaryDay]) -> Bool {
-        days.contains { marks.mark($0) == .unrecorded }
+    func hasUnknown(_ days: [DiaryDay]) -> Bool {
+        days.contains { [.unrecorded, .untracked].contains(marks.mark($0)) }
     }
 
     private static func days(in interval: DateInterval, calendar: Calendar) throws -> [DiaryDay] {
@@ -157,7 +157,7 @@ extension InsightsViewModel {
     }
 
     private nonisolated static func comparison(_ context: InsightsContext, count: Int) -> String? {
-        guard !context.hasUnrecorded(context.days), !context.hasUnrecorded(context.previousDays) else { return nil }
+        guard !context.hasUnknown(context.days), !context.hasUnknown(context.previousDays) else { return nil }
         let previous = context.previousDays.reduce(0) { $0 + (context.marks.logs[$1]?.count ?? 0) }
         let unit = previousName(context.source)
         let difference = count - previous

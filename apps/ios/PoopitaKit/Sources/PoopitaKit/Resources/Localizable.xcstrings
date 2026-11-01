@@ -2085,6 +2085,22 @@
         }
       }
     },
+    "insights.breakdown.untracked" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before you started"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sebelum Anda mulai"
+          }
+        }
+      }
+    },
     "insights.breakdown.week %lld" : {
       "localizations" : {
         "en" : {

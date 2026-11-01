@@ -43,7 +43,7 @@ public struct AppTabBarView<Value: Hashable>: View {
                 row(showsTitles: true)
                 row(showsTitles: false)
             }
-            .padding(.horizontal, Spacing.lg + Spacing.xs)
+            .padding(.horizontal, Spacing.lg)
             .padding(.top, Spacing.lg)
         }
         .background(AppColor.background)
@@ -62,7 +62,7 @@ public struct AppTabBarView<Value: Hashable>: View {
                 label(AppIcon.plus, title: actionTitle, showsTitle: showsTitles, bounces: false)
                     .font(AppFont.caption.weight(.medium))
                     .foregroundStyle(AppColor.onInk)
-                    .padding(.horizontal, Spacing.lg)
+                    .padding(.horizontal, Spacing.md)
                     .frame(minWidth: Spacing.touchTarget, minHeight: Spacing.touchTarget)
                     .background(AppColor.ink, in: Capsule())
             }
@@ -82,7 +82,7 @@ public struct AppTabBarView<Value: Hashable>: View {
             label(item.icon, title: item.title, showsTitle: showsTitle, bounces: isSelected && !reduceMotion)
                 .font(AppFont.caption.weight(isSelected ? .medium : .regular))
                 .foregroundStyle(isSelected ? AppColor.textPrimary : AppColor.textSecondary)
-                .padding(.horizontal, Spacing.md)
+                .padding(.horizontal, Spacing.sm + Spacing.xs / 2)
                 .frame(minWidth: Spacing.touchTarget, minHeight: Spacing.touchTarget)
                 .background {
                     if isSelected {

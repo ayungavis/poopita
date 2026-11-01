@@ -25,7 +25,6 @@ struct InsightsContentView: View {
                 summary
                 section("insights.when", link: "insights.frequency", action: showFrequency)
                 InsightsWhenChartView(data: data.when)
-                    .padding(.top, Spacing.xl)
                 if !data.types.isEmpty {
                     section("insights.type", link: "insights.bristolGuide") { showsGuide = true }
                     CardSectionView(nil) {
@@ -87,18 +86,24 @@ struct InsightsContentView: View {
                 Text(verbatim: usual)
                     .foregroundStyle(AppColor.textSecondary)
             }
-            HStack {
-                if let comparison = data.comparison {
-                    Text(verbatim: comparison)
-                        .font(AppFont.caption)
-                        .foregroundStyle(AppColor.textSecondary)
-                }
-                Spacer(minLength: Spacing.sm)
-                if let unrecorded = data.unrecorded {
-                    link(Text(verbatim: unrecorded.label)) { openDay(unrecorded.dayID) }
-                }
+            if data.comparison != nil || data.unrecorded != nil {
+                comparisonRow
             }
-            .padding(.top, Spacing.sm)
+        }
+        .padding(.top, Spacing.sm)
+    }
+
+    private var comparisonRow: some View {
+        HStack {
+            if let comparison = data.comparison {
+                Text(verbatim: comparison)
+                    .font(AppFont.caption)
+                    .foregroundStyle(AppColor.textSecondary)
+            }
+            Spacer(minLength: Spacing.sm)
+            if let unrecorded = data.unrecorded {
+                link(Text(verbatim: unrecorded.label)) { openDay(unrecorded.dayID) }
+            }
         }
         .padding(.top, Spacing.sm)
     }
@@ -111,7 +116,7 @@ struct InsightsContentView: View {
             Spacer(minLength: Spacing.sm)
             link(Text(key, bundle: .module), action: action)
         }
-        .padding(.top, Spacing.md)
+        .padding(.top, Spacing.sm)
     }
 
     private func link(_ title: Text, action: @escaping () -> Void) -> some View {
@@ -125,7 +130,9 @@ struct InsightsContentView: View {
             .font(AppFont.caption.weight(.semibold))
             .foregroundStyle(AppColor.accent)
             .frame(minHeight: Spacing.touchTarget)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .padding(.vertical, -Spacing.md)
     }
 }

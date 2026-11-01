@@ -30,7 +30,8 @@ struct HistoryFlowTests {
         #expect(Self.entries(data.selected)?.count == 2)
         #expect(data.selected.countLabel == "2 logs")
         #expect(data.logSummary == "2 logs in October")
-        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-01", label: "16 days not recorded"))
+        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-06", label: "14 days not recorded"))
+        #expect(days["2026-10-02"] == .untracked)
     }
 
     @Test func historyGroupsEntriesByStoredOccurrenceLocalDay() throws {

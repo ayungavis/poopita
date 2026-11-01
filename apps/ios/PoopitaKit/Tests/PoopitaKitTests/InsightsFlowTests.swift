@@ -64,6 +64,10 @@ struct InsightsFlowTests {
         #expect(year.frequency.bars.count == 12)
         #expect(year.when.columns[9].logMinutes.count == 5)
         #expect(year.when.columns[11].isUnrecorded == false)
+        #expect(year.when.columns[0].isUnrecorded == false)
+        #expect(year.when.isAggregated)
+        #expect(year.unrecorded?.dayID == "2026-10-29")
+        #expect(year.frequency.breakdown.last?.id == "untracked")
     }
 
     @Test func viewModelStepsBackButNeverPastTheCurrentPeriod() async throws {

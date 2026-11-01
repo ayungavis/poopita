@@ -293,7 +293,7 @@ private extension HistoryDayViewData {
         case .noPoop: String(localized: "checkIn.completed", bundle: .module)
         case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
         case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
-        case .future, .open: nil
+        case .untracked, .future, .open: nil
         }
     }
 }

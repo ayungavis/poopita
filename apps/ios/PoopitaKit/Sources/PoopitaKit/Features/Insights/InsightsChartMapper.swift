@@ -11,7 +11,10 @@ extension InsightsViewModel {
         let marks = stride(from: 0, through: 24, by: 6).map { $0 * 60 }.filter { $0 > start && $0 < end }.map {
             InsightsHourMarkViewData(minute: $0, label: clock($0, .dateTime.hour(.twoDigits(amPM: .omitted)), context))
         }
-        return InsightsWhenViewData(startMinute: start, endMinute: end, hourMarks: marks, columns: columns)
+        return InsightsWhenViewData(
+            startMinute: start, endMinute: end, hourMarks: marks, columns: columns,
+            isAggregated: context.source.period == .year
+        )
     }
 
     nonisolated static func frequency(_ context: InsightsContext, logs: Int, loggedDays: Int) -> InsightsFrequencyViewData {
@@ -181,7 +184,12 @@ extension InsightsViewModel {
             row("noneSoFar", .noneSoFar, "insights.breakdown.noneSoFar", marks.count { $0 == .noneSoFar }),
             row("unrecorded", .unrecorded, "insights.breakdown.unrecorded", marks.count { $0 == .unrecorded }),
             row("future", nil, "insights.breakdown.future", marks.count { $0 == .future || $0 == .open }),
-        ]
+        ] + untracked(marks)
+    }
+
+    private nonisolated static func untracked(_ marks: [DayMarkViewData]) -> [InsightsBreakdownViewData] {
+        let count = marks.count { $0 == .untracked }
+        return count == 0 ? [] : [row("untracked", nil, "insights.breakdown.untracked", count)]
     }
 
     private nonisolated static func row(

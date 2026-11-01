@@ -31,7 +31,7 @@ struct DayMarkView: View {
                         .stroke(isSelected ? AppColor.onInk : AppColor.marker, lineWidth: Spacing.borderWidth)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: Spacing.borderWidth * 2))
-        case .future, .open:
+        case .untracked, .future, .open:
             Color.clear.frame(width: Spacing.xs, height: Spacing.xs)
         }
     }

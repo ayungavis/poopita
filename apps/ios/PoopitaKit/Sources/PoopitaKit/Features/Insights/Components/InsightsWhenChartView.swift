@@ -96,12 +96,13 @@ struct InsightsWhenChartView: View {
         let isThin = data.columns.count > 7
         let blockHeight = isThin ? Spacing.xs : Spacing.sm
         let inset = isThin ? 0 : Spacing.xs
+        let shading = GraphicsContext.Shading.color(AppColor.marker.opacity(data.isAggregated ? 0.3 : 1))
         for minute in column.logMinutes {
             let rect = CGRect(
                 x: inset, y: y(minute, in: size) - blockHeight / 2,
                 width: max(Spacing.borderWidth * 2, size.width - inset * 2), height: blockHeight
             )
-            context.fill(Path(roundedRect: rect, cornerRadius: blockHeight / 2), with: .color(AppColor.marker))
+            context.fill(Path(roundedRect: rect, cornerRadius: blockHeight / 2), with: shading)
         }
         if let minute = column.checkInMinute {
             let center = CGPoint(x: size.width / 2, y: y(minute, in: size))
