@@ -38,6 +38,7 @@ public struct ToastView: View {
                 .buttonStyle(.plain)
             }
         }
+        .frame(minHeight: Spacing.touchTarget)
         .padding(.leading, Spacing.lg)
         .padding(.trailing, Spacing.sm)
         .padding(.vertical, Spacing.xs)
