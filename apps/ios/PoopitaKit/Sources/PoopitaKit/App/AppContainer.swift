@@ -5,6 +5,7 @@ import Foundation
 public final class AppContainer {
     private var diary: (any DiaryRepository)?
     private var undo: UndoModel?
+    private var appearance: AppearanceModel?
 
     public init() {
         AppFont.registerFonts()
@@ -26,11 +27,22 @@ public final class AppContainer {
         try SettingsViewModel(
             repository: diaryRepository(),
             undoModel: undoModel(),
+            appearance: appearanceModel(),
             reminderService: UserNotificationsReminderService(),
             biometricService: LocalAuthenticationBiometricService(),
+            languageService: AppleLanguagesService(),
             now: { .now },
             timeZone: { .current }
         )
+    }
+
+    func appearanceModel() -> AppearanceModel {
+        if let appearance {
+            return appearance
+        }
+        let model = AppearanceModel(repository: LocalAppearanceRepository(store: UserDefaultsValueStore()))
+        appearance = model
+        return model
     }
 
     func undoModel() throws -> UndoModel {

@@ -10,6 +10,7 @@ public struct RootView: View {
     @State private var patternsModel: PatternsViewModel?
     @State private var settingsModel: SettingsViewModel?
     @State private var undoModel: UndoModel?
+    @State private var appearance: AppearanceModel
     @State private var isUnlocked = false
     @State private var errorMessage: String?
     @State private var selectedTab = RootTab.today
@@ -17,6 +18,7 @@ public struct RootView: View {
 
     public init(container: AppContainer) {
         self.container = container
+        _appearance = State(initialValue: container.appearanceModel())
     }
 
     public var body: some View {
@@ -86,6 +88,7 @@ public struct RootView: View {
         .font(AppFont.body)
         .background(AppColor.background)
         .background { WindowPrivacyCoverView() }
+        .preferredColorScheme(appearance.colorScheme)
         .task { openDiary() }
         .onChange(of: undoModel?.revision) {
             model?.load()

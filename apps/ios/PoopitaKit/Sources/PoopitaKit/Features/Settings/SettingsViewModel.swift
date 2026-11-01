@@ -8,8 +8,10 @@ final class SettingsViewModel {
     private(set) var errorMessage: String?
     private let repository: any DiaryRepository
     private let undoModel: UndoModel
+    private let appearance: AppearanceModel
     private let reminderService: any ReminderService
     private let biometricService: any BiometricService
+    private let languageService: any LanguageService
     private let now: () -> Date
     private let timeZone: () -> TimeZone
     private var reminderTime: Date
@@ -17,15 +19,19 @@ final class SettingsViewModel {
     init(
         repository: any DiaryRepository,
         undoModel: UndoModel,
+        appearance: AppearanceModel,
         reminderService: any ReminderService,
         biometricService: any BiometricService,
+        languageService: any LanguageService,
         now: @escaping () -> Date,
         timeZone: @escaping () -> TimeZone
     ) {
         self.repository = repository
         self.undoModel = undoModel
+        self.appearance = appearance
         self.reminderService = reminderService
         self.biometricService = biometricService
+        self.languageService = languageService
         self.now = now
         self.timeZone = timeZone
 
@@ -37,7 +43,8 @@ final class SettingsViewModel {
             isReminderEnabled: false,
             reminderDate: initialTime,
             isAppLockEnabled: false,
-            isBiometricsAvailable: biometricService.isAvailable()
+            isBiometricsAvailable: biometricService.isAvailable(),
+            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService)
         )
     }
 
@@ -90,6 +97,22 @@ final class SettingsViewModel {
         }
     }
 
+    func selectTheme(id: String) {
+        guard let theme = AppTheme(rawValue: id) else { return }
+        do {
+            try appearance.setTheme(theme)
+            updateState()
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+        }
+    }
+
+    func selectLanguage(id: String) {
+        guard id != languageService.chosenCode, languageService.availableCodes.contains(id) else { return }
+        languageService.choose(id)
+        updateState()
+    }
+
     func updateReminderSchedule() async {
         guard state.isReminderEnabled else { return }
         await scheduleCurrentReminder()
@@ -134,7 +157,8 @@ final class SettingsViewModel {
             isReminderEnabled: reminderEnabled ?? state.isReminderEnabled,
             reminderDate: reminderDate ?? state.reminderDate,
             isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
-            isBiometricsAvailable: state.isBiometricsAvailable
+            isBiometricsAvailable: state.isBiometricsAvailable,
+            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService)
         )
     }
 
@@ -142,13 +166,41 @@ final class SettingsViewModel {
         isReminderEnabled: Bool,
         reminderDate: Date,
         isAppLockEnabled: Bool,
-        isBiometricsAvailable: Bool
+        isBiometricsAvailable: Bool,
+        appearance: SettingsAppearanceViewData
     ) -> SettingsViewData {
         SettingsViewData(
             isReminderEnabled: isReminderEnabled,
             reminderDate: reminderDate,
             isAppLockEnabled: isAppLockEnabled,
-            isBiometricsAvailable: isBiometricsAvailable
+            isBiometricsAvailable: isBiometricsAvailable,
+            appearance: appearance
         )
+    }
+
+    static func appearanceViewData(theme: AppTheme, language: any LanguageService) -> SettingsAppearanceViewData {
+        let chosen = language.chosenCode
+        return SettingsAppearanceViewData(
+            themes: AppTheme.allCases.map { SettingsChoiceViewData(id: $0.rawValue, title: title(for: $0)) },
+            selectedThemeID: theme.rawValue,
+            languages: language.availableCodes.map { SettingsChoiceViewData(id: $0, title: languageName(code: $0)) },
+            selectedLanguageID: chosen,
+            languageName: languageName(code: chosen),
+            languageNote: chosen == language.activeCode ? nil
+                : String(localized: "settings.appearance.languageNote \(languageName(code: chosen))", bundle: .module)
+        )
+    }
+
+    static func languageName(code: String) -> String {
+        let locale = Locale(identifier: code)
+        return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
+    }
+
+    private static func title(for theme: AppTheme) -> String {
+        switch theme {
+        case .system: String(localized: "settings.appearance.system", bundle: .module)
+        case .light: String(localized: "settings.appearance.light", bundle: .module)
+        case .dark: String(localized: "settings.appearance.dark", bundle: .module)
+        }
     }
 }

@@ -13,6 +13,9 @@ struct SettingsContentView: View {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }
                 reminderSection
+                SettingsAppearanceView(
+                    data: data.appearance, selectTheme: viewModel.selectTheme, selectLanguage: viewModel.selectLanguage
+                )
                 privacySection
                 backupSection
                 aboutSection
