@@ -4072,6 +4072,198 @@
         }
       }
     },
+    "settings.delete.checkIns" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check-ins"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konfirmasi"
+          }
+        }
+      }
+    },
+    "settings.delete.confirmWord" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DELETE"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HAPUS"
+          }
+        }
+      }
+    },
+    "settings.delete.copy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save a copy first"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan salinan dulu"
+          }
+        }
+      }
+    },
+    "settings.delete.deleted" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What gets deleted"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yang akan dihapus"
+          }
+        }
+      }
+    },
+    "settings.delete.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There’s nothing to delete yet."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum ada yang bisa dihapus."
+          }
+        }
+      }
+    },
+    "settings.delete.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletes every log and check-in. You can undo right after."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghapus semua catatan dan konfirmasi. Anda bisa membatalkan segera setelahnya."
+          }
+        }
+      }
+    },
+    "settings.delete.intro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes every log and check-in from this iPhone. There’s no account or backup to bring them back."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini menghapus semua catatan dan konfirmasi dari iPhone ini. Tidak ada akun atau cadangan untuk memulihkannya."
+          }
+        }
+      }
+    },
+    "settings.delete.logs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan"
+          }
+        }
+      }
+    },
+    "settings.delete.since" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sejak"
+          }
+        }
+      }
+    },
+    "settings.delete.stays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What stays"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yang tetap ada"
+          }
+        }
+      }
+    },
+    "settings.delete.staysDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders, theme and language"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengingat, tema, dan bahasa"
+          }
+        }
+      }
+    },
+    "settings.delete.typePrompt %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type %@ to continue"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketik %@ untuk melanjutkan"
+          }
+        }
+      }
+    },
     "settings.deleteAll" : {
       "localizations" : {
         "en" : {
@@ -4109,13 +4301,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Poopita %@ · No account. Your diary stays on this iPhone."
+            "value" : "Poopita %@"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Poopita %@ · Tanpa akun. Catatan Anda tetap di iPhone ini."
+            "value" : "Poopita %@"
+          }
+        }
+      }
+    },
+    "settings.footer.storage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No account. Your diary stays on this iPhone."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanpa akun. Catatan Anda tetap di iPhone ini."
           }
         }
       }
@@ -4349,13 +4557,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All history deleted · Undo"
+            "value" : "All history deleted"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semua riwayat dihapus · Batalkan"
+            "value" : "Semua riwayat dihapus"
           }
         }
       }

@@ -112,6 +112,10 @@ final class SettingsViewModel {
         languageService.relaunch(in: code)
     }
 
+    func deleteViewData() -> SettingsDeleteViewData {
+        Self.deleteViewData(entries: (try? repository.entries()) ?? [], checkIns: (try? repository.checkIns()) ?? [])
+    }
+
     func deleteAllHistory() throws {
         try repository.deleteAll()
         undoModel.record(String(localized: "settings.history.deleted", bundle: .module))
@@ -175,6 +179,21 @@ extension SettingsViewModel {
             },
             hidesInAppSwitcher: appearance.hidesInAppSwitcher
         )
+    }
+
+    static func deleteViewData(entries: [DiaryEntry], checkIns: [NoPoopCheckIn]) -> SettingsDeleteViewData {
+        let first = (entries.map(\.occurrence.instant) + checkIns.map(\.reportedAt.instant)).min()
+        return SettingsDeleteViewData(
+            logs: entries.count.formatted(), checkIns: checkIns.count.formatted(),
+            since: first?.formatted(.dateTime.day().month(.abbreviated).year()),
+            isEmpty: entries.isEmpty && checkIns.isEmpty,
+            confirmWord: String(localized: "settings.delete.confirmWord", bundle: .module)
+        )
+    }
+
+    static func confirms(_ typed: String, word: String) -> Bool {
+        let answer = typed.trimmingCharacters(in: .whitespacesAndNewlines)
+        return answer.caseInsensitiveCompare(word) == .orderedSame
     }
 
     static func footer(version: String?) -> String {

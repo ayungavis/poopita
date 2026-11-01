@@ -7,9 +7,9 @@ struct SettingsDataView: View {
 
     var body: some View {
         CardSectionView("settings.data.title") {
-            exportRow(pdfExport, title: "settings.data.exportPDF", format: "PDF")
+            SettingsExportRowView(item: pdfExport, title: "settings.data.exportPDF", format: "PDF")
             CardDividerView()
-            exportRow(csvExport, title: "settings.data.exportCSV", format: "CSV")
+            SettingsExportRowView(item: csvExport, title: "settings.data.exportCSV", format: "CSV")
             CardDividerView()
             HStack(spacing: Spacing.sm) {
                 Text("settings.backup.title", bundle: .module)
@@ -34,23 +34,5 @@ struct SettingsDataView: View {
             }
             .foregroundStyle(AppColor.textSecondary)
         }
-    }
-
-    private func exportRow(_ item: SettingsExportViewData, title: LocalizedStringKey, format: String) -> some View {
-        ShareLink(item: item, preview: SharePreview(Text(title, bundle: .module))) {
-            HStack(spacing: Spacing.sm) {
-                Text(title, bundle: .module)
-                Spacer(minLength: Spacing.md)
-                Text(verbatim: format)
-                    .foregroundStyle(AppColor.textSecondary)
-                Image(systemName: "chevron.right")
-                    .font(AppFont.caption.weight(.semibold))
-                    .foregroundStyle(AppColor.textSecondary)
-                    .accessibilityHidden(true)
-            }
-            .cardRow()
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
     }
 }

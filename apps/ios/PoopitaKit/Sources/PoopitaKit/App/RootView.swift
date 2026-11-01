@@ -34,7 +34,9 @@ public struct RootView: View {
                                 NavigationStack {
                                     TodayView(viewModel: model) { isShowingSettings = true }
                                         .navigationDestination(isPresented: $isShowingSettings) {
-                                            SettingsView(viewModel: settingsModel, reminders: remindersModel)
+                                            SettingsView(viewModel: settingsModel, reminders: remindersModel) {
+                                                isShowingSettings = false
+                                            }
                                         }
                                 }
                                 .hidesSystemTabBar()

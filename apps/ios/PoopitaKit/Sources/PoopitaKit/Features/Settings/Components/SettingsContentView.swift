@@ -5,7 +5,7 @@ struct SettingsContentView: View {
     let viewModel: SettingsViewModel
     let reminders: RemindersViewModel
     let data: SettingsViewData
-    @State private var confirmDeleteAll = false
+    let close: () -> Void
 
     var body: some View {
         ScrollView {
@@ -29,16 +29,6 @@ struct SettingsContentView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.top, Spacing.sm)
             .padding(.bottom, Spacing.xxl)
-        }
-        .confirmationDialog(Text("settings.deleteHistoryQuestion", bundle: .module), isPresented: $confirmDeleteAll) {
-            Button(role: .destructive) {
-                try? viewModel.deleteAllHistory()
-            } label: {
-                Text("settings.deleteAll", bundle: .module)
-            }
-            Button(role: .cancel) {} label: {
-                Text("entry.cancel", bundle: .module)
-            }
         }
         .onChange(of: viewModel.errorMessage) { _, error in
             if let error {
@@ -110,12 +100,17 @@ struct SettingsContentView: View {
     }
 
     private var footer: some View {
-        VStack(spacing: Spacing.md) {
-            Text(verbatim: viewModel.footer)
-                .font(AppFont.caption)
-                .foregroundStyle(AppColor.textSecondary)
-                .multilineTextAlignment(.center)
-            Button { confirmDeleteAll = true } label: {
+        VStack(spacing: Spacing.lg) {
+            VStack(spacing: Spacing.xs / 2) {
+                Text(verbatim: viewModel.footer)
+                Text("settings.footer.storage", bundle: .module)
+            }
+            .font(AppFont.caption)
+            .foregroundStyle(AppColor.textSecondary)
+            .multilineTextAlignment(.center)
+            NavigationLink {
+                SettingsDeleteHistoryView(viewModel: viewModel, close: close)
+            } label: {
                 Text("settings.data.deleteAll", bundle: .module)
                     .font(AppFont.body.weight(.medium))
                     .foregroundStyle(AppColor.destructive)
