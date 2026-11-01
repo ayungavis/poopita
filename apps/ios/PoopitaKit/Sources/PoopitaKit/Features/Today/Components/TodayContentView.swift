@@ -181,7 +181,7 @@ struct TodayContentView: View {
             }
             .transition(.opacity)
         case let .pastDay(status, detail, logLabel, canConfirm, mark):
-            TodayPastDayView(
+            PastDayCardView(
                 status: status, detail: detail, logLabel: logLabel, canConfirm: canConfirm, mark: mark,
                 log: viewModel.presentLogForSelectedDay, confirm: viewModel.confirmNoPoopForSelectedDay
             )

@@ -47,7 +47,7 @@ struct TodayWeekStripView: View {
                 Text(verbatim: item.dayNumber)
                     .font(AppFont.title.weight(.regular))
                     .foregroundStyle(numberColor(item, isShown: isShown))
-                TodayDayMarkView(mark: item.mark, isSelected: isShown)
+                DayMarkView(mark: item.mark, isSelected: isShown)
                     .frame(height: Spacing.sm)
             }
             .padding(.vertical, Spacing.sm)

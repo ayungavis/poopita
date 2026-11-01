@@ -1,9 +1,7 @@
 import Foundation
 
 struct TodayWeekDayViewData: Equatable, Sendable, Identifiable {
-    enum Mark: Equatable, Sendable {
-        case logs(Int), noPoop, noneSoFar, unrecorded, future, open
-    }
+    typealias Mark = DayMarkViewData
 
     let dayID: String
     let dayNumber: String

@@ -166,20 +166,27 @@ extension TodayViewModel {
             title = String(localized: "entry.typeSkipped", bundle: .module)
         }
         var observations = [title]
+        var details: [String] = []
         if let amount = entry.amount {
             let choice = EntryChoiceViewData.amounts.first { $0.id == amount.rawValue }
             guard let choice else { throw AppError.invalidStoredData }
             observations.append(String(localized: "entry.amountLabel", bundle: .module) + ": " + choice.title)
+            details.append(choice.title)
         }
         if let effort = entry.effort {
             let choice = EntryChoiceViewData.efforts.first { $0.id == effort.rawValue }
             guard let choice else { throw AppError.invalidStoredData }
             observations.append(String(localized: "entry.effortLabel", bundle: .module) + ": " + choice.title)
+            details.append(choice.title)
+        }
+        if !entry.note.isEmpty {
+            details.append(entry.note)
         }
         return TodayEntryViewData(
             id: entry.id, dateLabel: entry.occurrence.instant.formatted(dateStyle),
             timeLabel: entry.occurrence.instant.formatted(timeStyle), title: title, illustration: illustration,
-            observations: observations.joined(separator: " · "), note: entry.note
+            observations: observations.joined(separator: " · "), details: details.joined(separator: " · "),
+            note: entry.note
         )
     }
 }

@@ -4,166 +4,78 @@ import SwiftUI
 struct HistoryContentView: View {
     let viewModel: HistoryViewModel
     let data: HistoryViewData
-    @AccessibilityFocusState private var focusedEntry: UUID?
-    @State private var editedID: UUID?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
+                HistoryMonthHeaderView(data: data, move: viewModel.moveMonth)
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }
-                calendarCard
-                selectedDay
-                legend
+                HistoryCalendarView(data: data.calendar, select: viewModel.select(id:))
+                    .simultaneousGesture(monthSwipe)
+                HistoryLegendView()
+                summary
+                HistoryDaySectionView(
+                    data: data.selected, edit: viewModel.edit(id:), log: viewModel.addEntry, confirm: confirmNoPoop
+                )
+                .padding(.top, Spacing.sm)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: data.selected)
             }
-            .padding(Spacing.lg)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
         }
         .background(AppColor.background)
-        .navigationTitle(Text("history.title", bundle: .module))
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: viewModel.showToday) { Text("history.today", bundle: .module) }
+        #if os(iOS)
+            .toolbarVisibility(.hidden, for: .navigationBar)
+        #endif
+            .fullScreenModal(item: editorBinding, onDismiss: viewModel.dismissEditor) { editor in
+                EntryEditorView(
+                    viewModel: editor, saved: viewModel.savedEditor,
+                    delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage
+                )
             }
-        }
-        .fullScreenModal(item: editorBinding, onDismiss: dismissed) { editor in
-            EntryEditorView(
-                viewModel: editor, saved: viewModel.savedEditor,
-                delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage
-            )
-        }
+            .onChange(of: viewModel.errorMessage) { _, error in
+                if let error {
+                    AccessibilityNotification.Announcement(error).post()
+                }
+            }
     }
 
-    private var calendarCard: some View {
-        VStack(spacing: Spacing.md) {
-            HStack {
-                Button { viewModel.moveMonth(-1) } label: {
-                    Image(systemName: "chevron.left").frame(minWidth: Spacing.touchTarget, minHeight: Spacing.touchTarget)
-                }
-                .accessibilityLabel(Text("history.previousMonth", bundle: .module))
-                Spacer()
-                Text(verbatim: data.monthLabel).font(AppFont.title)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer()
-                Button { viewModel.moveMonth(1) } label: {
-                    Image(systemName: "chevron.right").frame(minWidth: Spacing.touchTarget, minHeight: Spacing.touchTarget)
-                }
-                .disabled(!data.canMoveNext)
-                .accessibilityLabel(Text("history.nextMonth", bundle: .module))
-            }
-            HistoryCalendarView(data: data.calendar, selectedID: data.selected.dayID,
-                                todayID: data.todayID, select: viewModel.select(id:))
-        }
-        .padding(Spacing.lg)
-        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
-    }
-
-    private var selectedDay: some View {
-        VStack(alignment: .leading, spacing: Spacing.md) {
-            HStack {
-                Text(verbatim: data.selected.dateLabel).font(AppFont.title).accessibilityAddTraits(.isHeader)
-                Spacer()
-                if data.selected.status == .logged || data.selected.status == .completed || data.selected.status == .partial {
-                    marker(data.selected.status)
-                        .frame(width: Spacing.md, height: Spacing.md)
-                        .accessibilityHidden(true)
-                }
-            }
-            Text(verbatim: selectedStatus)
-                .font(AppFont.body.weight(.semibold))
-            if let checkInStatus = data.selected.checkInStatus, data.selected.entries.isEmpty {
-                Text(verbatim: checkInStatus).foregroundStyle(AppColor.textSecondary)
-            }
-            if data.selected.entries.isEmpty {
-                Text("history.emptyDay", bundle: .module).foregroundStyle(AppColor.textSecondary)
-            } else {
-                LazyVStack(spacing: Spacing.sm) {
-                    ForEach(data.selected.entries) { entry in
-                        HistoryEntryRowView(entry: entry, edit: {
-                            editedID = entry.id
-                            viewModel.edit(id: entry.id)
-                        }, delete: {
-                            if viewModel.delete(id: entry.id) {
-                                focusedEntry = nil
-                            }
-                        })
-                        .accessibilityFocused($focusedEntry, equals: entry.id)
+    private var summary: some View {
+        HStack {
+            Text(verbatim: data.logSummary)
+                .font(AppFont.caption)
+                .foregroundStyle(AppColor.textSecondary)
+            Spacer(minLength: Spacing.sm)
+            if let unrecorded = data.unrecorded {
+                Button {
+                    viewModel.select(id: unrecorded.dayID)
+                } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Text(verbatim: unrecorded.label)
+                        Image(systemName: "chevron.right").accessibilityHidden(true)
                     }
+                    .font(AppFont.caption.weight(.semibold))
+                    .foregroundStyle(AppColor.accent)
+                    .frame(minHeight: Spacing.touchTarget)
                 }
-            }
-            if data.selected.canConfirmNoPoop {
-                Button(action: confirmNoPoop) {
-                    Text("checkIn.confirmPast", bundle: .module)
-                        .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
-                }
-                .buttonStyle(.bordered)
-            }
-            Button(action: viewModel.addEntry) {
-                Label {
-                    Text("history.addEntry", bundle: .module)
-                } icon: {
-                    Image(systemName: "plus")
-                }
-                .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
-            }
-            .buttonStyle(.borderedProminent)
-        }
-        .padding(Spacing.lg)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
-        .onChange(of: viewModel.errorMessage) { _, error in
-            if let error {
-                AccessibilityNotification.Announcement(error).post()
+                .buttonStyle(.plain)
             }
         }
     }
 
-    @ViewBuilder
-    private func marker(_ status: HistoryDayViewData.Status) -> some View {
-        switch status {
-        case .logged:
-            Circle().fill(AppColor.accent)
-        case .completed:
-            Circle().stroke(AppColor.accent, lineWidth: Spacing.borderWidth)
-        case .partial:
-            Image(systemName: "diamond.fill").foregroundStyle(AppColor.accent)
-        case .unrecorded:
-            Capsule().fill(AppColor.textSecondary)
+    private var monthSwipe: some Gesture {
+        DragGesture(minimumDistance: Spacing.xl).onEnded { value in
+            let width = value.translation.width
+            guard abs(width) > abs(value.translation.height) * 2 else { return }
+            viewModel.moveMonth(width < 0 ? 1 : -1)
         }
     }
 
     private func confirmNoPoop() {
         _ = viewModel.confirmNoPoop()
-    }
-
-    private var legend: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            legendRow("history.status.logged", marker: "circle.fill")
-            legendRow("history.status.completed", marker: "circle")
-            legendRow("history.status.partial", marker: "diamond.fill")
-            legendRow("history.status.unrecorded", marker: "minus")
-        }
-        .font(AppFont.caption)
-        .foregroundStyle(AppColor.textSecondary)
-        .padding(.horizontal, Spacing.sm)
-    }
-
-    private var selectedStatus: String {
-        let key: String.LocalizationValue = switch data.selected.status {
-        case .logged: "history.status.logged"
-        case .completed: "history.status.completed"
-        case .partial: "history.status.partial"
-        case .unrecorded: "history.status.unrecorded"
-        }
-        return String(localized: key, bundle: .module)
-    }
-
-    private func legendRow(_ key: LocalizedStringKey, marker: String) -> some View {
-        Label {
-            Text(key, bundle: .module)
-        } icon: {
-            Image(systemName: marker).accessibilityHidden(true)
-        }
     }
 
     private var editorBinding: Binding<EntryEditorViewModel?> {
@@ -172,10 +84,5 @@ struct HistoryContentView: View {
                 viewModel.dismissEditor()
             }
         })
-    }
-
-    private func dismissed() {
-        viewModel.dismissEditor()
-        focusedEntry = editedID
     }
 }

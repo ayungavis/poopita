@@ -148,86 +148,108 @@ final class HistoryViewModel {
         }
     }
 
-    var calendarState: HistoryCalendarViewData? {
-        guard case let .loaded(data) = state else { return nil }
-        return data.calendar
-    }
-
     private func todayDay() -> DiaryDay {
         (try? DiaryDay(date: now(), timeZone: timeZone())) ?? selectedDay
     }
 
     static func viewData(_ source: HistorySourceData) throws -> HistoryViewData {
-        let calendar = gregorianCalendar(source.timeZone)
+        let calendar = TodayViewModel.calendar(source.timeZone)
         guard let monthStart = calendar.dateInterval(of: .month, for: source.month)?.start,
               let monthRange = calendar.range(of: .day, in: .month, for: monthStart)
         else { throw AppError.invalidOccurrence }
         let today = try DiaryDay(date: source.today, timeZone: source.timeZone)
-        let days = try calendarDays(source, calendar: calendar, monthStart: monthStart, count: monthRange.count)
-        let selectedEntries = source.entries.filter { DiaryDay(occurrence: $0.occurrence) == source.selectedDay }
-        return try HistoryViewData(
-            monthLabel: monthStart.formatted(.dateTime.month(.wide).year()),
-            canMoveNext: monthStart < (calendar.dateInterval(of: .month, for: source.today)?.start ?? source.today),
-            calendar: HistoryCalendarViewData(weekdays: weekdays(calendar), days: days),
-            selected: selection(source, entries: selectedEntries, today: today, calendar: calendar),
-            todayID: String(format: "%04d-%02d-%02d", today.year, today.month, today.day)
-        )
-    }
-
-    private static func calendarDays(
-        _ source: HistorySourceData, calendar: Calendar, monthStart: Date, count: Int
-    ) throws -> [HistoryDayViewData?] {
-        let firstWeekday = calendar.component(.weekday, from: monthStart) - calendar.firstWeekday
-        let leading = (firstWeekday + 7) % 7
-        let days = try (1 ... count).map { offset in
+        let logs = Dictionary(grouping: source.entries) { DiaryDay(occurrence: $0.occurrence) }
+        let checkIns = Dictionary(source.checkIns.map { ($0.day, $0.coverage) }) { first, _ in first }
+        let marks = MarkSource(logs: logs.mapValues(\.count), checkIns: checkIns, today: today)
+        let days = try (1 ... monthRange.count).map { offset in
             try DiaryDay(date: calendar.date(byAdding: .day, value: offset - 1, to: monthStart) ?? monthStart,
                          timeZone: source.timeZone)
         }
-        return Array(repeating: HistoryDayViewData?.none, count: leading)
-            + days.map { day in
-                Optional(HistoryDayViewData.viewData(
-                    day: day, status: status(day, entries: source.entries, checkIns: source.checkIns),
-                    timeZone: source.timeZone
-                ))
+        let leading = (calendar.component(.weekday, from: monthStart) - calendar.firstWeekday + 7) % 7
+        let cells = days.map { day in
+            HistoryDayViewData.viewData(
+                day: day, mark: marks.mark(day), today: today, selected: source.selectedDay, timeZone: source.timeZone
+            )
+        }
+        var monthStyle = Date.FormatStyle.dateTime.month(.wide)
+        monthStyle.timeZone = source.timeZone
+        let monthName = monthStart.formatted(monthStyle)
+        let monthLogs = days.reduce(0) { $0 + (logs[$1]?.count ?? 0) }
+        let unrecorded = cells.filter { $0.mark == .unrecorded }
+        return try HistoryViewData(
+            monthLabel: monthStart.formatted(.dateTime.month(.wide).year()),
+            monthName: monthName,
+            yearLabel: monthStart.formatted(.dateTime.year()),
+            canMoveNext: monthStart < (calendar.dateInterval(of: .month, for: source.today)?.start ?? source.today),
+            calendar: HistoryCalendarViewData(
+                weekdays: weekdays(calendar), days: Array(repeating: nil, count: leading) + cells
+            ),
+            logSummary: monthLogs == 1 ? String(localized: "history.monthLogs.one \(monthName)", bundle: .module)
+                : String(localized: "history.monthLogs \(monthLogs) \(monthName)", bundle: .module),
+            unrecorded: unrecorded.first.map {
+                HistoryUnrecordedViewData(dayID: $0.dayID, label: unrecordedLabel(unrecorded.count))
+            },
+            selected: selection(source, logs: logs[source.selectedDay] ?? [], today: today, calendar: calendar)
+        )
+    }
+
+    private struct MarkSource {
+        let logs: [DiaryDay: Int]
+        let checkIns: [DiaryDay: NoPoopCheckIn.Coverage]
+        let today: DiaryDay
+
+        func mark(_ day: DiaryDay) -> DayMarkViewData {
+            if let count = logs[day] {
+                return .logs(count)
             }
+            switch checkIns[day] {
+            case .completed: return .noPoop
+            case .partial: return .noneSoFar
+            case nil: return day > today ? .future : day == today ? .open : .unrecorded
+            }
+        }
+    }
+
+    private static func unrecordedLabel(_ count: Int) -> String {
+        count == 1 ? String(localized: "history.unrecordedDays.one", bundle: .module)
+            : String(localized: "history.unrecordedDays \(count)", bundle: .module)
     }
 
     private static func selection(
-        _ source: HistorySourceData, entries: [DiaryEntry], today: DiaryDay, calendar: Calendar
+        _ source: HistorySourceData, logs: [DiaryEntry], today: DiaryDay, calendar: Calendar
     ) throws -> HistorySelectionViewData {
-        let checkIn = source.checkIns.first { $0.day == source.selectedDay }
-        return try HistorySelectionViewData(
-            dayID: source.selectedDay.id,
-            dateLabel: date(for: source.selectedDay, calendar: calendar)
-                .formatted(.dateTime.weekday(.wide).month(.wide).day().year()),
-            status: status(source.selectedDay, entries: source.entries, checkIns: source.checkIns),
-            entries: entries.map(TodayViewModel.row),
-            checkInStatus: checkIn.map {
-                String(localized: $0.coverage == .completed ? "checkIn.completed" : "checkIn.partial", bundle: .module)
-            },
-            canConfirmNoPoop: source.selectedDay < today && entries.isEmpty && checkIn == nil
+        let selected = source.selectedDay
+        let date = try TodayViewModel.start(of: selected, calendar: calendar)
+        var dateStyle = Date.FormatStyle.dateTime.weekday(.wide).day().month(.wide)
+        var weekdayStyle = Date.FormatStyle.dateTime.weekday(.wide)
+        var shortWeekdayStyle = Date.FormatStyle.dateTime.weekday(.abbreviated)
+        dateStyle.timeZone = source.timeZone
+        weekdayStyle.timeZone = source.timeZone
+        shortWeekdayStyle.timeZone = source.timeZone
+        let logLabel = String(localized: "today.logFor \(date.formatted(weekdayStyle))", bundle: .module)
+        let content: HistorySelectionViewData.Content
+        if !logs.isEmpty {
+            let rows = try logs.sorted { $0.occurrence.instant < $1.occurrence.instant }.map(TodayViewModel.row)
+            content = .entries(rows, logLabel: logLabel)
+        } else if selected < today, case let .pastDay(status, detail, label, canConfirm, mark) = try TodayViewModel.dayState(
+            hasLogs: false, latestEntry: nil, checkIn: source.checkIns.first { $0.day == selected },
+            pastWeekday: date.formatted(shortWeekdayStyle), now: source.today
+        ) {
+            content = .pastDay(status: status, detail: detail, logLabel: label, canConfirm: canConfirm, mark: mark)
+        } else {
+            content = .open(logLabel: logLabel)
+        }
+        return HistorySelectionViewData(
+            dayID: selected.id,
+            dateLabel: date.formatted(dateStyle),
+            countLabel: logs.isEmpty ? nil : TodayViewModel.logCount(logs.count),
+            content: content
         )
     }
 
     private static func weekdays(_ calendar: Calendar) -> [String] {
         let symbols = calendar.veryShortStandaloneWeekdaySymbols
         return Array(symbols.dropFirst(calendar.firstWeekday - 1) + symbols.prefix(calendar.firstWeekday - 1))
-    }
-
-    private static func status(
-        _ day: DiaryDay, entries: [DiaryEntry], checkIns: [NoPoopCheckIn]
-    ) -> HistoryDayViewData.Status {
-        if entries.contains(where: { DiaryDay(occurrence: $0.occurrence) == day }) {
-            return .logged
-        }
-        guard let checkIn = checkIns.first(where: { $0.day == day }) else { return .unrecorded }
-        return checkIn.coverage == .completed ? .completed : .partial
-    }
-
-    private static func gregorianCalendar(_ timeZone: TimeZone) -> Calendar {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone
-        return calendar
     }
 
     private static func date(for day: DiaryDay, calendar: Calendar) -> Date {
@@ -254,26 +276,28 @@ final class HistoryViewModel {
 }
 
 private extension HistoryDayViewData {
-    static func viewData(day: DiaryDay, status: Status, timeZone: TimeZone) -> Self {
-        let dayID = day.id
-        let number = String(day.day)
-        var style = Date.FormatStyle.dateTime.weekday(.wide).month(.wide).day().year()
+    static func viewData(
+        day: DiaryDay, mark: DayMarkViewData, today: DiaryDay, selected: DiaryDay, timeZone: TimeZone
+    ) -> Self {
+        var style = Date.FormatStyle.dateTime.weekday(.wide).day().month(.wide)
         style.timeZone = timeZone
         let date = Calendar(identifier: .gregorian).date(
             from: DateComponents(timeZone: timeZone, year: day.year, month: day.month, day: day.day)
         ) ?? .now
-        let localizedStatus = String(localized: Self.statusKey(status), bundle: .module)
-        let dateLabel = date.formatted(style)
-        let accessibilityLabel = String(localized: "history.dateLabel \(dateLabel), \(localizedStatus)", bundle: .module)
-        return Self(dayID: dayID, number: number, accessibilityLabel: accessibilityLabel, status: status)
+        let label = [date.formatted(style), statusLabel(mark)].compactMap(\.self).joined(separator: ", ")
+        return Self(
+            dayID: day.id, number: String(day.day), accessibilityLabel: label, mark: mark,
+            isToday: day == today, isSelected: day == selected
+        )
     }
 
-    private static func statusKey(_ status: Status) -> String.LocalizationValue {
-        switch status {
-        case .logged: "history.status.logged"
-        case .completed: "history.status.completed"
-        case .partial: "history.status.partial"
-        case .unrecorded: "history.status.unrecorded"
+    private static func statusLabel(_ mark: DayMarkViewData) -> String? {
+        switch mark {
+        case let .logs(count): TodayViewModel.logCount(count)
+        case .noPoop: String(localized: "checkIn.completed", bundle: .module)
+        case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
+        case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
+        case .future, .open: nil
         }
     }
 }

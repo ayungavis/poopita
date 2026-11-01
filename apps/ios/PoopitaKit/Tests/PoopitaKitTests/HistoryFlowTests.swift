@@ -20,13 +20,17 @@ struct HistoryFlowTests {
             entries: entries, checkIns: checkIns, month: today, selectedDay: loggedDay,
             today: today, timeZone: zone
         ))
-        let days = Dictionary(uniqueKeysWithValues: data.calendar.days.compactMap(\.self).map { ($0.dayID, $0.status) })
-        #expect(days["2026-10-03"] == .logged)
-        #expect(days["2026-10-04"] == .completed)
-        #expect(days["2026-10-05"] == .partial)
+        let days = Dictionary(uniqueKeysWithValues: data.calendar.days.compactMap(\.self).map { ($0.dayID, $0.mark) })
+        #expect(days["2026-10-03"] == .logs(2))
+        #expect(days["2026-10-04"] == .noPoop)
+        #expect(days["2026-10-05"] == .noneSoFar)
         #expect(days["2026-10-06"] == .unrecorded)
-        #expect(data.selected.entries.count == 2)
-        #expect(data.selected.canConfirmNoPoop == false)
+        #expect(days["2026-10-20"] == .open)
+        #expect(days["2026-10-21"] == .future)
+        #expect(Self.entries(data.selected)?.count == 2)
+        #expect(data.selected.countLabel == "2 logs")
+        #expect(data.logSummary == "2 logs in October")
+        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-01", label: "16 days not recorded"))
     }
 
     @Test func historyGroupsEntriesByStoredOccurrenceLocalDay() throws {
@@ -38,8 +42,7 @@ struct HistoryFlowTests {
             entries: [entry], checkIns: [], month: date("2026-10-15T12:00:00Z"), selectedDay: storedDay,
             today: date("2026-10-30T12:00:00Z"), timeZone: displayZone
         ))
-        #expect(data.selected.entries.count == 1)
-        #expect(data.selected.status == .logged)
+        #expect(Self.entries(data.selected)?.count == 1)
     }
 
     @Test func selectionMonthNavigationTodayAndFutureDatesStayBounded() throws {
@@ -91,6 +94,36 @@ struct HistoryFlowTests {
         model.load()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-03")
         #expect(try repository.entries().count == 1)
+    }
+
+    @Test func emptyDaysOfferTheSameCardAsTodayAndTodayStaysOpen() throws {
+        let zone = try #require(TimeZone(secondsFromGMT: 0))
+        let today = try date("2026-10-20T12:00:00Z")
+        let pastDay = try DiaryDay(date: date("2026-10-06T00:00:00Z"), timeZone: zone)
+        let past = try HistoryViewModel.viewData(HistorySourceData(
+            entries: [], checkIns: [], month: today, selectedDay: pastDay, today: today, timeZone: zone
+        ))
+        guard case let .pastDay(status, _, logLabel, canConfirm, mark) = past.selected.content else {
+            Issue.record("expected the not-recorded card")
+            return
+        }
+        #expect(status == "Not recorded")
+        #expect(logLabel == "Log for Tue")
+        #expect(canConfirm)
+        #expect(mark == .unrecorded)
+        #expect(past.selected.countLabel == nil)
+        #expect(past.logSummary == "0 logs in October")
+
+        let open = try HistoryViewModel.viewData(HistorySourceData(
+            entries: [], checkIns: [], month: today, selectedDay: DiaryDay(date: today, timeZone: zone),
+            today: today, timeZone: zone
+        ))
+        #expect(open.selected.content == .open(logLabel: "Log for Tuesday"))
+    }
+
+    private static func entries(_ selection: HistorySelectionViewData) -> [TodayEntryViewData]? {
+        guard case let .entries(entries, _) = selection.content else { return nil }
+        return entries
     }
 
     private static func loaded(_ state: Loadable<HistoryViewData>) -> HistoryViewData? {

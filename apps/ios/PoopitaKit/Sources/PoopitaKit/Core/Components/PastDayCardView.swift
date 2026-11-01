@@ -1,19 +1,19 @@
 import DesignSystem
 import SwiftUI
 
-struct TodayPastDayView: View {
+struct PastDayCardView: View {
     let status: String
     let detail: String
     let logLabel: String
     let canConfirm: Bool
-    let mark: TodayWeekDayViewData.Mark
+    let mark: DayMarkViewData
     let log: () -> Void
     let confirm: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
             HStack(spacing: Spacing.sm) {
-                TodayDayMarkView(mark: mark, isSelected: false)
+                DayMarkView(mark: mark, isSelected: false)
                     .frame(minWidth: Spacing.lg)
                 Text(verbatim: status)
                     .font(AppFont.caption.weight(.semibold))

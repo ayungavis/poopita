@@ -43,7 +43,7 @@ struct TodayWaitingView: View {
             }
             if let partialNote {
                 HStack(spacing: Spacing.sm) {
-                    TodayDayMarkView(mark: .noneSoFar, isSelected: false)
+                    DayMarkView(mark: .noneSoFar, isSelected: false)
                     Text(verbatim: partialNote)
                         .font(AppFont.caption)
                         .foregroundStyle(AppColor.textSecondary)

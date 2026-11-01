@@ -289,7 +289,7 @@ extension TodayViewModel {
         )
     }
 
-    static func logCount(_ count: Int) -> String {
+    nonisolated static func logCount(_ count: Int) -> String {
         count == 1 ? String(localized: "today.logCount.one", bundle: .module)
             : String(localized: "today.logCount \(count)", bundle: .module)
     }
@@ -311,7 +311,7 @@ extension TodayViewModel {
     private struct WeekDay {
         let item: TodayWeekDayViewData
         let weekdayName: String
-        var mark: TodayWeekDayViewData.Mark {
+        var mark: DayMarkViewData {
             item.mark
         }
 
@@ -346,7 +346,7 @@ extension TodayViewModel {
             let day = try DiaryDay(date: dayDate, timeZone: calendar.timeZone)
             let logs = entries.count { DiaryDay(occurrence: $0.occurrence) == day }
             let coverage = checkIns.first { $0.day == day }?.coverage
-            let mark: TodayWeekDayViewData.Mark = if logs > 0 {
+            let mark: DayMarkViewData = if logs > 0 {
                 .logs(logs)
             } else if coverage == .completed {
                 .noPoop
@@ -375,7 +375,7 @@ extension TodayViewModel {
         }
     }
 
-    private static func markLabel(_ mark: TodayWeekDayViewData.Mark) -> String? {
+    private static func markLabel(_ mark: DayMarkViewData) -> String? {
         switch mark {
         case let .logs(count): logCount(count)
         case .noPoop: String(localized: "checkIn.completed", bundle: .module)

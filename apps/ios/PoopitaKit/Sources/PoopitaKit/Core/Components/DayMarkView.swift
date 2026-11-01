@@ -1,8 +1,8 @@
 import DesignSystem
 import SwiftUI
 
-struct TodayDayMarkView: View {
-    let mark: TodayWeekDayViewData.Mark
+struct DayMarkView: View {
+    let mark: DayMarkViewData
     let isSelected: Bool
 
     var body: some View {

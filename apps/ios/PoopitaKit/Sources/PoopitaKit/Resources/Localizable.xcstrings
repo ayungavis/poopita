@@ -1845,50 +1845,98 @@
         }
       }
     },
-    "history.addEntry" : {
+    "history.legend.logs" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add bowel movement"
+            "value" : "Logs"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tambah catatan BAB"
+            "value" : "Catatan"
           }
         }
       }
     },
-    "history.dateLabel %@, %@" : {
+    "history.legend.noneSoFar" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@, %2$@"
+            "value" : "None so far"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@, %2$@"
+            "value" : "Belum BAB"
           }
         }
       }
     },
-    "history.emptyDay" : {
+    "history.legend.noPoop" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No entries for this day."
+            "value" : "No poop"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tidak ada catatan untuk hari ini."
+            "value" : "Tidak BAB"
+          }
+        }
+      }
+    },
+    "history.legend.unrecorded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum dicatat"
+          }
+        }
+      }
+    },
+    "history.monthLogs %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld logs in %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld catatan di %2$@"
+          }
+        }
+      }
+    },
+    "history.monthLogs.one %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 log in %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 catatan di %@"
           }
         }
       }
@@ -1925,70 +1973,6 @@
         }
       }
     },
-    "history.status.completed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No poop that day"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tidak BAB pada hari itu"
-          }
-        }
-      }
-    },
-    "history.status.logged" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logged"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tercatat"
-          }
-        }
-      }
-    },
-    "history.status.partial" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None so far today"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB hari ini"
-          }
-        }
-      }
-    },
-    "history.status.unrecorded" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not recorded"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum dicatat"
-          }
-        }
-      }
-    },
     "history.title" : {
       "localizations" : {
         "en" : {
@@ -2005,18 +1989,34 @@
         }
       }
     },
-    "history.today" : {
+    "history.unrecordedDays %lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Today"
+            "value" : "%lld days not recorded"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hari ini"
+            "value" : "%lld hari belum dicatat"
+          }
+        }
+      }
+    },
+    "history.unrecordedDays.one" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 day not recorded"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hari belum dicatat"
           }
         }
       }

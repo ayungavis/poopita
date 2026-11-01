@@ -3,11 +3,9 @@ import SwiftUI
 
 struct HistoryCalendarView: View {
     let data: HistoryCalendarViewData
-    let selectedID: String
-    let todayID: String
     let select: (String) -> Void
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: Spacing.xs), count: 7)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: Spacing.xs) {
@@ -15,64 +13,55 @@ struct HistoryCalendarView: View {
                 Text(verbatim: weekday.element)
                     .font(AppFont.caption)
                     .foregroundStyle(AppColor.textSecondary)
-                    .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
+                    .frame(maxWidth: .infinity, minHeight: Spacing.xl)
                     .accessibilityHidden(true)
             }
             ForEach(Array(data.days.enumerated()), id: \.offset) { _, day in
                 if let day {
-                    dateButton(day)
+                    dayButton(day)
                 } else {
-                    Color.clear.frame(height: Spacing.touchTarget)
+                    Color.clear.frame(height: Spacing.buttonHeight)
                         .accessibilityHidden(true)
                 }
             }
         }
+        .sensoryFeedback(.selection, trigger: data.days.first { $0?.isSelected == true }??.dayID)
     }
 
-    private func dateButton(_ item: HistoryDayViewData) -> some View {
-        let isSelected = item.dayID == selectedID
-        let isToday = item.dayID == todayID
-        let isFuture = item.dayID > todayID
+    private func dayButton(_ item: HistoryDayViewData) -> some View {
+        let shape = RoundedRectangle(cornerRadius: Spacing.lg)
         return Button { select(item.dayID) } label: {
             VStack(spacing: Spacing.xs) {
                 Text(verbatim: item.number)
-                    .font(AppFont.body.weight(isSelected ? .semibold : .regular))
-                marker(item.status)
-                    .frame(width: Spacing.xs, height: Spacing.xs)
+                    .font(AppFont.title.weight(.regular))
+                    .foregroundStyle(numberColor(item))
+                DayMarkView(mark: item.mark, isSelected: item.isSelected)
+                    .frame(height: Spacing.sm)
             }
-            .foregroundStyle(isFuture ? AppColor.textSecondary.opacity(0.4) : AppColor.textPrimary)
-            .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
-            .background(isSelected ? AppColor.accent.opacity(0.15) : .clear,
-                        in: RoundedRectangle(cornerRadius: Spacing.sm))
-            .overlay {
-                RoundedRectangle(cornerRadius: Spacing.sm)
-                    .stroke(isSelected ? AppColor.accent : .clear, lineWidth: Spacing.borderWidth)
-            }
-            .overlay(alignment: .bottom) {
-                if isToday {
-                    Capsule().fill(AppColor.accent).frame(width: Spacing.md, height: Spacing.borderWidth)
-                        .offset(y: Spacing.xs)
+            .frame(maxWidth: .infinity, minHeight: Spacing.buttonHeight)
+            .background {
+                if item.isSelected {
+                    shape.fill(AppColor.ink)
+                } else if item.isToday {
+                    shape.strokeBorder(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }
             }
-            .contentShape(Rectangle())
+            .contentShape(shape)
         }
         .buttonStyle(.plain)
-        .disabled(isFuture)
+        .disabled(item.mark == .future)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: item.accessibilityLabel))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityAddTraits(item.isSelected ? .isSelected : [])
     }
 
-    @ViewBuilder
-    private func marker(_ status: HistoryDayViewData.Status) -> some View {
-        switch status {
-        case .logged:
-            Circle().fill(AppColor.accent)
-        case .completed:
-            Circle().stroke(AppColor.accent, lineWidth: Spacing.borderWidth)
-        case .partial:
-            Image(systemName: "diamond.fill").font(AppFont.caption).foregroundStyle(AppColor.accent)
-        case .unrecorded:
-            Capsule().fill(AppColor.textSecondary).frame(width: Spacing.sm, height: Spacing.borderWidth)
+    private func numberColor(_ item: HistoryDayViewData) -> Color {
+        if item.isSelected {
+            AppColor.onInk
+        } else if item.mark == .future {
+            AppColor.marker
+        } else {
+            AppColor.textPrimary
         }
     }
 }
