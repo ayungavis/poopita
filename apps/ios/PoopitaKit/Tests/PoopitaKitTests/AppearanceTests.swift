@@ -111,8 +111,8 @@ struct AppearanceTests {
     ) -> SettingsViewModel {
         SettingsViewModel(
             repository: repository, undoModel: UndoModel(repository: repository), appearance: appearance,
-            reminderService: TestReminderService(), biometricService: TestBiometricService(),
-            languageService: language, now: { .now }, timeZone: { .gmt }
+            biometricService: TestBiometricService(),
+            languageService: language, now: { .now }
         )
     }
 }

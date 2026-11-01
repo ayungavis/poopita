@@ -2,8 +2,8 @@ import DesignSystem
 import SwiftUI
 
 struct SettingsContentView: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let viewModel: SettingsViewModel
+    let reminders: RemindersViewModel
     let data: SettingsViewData
     @State private var confirmDeleteAll = false
 
@@ -48,34 +48,29 @@ struct SettingsContentView: View {
     }
 
     private var reminderSection: some View {
-        SettingsSectionView("settings.reminders.title", footnote: "settings.reminders.discreetHint") {
-            Toggle(isOn: Binding(
-                get: { data.isReminderEnabled },
-                set: { enabled in Task { await viewModel.toggleReminder(enabled) } }
-            )) {
-                Text("settings.reminders.dailyCheckIn", bundle: .module)
-            }
-            .tint(AppColor.ink)
-            .settingsRow()
-            if data.isReminderEnabled {
-                SettingsDividerView()
-                DatePicker(
-                    selection: Binding(
-                        get: { data.reminderDate },
-                        set: { date in Task { await viewModel.setReminderDate(date) } }
-                    ),
-                    displayedComponents: [.hourAndMinute]
-                ) {
-                    Text("settings.reminders.time", bundle: .module)
+        CardSectionView("settings.reminders.title") {
+            NavigationLink {
+                RemindersView(viewModel: reminders)
+            } label: {
+                HStack(spacing: Spacing.sm) {
+                    Text("settings.reminders.dailyCheckIn", bundle: .module)
+                    Spacer(minLength: Spacing.md)
+                    Text(verbatim: reminders.state.summary)
+                        .foregroundStyle(AppColor.textSecondary)
+                    Image(systemName: "chevron.right")
+                        .font(AppFont.caption.weight(.semibold))
+                        .foregroundStyle(AppColor.textSecondary)
+                        .accessibilityHidden(true)
                 }
-                .settingsRow()
+                .cardRow()
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
         }
-        .animation(reduceMotion ? nil : .snappy, value: data.isReminderEnabled)
     }
 
     private var privacySection: some View {
-        SettingsSectionView("settings.privacy.title") {
+        CardSectionView("settings.privacy.title") {
             Toggle(isOn: Binding(
                 get: { data.isAppLockEnabled },
                 set: { enabled in Task { await viewModel.toggleAppLock(enabled) } }
@@ -84,18 +79,18 @@ struct SettingsContentView: View {
             }
             .tint(AppColor.ink)
             .disabled(!data.isBiometricsAvailable)
-            .settingsRow()
-            SettingsDividerView()
+            .cardRow()
+            CardDividerView()
             Toggle(isOn: Binding(get: { data.appearance.hidesInAppSwitcher }, set: viewModel.setHidesInAppSwitcher)) {
                 Text("settings.privacy.hideInSwitcher", bundle: .module)
             }
             .tint(AppColor.ink)
-            .settingsRow()
+            .cardRow()
         }
     }
 
     private var helpSection: some View {
-        SettingsSectionView("settings.help.title") {
+        CardSectionView("settings.help.title") {
             NavigationLink {
                 SettingsBristolGuideView(guide: SettingsViewModel.guide)
             } label: {
@@ -107,7 +102,7 @@ struct SettingsContentView: View {
                         .foregroundStyle(AppColor.textSecondary)
                         .accessibilityHidden(true)
                 }
-                .settingsRow()
+                .cardRow()
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)

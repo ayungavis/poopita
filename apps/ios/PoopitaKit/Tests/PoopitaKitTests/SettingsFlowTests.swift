@@ -4,70 +4,15 @@ import Testing
 
 @MainActor
 struct SettingsFlowTests {
-    @Test func togglingReminderSchedulesAndCancelsViaReminderService() async throws {
-        let reminder = TestReminderService()
-        let biometric = TestBiometricService()
-        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
-        let clock = try date("2026-10-20T12:00:00Z")
-        let zone = try #require(TimeZone(secondsFromGMT: 0))
-
-        let model = try SettingsViewModel(
-            repository: repository, undoModel: UndoModel(repository: repository), appearance: AppearanceTests.model(),
-            reminderService: reminder,
-            biometricService: biometric, languageService: TestLanguageService(),
-            now: { clock }, timeZone: { zone }
-        )
-
-        #expect(model.state.isReminderEnabled == false)
-        await model.toggleReminder(true)
-        #expect(reminder.requestedAuthorization)
-        #expect(reminder.scheduledReminder != nil)
-        #expect(model.state.isReminderEnabled == true)
-
-        await model.toggleReminder(false)
-        #expect(reminder.scheduledReminder == nil)
-        #expect(reminder.cancelled)
-        #expect(model.state.isReminderEnabled == false)
-    }
-
-    @Test func reminderSchedulingSkipsTodayIfEntryOrCheckInExists() async throws {
-        let reminder = TestReminderService()
-        let biometric = TestBiometricService()
-        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
-        let clock = try date("2026-10-20T12:00:00Z")
-        let zone = try #require(TimeZone(secondsFromGMT: 0))
-
-        let model = try SettingsViewModel(
-            repository: repository, undoModel: UndoModel(repository: repository), appearance: AppearanceTests.model(),
-            reminderService: reminder,
-            biometricService: biometric, languageService: TestLanguageService(),
-            now: { clock }, timeZone: { zone }
-        )
-
-        await model.toggleReminder(true)
-        let firstSchedule = try #require(reminder.scheduledReminder)
-        #expect(firstSchedule.skipToday == false)
-
-        let entry = try makeEntry(day: clock, zone: zone)
-        try repository.save(entry)
-
-        await model.updateReminderSchedule()
-        let secondSchedule = try #require(reminder.scheduledReminder)
-        #expect(secondSchedule.skipToday == true)
-    }
-
     @Test func togglingAppLockAuthenticatesWithBiometrics() async throws {
-        let reminder = TestReminderService()
         let biometric = TestBiometricService()
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
         let clock = try date("2026-10-20T12:00:00Z")
-        let zone = try #require(TimeZone(secondsFromGMT: 0))
 
         let model = try SettingsViewModel(
             repository: repository, undoModel: UndoModel(repository: repository), appearance: AppearanceTests.model(),
-            reminderService: reminder,
             biometricService: biometric, languageService: TestLanguageService(),
-            now: { clock }, timeZone: { zone }
+            now: { clock }
         )
 
         biometric.shouldSucceed = false
@@ -81,7 +26,6 @@ struct SettingsFlowTests {
     }
 
     @Test func deleteAllHistoryClearsStoreAndSupportsUndo() throws {
-        let reminder = TestReminderService()
         let biometric = TestBiometricService()
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
         let clock = try date("2026-10-20T12:00:00Z")
@@ -101,8 +45,8 @@ struct SettingsFlowTests {
         let undo = UndoModel(repository: repository)
         let model = try SettingsViewModel(
             repository: repository, undoModel: undo, appearance: AppearanceTests.model(),
-            reminderService: reminder, biometricService: biometric, languageService: TestLanguageService(),
-            now: { clock }, timeZone: { zone }
+            biometricService: biometric, languageService: TestLanguageService(),
+            now: { clock }
         )
 
         try model.deleteAllHistory()
@@ -126,41 +70,6 @@ struct SettingsFlowTests {
 
     private func fixture() -> URL {
         FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
-    }
-}
-
-@MainActor
-final class TestReminderService: ReminderService {
-    struct ScheduledReminder: Equatable {
-        let hour: Int
-        let minute: Int
-        let skipToday: Bool
-    }
-
-    var requestedAuthorization = false
-    var isAuthorized = false
-    var shouldGrant = true
-    var scheduledReminder: ScheduledReminder?
-    var cancelled = false
-
-    func requestAuthorization() async -> Bool {
-        requestedAuthorization = true
-        isAuthorized = shouldGrant
-        return shouldGrant
-    }
-
-    func checkAuthorizationStatus() async -> Bool {
-        isAuthorized
-    }
-
-    func scheduleDailyReminder(hour: Int, minute: Int, skipToday: Bool) async throws {
-        scheduledReminder = ScheduledReminder(hour: hour, minute: minute, skipToday: skipToday)
-        cancelled = false
-    }
-
-    func cancelDailyReminder() async {
-        scheduledReminder = nil
-        cancelled = true
     }
 }
 

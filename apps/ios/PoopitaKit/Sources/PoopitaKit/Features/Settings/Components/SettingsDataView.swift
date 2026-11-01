@@ -6,20 +6,20 @@ struct SettingsDataView: View {
     let pdfExport: SettingsExportViewData
 
     var body: some View {
-        SettingsSectionView("settings.data.title") {
+        CardSectionView("settings.data.title") {
             exportRow(pdfExport, title: "settings.data.exportPDF", format: "PDF")
-            SettingsDividerView()
+            CardDividerView()
             exportRow(csvExport, title: "settings.data.exportCSV", format: "CSV")
-            SettingsDividerView()
+            CardDividerView()
             HStack(spacing: Spacing.sm) {
                 Text("settings.backup.title", bundle: .module)
                 Spacer(minLength: Spacing.md)
                 Text("settings.backup.notSetUp", bundle: .module)
                     .foregroundStyle(AppColor.textSecondary)
             }
-            .settingsRow()
+            .cardRow()
             .accessibilityElement(children: .combine)
-            SettingsDividerView()
+            CardDividerView()
             DisclosureGroup {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("settings.backup.explainer1", bundle: .module)
@@ -30,7 +30,7 @@ struct SettingsDataView: View {
                 .padding(.bottom, Spacing.md)
             } label: {
                 Text("settings.backup.howItWorks", bundle: .module)
-                    .settingsRow()
+                    .cardRow()
             }
             .foregroundStyle(AppColor.textSecondary)
         }
@@ -48,7 +48,7 @@ struct SettingsDataView: View {
                     .foregroundStyle(AppColor.textSecondary)
                     .accessibilityHidden(true)
             }
-            .settingsRow()
+            .cardRow()
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

@@ -9,6 +9,7 @@ public struct RootView: View {
     @State private var historyModel: HistoryViewModel?
     @State private var patternsModel: PatternsViewModel?
     @State private var settingsModel: SettingsViewModel?
+    @State private var remindersModel: RemindersViewModel?
     @State private var undoModel: UndoModel?
     @State private var appearance: AppearanceModel
     @State private var isUnlocked = false
@@ -23,7 +24,7 @@ public struct RootView: View {
 
     public var body: some View {
         Group {
-            if let model, let historyModel, let patternsModel, let settingsModel {
+            if let model, let historyModel, let patternsModel, let settingsModel, let remindersModel {
                 if settingsModel.state.isAppLockEnabled, !isUnlocked {
                     lockScreen(settingsModel)
                 } else {
@@ -33,7 +34,7 @@ public struct RootView: View {
                                 NavigationStack {
                                     TodayView(viewModel: model) { isShowingSettings = true }
                                         .navigationDestination(isPresented: $isShowingSettings) {
-                                            SettingsView(viewModel: settingsModel)
+                                            SettingsView(viewModel: settingsModel, reminders: remindersModel)
                                         }
                                 }
                                 .hidesSystemTabBar()
@@ -90,6 +91,7 @@ public struct RootView: View {
         .background { WindowPrivacyCoverView(isEnabled: appearance.hidesInAppSwitcher) }
         .preferredColorScheme(appearance.colorScheme)
         .task { openDiary() }
+        .onChange(of: undoModel?.toast?.id) { remindersModel?.reschedule() }
         .onChange(of: undoModel?.revision) {
             model?.load()
             historyModel?.load()
@@ -98,6 +100,11 @@ public struct RootView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
                 isUnlocked = false
+            } else if phase == .active, let remindersModel {
+                Task {
+                    await remindersModel.refreshPermission()
+                    remindersModel.reschedule()
+                }
             }
         }
     }
@@ -166,6 +173,7 @@ public struct RootView: View {
             historyModel = try container.makeHistoryViewModel()
             patternsModel = try container.makePatternsViewModel()
             settingsModel = try container.makeSettingsViewModel()
+            remindersModel = try container.makeRemindersViewModel()
             undoModel = try container.undoModel()
             errorMessage = nil
         } catch {

@@ -3,13 +3,15 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var viewModel: SettingsViewModel
+    let reminders: RemindersViewModel
 
-    init(viewModel: SettingsViewModel) {
+    init(viewModel: SettingsViewModel, reminders: RemindersViewModel) {
         _viewModel = State(initialValue: viewModel)
+        self.reminders = reminders
     }
 
     var body: some View {
-        SettingsContentView(viewModel: viewModel, data: viewModel.state)
+        SettingsContentView(viewModel: viewModel, reminders: reminders, data: viewModel.state)
             .background(AppColor.background)
             .navigationTitle(Text("settings.title", bundle: .module))
             .largeNavigationTitle()

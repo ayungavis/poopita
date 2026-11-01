@@ -9,7 +9,7 @@ struct SettingsAppearanceView: View {
     let cancelLanguageChange: () -> Void
 
     var body: some View {
-        SettingsSectionView("settings.appearance.title") {
+        CardSectionView("settings.appearance.title") {
             ViewThatFits(in: .horizontal) {
                 HStack {
                     Text("settings.appearance.theme", bundle: .module)
@@ -22,8 +22,8 @@ struct SettingsAppearanceView: View {
                 }
                 .padding(.vertical, Spacing.md)
             }
-            .settingsRow()
-            SettingsDividerView()
+            .cardRow()
+            CardDividerView()
             languageMenu
         }
         .alert(
@@ -78,7 +78,7 @@ struct SettingsAppearanceView: View {
                     .foregroundStyle(AppColor.textSecondary)
                     .accessibilityHidden(true)
             }
-            .settingsRow()
+            .cardRow()
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

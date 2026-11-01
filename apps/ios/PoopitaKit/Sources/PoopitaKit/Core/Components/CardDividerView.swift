@@ -1,7 +1,7 @@
 import DesignSystem
 import SwiftUI
 
-struct SettingsDividerView: View {
+struct CardDividerView: View {
     var body: some View {
         Rectangle()
             .fill(AppColor.hairline)

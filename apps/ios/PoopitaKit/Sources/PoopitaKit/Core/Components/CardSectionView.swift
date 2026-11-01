@@ -1,12 +1,12 @@
 import DesignSystem
 import SwiftUI
 
-struct SettingsSectionView<Content: View>: View {
-    private let title: LocalizedStringKey
+struct CardSectionView<Content: View>: View {
+    private let title: LocalizedStringKey?
     private let footnote: LocalizedStringKey?
     private let content: Content
 
-    init(_ title: LocalizedStringKey, footnote: LocalizedStringKey? = nil, @ViewBuilder content: () -> Content) {
+    init(_ title: LocalizedStringKey?, footnote: LocalizedStringKey? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.footnote = footnote
         self.content = content()
@@ -14,10 +14,12 @@ struct SettingsSectionView<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(title, bundle: .module)
-                .font(AppFont.caption.weight(.medium))
-                .foregroundStyle(AppColor.textSecondary)
-                .accessibilityAddTraits(.isHeader)
+            if let title {
+                Text(title, bundle: .module)
+                    .font(AppFont.caption.weight(.medium))
+                    .foregroundStyle(AppColor.textSecondary)
+                    .accessibilityAddTraits(.isHeader)
+            }
             VStack(spacing: 0) {
                 content
             }
@@ -33,7 +35,7 @@ struct SettingsSectionView<Content: View>: View {
 }
 
 extension View {
-    func settingsRow() -> some View {
+    func cardRow() -> some View {
         font(AppFont.body)
             .foregroundStyle(AppColor.textPrimary)
             .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget + Spacing.xs, alignment: .leading)

@@ -31,11 +31,16 @@ public final class AppContainer {
             repository: diaryRepository(),
             undoModel: undoModel(),
             appearance: appearanceModel(),
-            reminderService: UserNotificationsReminderService(),
             biometricService: LocalAuthenticationBiometricService(),
             languageService: AppleLanguagesService(),
-            now: { .now },
-            timeZone: { .current }
+            now: { .now }
+        )
+    }
+
+    func makeRemindersViewModel() throws -> RemindersViewModel {
+        try RemindersViewModel(
+            repository: LocalReminderRepository(store: UserDefaultsValueStore()), diary: diaryRepository(),
+            service: UserNotificationsReminderService(), now: { .now }, timeZone: { .current }
         )
     }
 

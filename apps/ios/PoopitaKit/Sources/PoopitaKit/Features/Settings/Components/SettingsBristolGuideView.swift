@@ -19,7 +19,7 @@ struct SettingsBristolGuideView: View {
                         VStack(spacing: 0) {
                             ForEach(group.rows) { row in
                                 if row.id != group.rows.first?.id {
-                                    SettingsDividerView()
+                                    CardDividerView()
                                 }
                                 rowView(row)
                             }

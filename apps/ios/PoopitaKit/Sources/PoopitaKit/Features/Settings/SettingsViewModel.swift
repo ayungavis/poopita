@@ -10,71 +10,32 @@ final class SettingsViewModel {
     private let repository: any DiaryRepository
     private let undoModel: UndoModel
     private let appearance: AppearanceModel
-    private let reminderService: any ReminderService
     private let biometricService: any BiometricService
     private let languageService: any LanguageService
     private let now: () -> Date
-    private let timeZone: () -> TimeZone
-    private var reminderTime: Date
     private var pendingLanguage: String?
 
     init(
         repository: any DiaryRepository,
         undoModel: UndoModel,
         appearance: AppearanceModel,
-        reminderService: any ReminderService,
         biometricService: any BiometricService,
         languageService: any LanguageService,
-        now: @escaping () -> Date,
-        timeZone: @escaping () -> TimeZone
+        now: @escaping () -> Date
     ) {
         self.repository = repository
         self.undoModel = undoModel
         self.appearance = appearance
-        self.reminderService = reminderService
         self.biometricService = biometricService
         self.languageService = languageService
         self.now = now
-        self.timeZone = timeZone
         footer = Self.footer(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
 
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone()
-        let initialTime = calendar.date(from: DateComponents(hour: 20, minute: 0)) ?? now()
-        reminderTime = initialTime
         state = Self.viewData(
-            isReminderEnabled: false,
-            reminderDate: initialTime,
             isAppLockEnabled: false,
             isBiometricsAvailable: biometricService.isAvailable(),
             appearance: Self.appearanceViewData(appearance: appearance, language: languageService, pending: nil)
         )
-    }
-
-    func toggleReminder(_ enabled: Bool) async {
-        if enabled {
-            var authorized = await reminderService.checkAuthorizationStatus()
-            if !authorized {
-                authorized = await reminderService.requestAuthorization()
-            }
-            guard authorized else {
-                errorMessage = String(localized: "settings.reminders.denied", bundle: .module)
-                return
-            }
-            await scheduleCurrentReminder()
-            updateState(reminderEnabled: true)
-        } else {
-            await reminderService.cancelDailyReminder()
-            updateState(reminderEnabled: false)
-        }
-    }
-
-    func setReminderDate(_ date: Date) async {
-        reminderTime = date
-        if state.isReminderEnabled {
-            await scheduleCurrentReminder()
-        }
-        updateState(reminderDate: date)
     }
 
     func toggleAppLock(_ enabled: Bool) async {
@@ -151,11 +112,6 @@ final class SettingsViewModel {
         languageService.relaunch(in: code)
     }
 
-    func updateReminderSchedule() async {
-        guard state.isReminderEnabled else { return }
-        await scheduleCurrentReminder()
-    }
-
     func deleteAllHistory() throws {
         try repository.deleteAll()
         undoModel.record(String(localized: "settings.history.deleted", bundle: .module))
@@ -176,34 +132,8 @@ final class SettingsViewModel {
         }
     }
 
-    private func scheduleCurrentReminder() async {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone()
-        let hour = calendar.component(.hour, from: reminderTime)
-        let minute = calendar.component(.minute, from: reminderTime)
-        let skipToday = hasObservationToday()
-        do {
-            try await reminderService.scheduleDailyReminder(hour: hour, minute: minute, skipToday: skipToday)
-        } catch {
-            errorMessage = AppError(wrapping: error).userMessage
-        }
-    }
-
-    private func hasObservationToday() -> Bool {
-        guard let today = try? DiaryDay(date: now(), timeZone: timeZone()) else { return false }
-        let hasEntry = (try? repository.entries())?.contains { DiaryDay(occurrence: $0.occurrence) == today } ?? false
-        let hasCheckIn = (try? repository.checkIns())?.contains { $0.day == today && $0.coverage == .completed } ?? false
-        return hasEntry || hasCheckIn
-    }
-
-    private func updateState(
-        reminderEnabled: Bool? = nil,
-        reminderDate: Date? = nil,
-        appLockEnabled: Bool? = nil
-    ) {
+    private func updateState(appLockEnabled: Bool? = nil) {
         state = Self.viewData(
-            isReminderEnabled: reminderEnabled ?? state.isReminderEnabled,
-            reminderDate: reminderDate ?? state.reminderDate,
             isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
             isBiometricsAvailable: state.isBiometricsAvailable,
             appearance: Self.appearanceViewData(
@@ -215,15 +145,11 @@ final class SettingsViewModel {
 
 extension SettingsViewModel {
     static func viewData(
-        isReminderEnabled: Bool,
-        reminderDate: Date,
         isAppLockEnabled: Bool,
         isBiometricsAvailable: Bool,
         appearance: SettingsAppearanceViewData
     ) -> SettingsViewData {
         SettingsViewData(
-            isReminderEnabled: isReminderEnabled,
-            reminderDate: reminderDate,
             isAppLockEnabled: isAppLockEnabled,
             isBiometricsAvailable: isBiometricsAvailable,
             appearance: appearance
