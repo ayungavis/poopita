@@ -965,6 +965,22 @@
         }
       }
     },
+    "entry.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selesai"
+          }
+        }
+      }
+    },
     "entry.durationLabel" : {
       "localizations" : {
         "en" : {
@@ -1489,6 +1505,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jenis tinja tidak dicatat"
+          }
+        }
+      }
+    },
+    "entry.yesterday" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kemarin"
           }
         }
       }

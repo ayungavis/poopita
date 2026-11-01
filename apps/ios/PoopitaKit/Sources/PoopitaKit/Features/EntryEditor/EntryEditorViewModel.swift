@@ -47,6 +47,10 @@ final class EntryEditorViewModel: Identifiable {
         now()
     }
 
+    var whenLabels: (date: String, time: String) {
+        Self.whenLabels(for: draft.occurrenceDate, now: now(), timeZone: displayTimeZone, locale: .current)
+    }
+
     var errorMessage: String? {
         error?.userMessage
     }
@@ -143,6 +147,23 @@ final class EntryEditorViewModel: Identifiable {
             blood: entry.blood?.rawValue, color: entry.color?.rawValue, duration: entry.duration?.rawValue,
             note: entry.note
         )
+    }
+
+    static func whenLabels(
+        for date: Date, now: Date, timeZone: TimeZone, locale: Locale
+    ) -> (date: String, time: String) {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let style = Date.FormatStyle(locale: locale, timeZone: timeZone)
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: now) ?? now
+        let day = if calendar.isDate(date, inSameDayAs: now) {
+            String(localized: "diary.today", bundle: .module)
+        } else if calendar.isDate(date, inSameDayAs: yesterday) {
+            String(localized: "entry.yesterday", bundle: .module)
+        } else {
+            date.formatted(style.weekday(.abbreviated).month(.abbreviated).day())
+        }
+        return (day, date.formatted(style.hour().minute()))
     }
 
     private func makeEntry() throws -> DiaryEntry {
