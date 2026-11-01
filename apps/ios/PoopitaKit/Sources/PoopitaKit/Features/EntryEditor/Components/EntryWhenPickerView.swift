@@ -52,7 +52,7 @@ struct EntryWhenPickerView: View {
     }
 
     @ViewBuilder private var picker: some View {
-        let selection = Binding(get: { viewModel.draft.occurrenceDate }, set: viewModel.setDate)
+        let selection = Binding(get: { viewModel.draft.occurrenceDate }, set: { viewModel.setDate($0) })
         switch field {
         case .date:
             DatePicker(selection: selection, in: ...viewModel.maximumDate, displayedComponents: .date) {

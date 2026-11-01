@@ -47,7 +47,7 @@ struct SettingsAppearanceView: View {
     }
 
     private var themePicker: some View {
-        Picker(selection: Binding(get: { data.selectedThemeID }, set: selectTheme)) {
+        Picker(selection: Binding(get: { data.selectedThemeID }, set: { selectTheme($0) })) {
             ForEach(data.themes) { theme in
                 Text(verbatim: theme.title).tag(theme.id)
             }
@@ -60,7 +60,7 @@ struct SettingsAppearanceView: View {
 
     private var languageMenu: some View {
         Menu {
-            Picker(selection: Binding(get: { data.selectedLanguageID }, set: selectLanguage)) {
+            Picker(selection: Binding(get: { data.selectedLanguageID }, set: { selectLanguage($0) })) {
                 ForEach(data.languages) { language in
                     Text(verbatim: language.title).tag(language.id)
                 }

@@ -31,7 +31,7 @@ struct CheckInView: View {
                 DisclosureGroup {
                     VStack(alignment: .leading, spacing: Spacing.md) {
                         DatePicker(
-                            selection: Binding(get: { viewModel.selectedDate }, set: viewModel.selectDate),
+                            selection: Binding(get: { viewModel.selectedDate }, set: { viewModel.selectDate($0) }),
                             in: ...viewModel.maximumDate, displayedComponents: [.date]
                         ) {
                             Text("checkIn.date", bundle: .module)

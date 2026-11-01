@@ -71,7 +71,7 @@ struct SettingsContentView: View {
             .disabled(!data.isBiometricsAvailable)
             .cardRow()
             CardDividerView()
-            Toggle(isOn: Binding(get: { data.appearance.hidesInAppSwitcher }, set: viewModel.setHidesInAppSwitcher)) {
+            Toggle(isOn: Binding(get: { data.appearance.hidesInAppSwitcher }, set: { viewModel.setHidesInAppSwitcher($0) })) {
                 Text("settings.privacy.hideInSwitcher", bundle: .module)
             }
             .tint(AppColor.ink)

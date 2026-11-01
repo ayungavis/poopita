@@ -229,6 +229,21 @@ struct ConventionsTests {
         }
     }
 
+    @Test func bindingSettersAreClosuresNotMethodReferences() throws {
+        let methodSetter = /Binding\(get:.*set: [A-Za-z_][A-Za-z0-9_.]*\)/
+        for file in try sources() {
+            for (index, line) in file.lines.enumerated() where line.contains(methodSetter) {
+                Issue.record(
+                    """
+                    \(file.path):\(index + 1) passes a method as a Binding setter. Swift 6.3 (Xcode 26.6, \
+                    the CI toolchain) crashes in IRGen on that @isolated(any) thunk. Use a closure: \
+                    set: { viewModel.setValue($0) }.
+                    """
+                )
+            }
+        }
+    }
+
     @Test func serviceFilesAreNamedService() throws {
         var offenders: [String] = []
         for file in try sources() where file.path.contains("/Core/Services/") {

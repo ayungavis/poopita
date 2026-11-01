@@ -47,14 +47,14 @@ struct RemindersView: View {
 
     private func dailySection(_ data: RemindersViewData) -> some View {
         CardSectionView("reminders.dailySection") {
-            Toggle(isOn: Binding(get: { data.isEnabled }, set: viewModel.setEnabled)) {
+            Toggle(isOn: Binding(get: { data.isEnabled }, set: { viewModel.setEnabled($0) })) {
                 Text("reminders.remindMe", bundle: .module)
             }
             .tint(AppColor.ink)
             .cardRow()
             CardDividerView()
             DatePicker(
-                selection: Binding(get: { data.time }, set: viewModel.setTime), displayedComponents: .hourAndMinute
+                selection: Binding(get: { data.time }, set: { viewModel.setTime($0) }), displayedComponents: .hourAndMinute
             ) {
                 Text("reminders.time", bundle: .module)
             }
@@ -82,19 +82,19 @@ struct RemindersView: View {
 
     private func optionsSection(_ data: RemindersViewData) -> some View {
         CardSectionView("reminders.options", footnote: "reminders.footnote") {
-            Toggle(isOn: Binding(get: { data.skipsLoggedDays }, set: viewModel.setSkipsLoggedDays)) {
+            Toggle(isOn: Binding(get: { data.skipsLoggedDays }, set: { viewModel.setSkipsLoggedDays($0) })) {
                 Text("reminders.skip", bundle: .module)
             }
             .tint(AppColor.ink)
             .cardRow()
             CardDividerView()
-            Toggle(isOn: Binding(get: { data.sendsWeeklySummary }, set: viewModel.setSendsWeeklySummary)) {
+            Toggle(isOn: Binding(get: { data.sendsWeeklySummary }, set: { viewModel.setSendsWeeklySummary($0) })) {
                 Text("reminders.weeklySummary", bundle: .module)
             }
             .tint(AppColor.ink)
             .cardRow()
             CardDividerView()
-            Toggle(isOn: Binding(get: { data.alertsAfterGap }, set: viewModel.setAlertsAfterGap)) {
+            Toggle(isOn: Binding(get: { data.alertsAfterGap }, set: { viewModel.setAlertsAfterGap($0) })) {
                 Text("reminders.gap", bundle: .module)
             }
             .tint(AppColor.ink)

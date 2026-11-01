@@ -51,7 +51,7 @@ struct EntryFieldsView: View {
             .id(EntryFieldStep.duration)
             EntryFieldSectionView(title: Text("entry.noteLabel", bundle: .module), isOptional: true, isMissing: false) {
                 TextField(
-                    "", text: Binding(get: { viewModel.draft.note }, set: viewModel.setNote),
+                    "", text: Binding(get: { viewModel.draft.note }, set: { viewModel.setNote($0) }),
                     prompt: Text("entry.notePrompt", bundle: .module), axis: .vertical
                 )
                 .lineLimit(3 ... 6)
