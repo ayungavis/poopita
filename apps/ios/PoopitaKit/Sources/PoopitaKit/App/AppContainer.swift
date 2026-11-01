@@ -6,12 +6,18 @@ public final class AppContainer {
     private var diary: (any DiaryRepository)?
     private var undo: UndoModel?
     private var appearance: AppearanceModel?
+    private var reminders: RemindersViewModel?
+    private let reminderResponses = UserNotificationsResponseService()
 
     public init() {
         AppFont.registerFonts()
         #if os(iOS)
             NavigationBarStyle.apply()
         #endif
+        reminderResponses.onResponse = { [weak self] response in
+            guard let model = try? self?.remindersViewModel() else { return }
+            await model.handle(response)
+        }
     }
 
     func makeTodayViewModel() throws -> TodayViewModel {
@@ -37,11 +43,16 @@ public final class AppContainer {
         )
     }
 
-    func makeRemindersViewModel() throws -> RemindersViewModel {
-        try RemindersViewModel(
+    func remindersViewModel() throws -> RemindersViewModel {
+        if let reminders {
+            return reminders
+        }
+        let model = try RemindersViewModel(
             repository: LocalReminderRepository(store: UserDefaultsValueStore()), diary: diaryRepository(),
             service: UserNotificationsReminderService(), now: { .now }, timeZone: { .current }
         )
+        reminders = model
+        return model
     }
 
     func appearanceModel() -> AppearanceModel {

@@ -6,6 +6,8 @@ import Observation
 final class RemindersViewModel {
     private(set) var state: RemindersViewData
     private(set) var errorMessage: String?
+    private(set) var route: RemindersRoute?
+    private(set) var revision = 0
     private let repository: any ReminderRepository
     private let diary: any DiaryRepository
     private let service: any ReminderService
@@ -92,9 +94,49 @@ final class RemindersViewModel {
         let checkIns = (try? diary.checkIns()) ?? []
         let loggedDays = Set(entries.map { DiaryDay(occurrence: $0.occurrence) } + checkIns.map(\.day))
         let lastActivity = (entries.map(\.occurrence.instant) + checkIns.map(\.reportedAt.instant)).max()
-        return ReminderPlanner.plan(
-            preferences, loggedDays: loggedDays, lastActivity: lastActivity, now: now(), calendar: Self.calendar(timeZone())
+        let context = ReminderPlanner.Context(
+            loggedDays: loggedDays, lastActivity: lastActivity, snooze: repository.snooze()
         )
+        return ReminderPlanner.plan(preferences, context: context, now: now(), calendar: Self.calendar(timeZone()))
+    }
+
+    func handle(_ response: ReminderResponse) async {
+        switch response {
+        case .opened(.weeklySummary):
+            route = .insights
+        case .opened, .logNow:
+            route = .log
+        case .noneSoFar:
+            do {
+                let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
+                try diary.saveCheckIn(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
+                revision += 1
+            } catch AppError.checkInConflict {
+                Log.app.info("None so far skipped: today already has a log")
+            } catch {
+                Log.report(error, context: Log.Context(operation: "reminders.noneSoFar"))
+            }
+        case .snooze:
+            snooze()
+        }
+        await refreshPermission()
+        reschedule()
+    }
+
+    func consumeRoute() {
+        route = nil
+    }
+
+    private func snooze() {
+        let calendar = Self.calendar(timeZone())
+        let today = ReminderPlanner.diaryDay(now(), calendar: calendar)
+        let previous = repository.snooze().flatMap { $0.day == today ? $0.count : nil } ?? 0
+        guard ReminderPlanner.canSnooze(after: now(), count: previous, calendar: calendar) else { return }
+        do {
+            try repository.save(ReminderSnooze(day: today, count: previous + 1, until: now().addingTimeInterval(3600)))
+        } catch {
+            Log.report(error, context: Log.Context(operation: "reminders.snooze"))
+        }
     }
 
     private func update(_ change: (inout ReminderPreferences) -> Void) {

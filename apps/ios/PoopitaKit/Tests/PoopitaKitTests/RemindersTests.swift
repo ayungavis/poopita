@@ -25,14 +25,15 @@ struct RemindersTests {
     @Test func plansADailyReminderForTheComingTwoWeeksAndSkipsALoggedToday() {
         let today = DiaryDay(year: 2026, month: 11, day: 1)
         let plan = ReminderPlanner.plan(
-            Self.on { _ in }, loggedDays: [today], lastActivity: nil, now: Self.now, calendar: Self.calendar
+            Self.on { _ in }, context: ReminderPlanner.Context(loggedDays: [today], lastActivity: nil), now: Self.now,
+            calendar: Self.calendar
         )
         #expect(plan.count == ReminderPlanner.horizonDays - 1)
         #expect(plan.allSatisfy { $0.kind == .daily && $0.date > Self.now })
         #expect(plan.allSatisfy { Self.calendar.component(.hour, from: $0.date) == 20 })
 
         let notSkipping = ReminderPlanner.plan(
-            Self.on { $0.skipsLoggedDays = false }, loggedDays: [today], lastActivity: nil,
+            Self.on { $0.skipsLoggedDays = false }, context: ReminderPlanner.Context(loggedDays: [today], lastActivity: nil),
             now: Self.now, calendar: Self.calendar
         )
         #expect(notSkipping.count == ReminderPlanner.horizonDays)
@@ -40,7 +41,8 @@ struct RemindersTests {
 
     @Test func respectsChosenDaysTheWeeklySummaryAndTheGapAlert() {
         let weekends = ReminderPlanner.plan(
-            Self.on { $0.weekdays = [1, 7] }, loggedDays: [], lastActivity: nil, now: Self.now, calendar: Self.calendar
+            Self.on { $0.weekdays = [1, 7] }, context: ReminderPlanner.Context(loggedDays: [], lastActivity: nil), now: Self.now,
+            calendar: Self.calendar
         )
         #expect(weekends.allSatisfy { [1, 7].contains(Self.calendar.component(.weekday, from: $0.date)) })
 
@@ -50,7 +52,7 @@ struct RemindersTests {
                 $0.sendsWeeklySummary = true
                 $0.alertsAfterGap = true
             },
-            loggedDays: [], lastActivity: Self.now, now: Self.now, calendar: Self.calendar
+            context: ReminderPlanner.Context(loggedDays: [], lastActivity: Self.now), now: Self.now, calendar: Self.calendar
         )
         let summaries = extras.filter { $0.kind == .weeklySummary }
         #expect(summaries.count == 2)
@@ -94,6 +96,66 @@ struct RemindersTests {
         #expect(service.replaced?.contains { $0.kind == .daily } == true)
     }
 
+    @Test func mapsNotificationActionsAndOffersSnoozeOnlyWhileItFits() {
+        #expect(ReminderCategory.response(action: ReminderCategory.noneSoFar, category: ReminderCategory.daily) == .noneSoFar)
+        #expect(
+            ReminderCategory.response(action: ReminderCategory.defaultAction, category: ReminderCategory.weeklySummary)
+                == .opened(.weeklySummary)
+        )
+        #expect(ReminderCategory.response(action: "unknown", category: ReminderCategory.daily) == nil)
+
+        let at = { (hour: Int, minute: Int) in
+            Self.calendar.date(bySettingHour: hour, minute: minute, second: 0, of: Self.now) ?? Self.now
+        }
+        #expect(ReminderPlanner.canSnooze(after: at(21, 0), count: 1, calendar: Self.calendar))
+        #expect(!ReminderPlanner.canSnooze(after: at(21, 0), count: 2, calendar: Self.calendar))
+        #expect(!ReminderPlanner.canSnooze(after: at(22, 30), count: 0, calendar: Self.calendar))
+        #expect(ReminderCategory.identifier(for: PlannedReminder(kind: .daily, date: at(22, 30))) == ReminderCategory
+            .dailyLastCall)
+
+        let late = ReminderPlanner.plan(
+            Self.on {
+                $0.hour = 22
+                $0.minute = 30
+            },
+            context: ReminderPlanner.Context(), now: Self.now, calendar: Self.calendar
+        )
+        #expect(late.allSatisfy { !$0.allowsSnooze })
+    }
+
+    @Test func noneSoFarSavesAPartialCheckInAndDropsTodaysReminder() async throws {
+        let fixture = try Self.model()
+        fixture.model.setEnabled(true)
+        #expect(fixture.model.plan().first.map { Self.calendar.isDate($0.date, inSameDayAs: Self.now) } == true)
+
+        await fixture.model.handle(.noneSoFar)
+        let checkIn = try #require(try fixture.diary.checkIns().first)
+        #expect(checkIn.coverage == .partial)
+        #expect(fixture.model.revision == 1)
+        #expect(fixture.model.plan().allSatisfy { $0.kind != .daily || !Self.calendar.isDate($0.date, inSameDayAs: Self.now) })
+    }
+
+    @Test func snoozeAddsOneHourAtMostTwiceADay() async throws {
+        let fixture = try Self.model()
+        await fixture.model.handle(.snooze)
+        await fixture.model.handle(.snooze)
+        await fixture.model.handle(.snooze)
+        let snooze = try #require(fixture.repository.snooze())
+        #expect(snooze.count == 2)
+        #expect(snooze.until == Self.now.addingTimeInterval(3600))
+        let planned = fixture.model.plan().first { $0.date == Self.now.addingTimeInterval(3600) }
+        #expect(planned?.allowsSnooze == false)
+    }
+
+    @Test func tappingRoutesToLogOrInsights() async throws {
+        let fixture = try Self.model()
+        await fixture.model.handle(.opened(.weeklySummary))
+        #expect(fixture.model.route == .insights)
+        fixture.model.consumeRoute()
+        await fixture.model.handle(.logNow)
+        #expect(fixture.model.route == .log)
+    }
+
     private static func model() throws -> RemindersFixture {
         let suite = "RemindersTests.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
@@ -105,7 +167,7 @@ struct RemindersTests {
         let model = RemindersViewModel(
             repository: repository, diary: diary, service: service, now: { now }, timeZone: { zone }
         )
-        return RemindersFixture(model: model, service: service, repository: repository)
+        return RemindersFixture(model: model, service: service, repository: repository, diary: diary)
     }
 }
 
@@ -114,6 +176,7 @@ struct RemindersFixture {
     let model: RemindersViewModel
     let service: TestReminderService
     let repository: LocalReminderRepository
+    let diary: LocalDiaryRepository
 }
 
 @MainActor

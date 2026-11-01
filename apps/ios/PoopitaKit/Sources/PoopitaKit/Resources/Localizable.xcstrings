@@ -3144,6 +3144,54 @@
         }
       }
     },
+    "reminders.action.logNow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log now"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat sekarang"
+          }
+        }
+      }
+    },
+    "reminders.action.noneSoFar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None so far today"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum ada hari ini"
+          }
+        }
+      }
+    },
+    "reminders.action.snooze" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind me in 1 hour"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingatkan 1 jam lagi"
+          }
+        }
+      }
+    },
     "reminders.allow" : {
       "localizations" : {
         "en" : {
@@ -3309,13 +3357,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing logged today yet. Tap to log."
+            "value" : "Nothing logged today yet. Tap to log, or hold for more."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Belum ada catatan hari ini. Ketuk untuk mencatat."
+            "value" : "Belum ada catatan hari ini. Ketuk untuk mencatat, atau tahan untuk opsi lain."
           }
         }
       }

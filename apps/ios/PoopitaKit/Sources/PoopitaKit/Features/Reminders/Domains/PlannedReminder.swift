@@ -7,6 +7,7 @@ struct PlannedReminder: Equatable, Sendable {
 
     let kind: Kind
     let date: Date
+    var allowsSnooze = false
 
     var identifier: String {
         "poopita.\(kind.rawValue).\(Int(date.timeIntervalSince1970))"

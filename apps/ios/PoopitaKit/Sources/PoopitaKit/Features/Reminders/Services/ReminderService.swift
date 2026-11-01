@@ -38,6 +38,7 @@ final class UserNotificationsReminderService: ReminderService {
             let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.date)
             let content = UNMutableNotificationContent()
             (content.title, content.body) = Self.text(for: reminder.kind)
+            content.categoryIdentifier = ReminderCategory.identifier(for: reminder)
             content.sound = .default
             try await center.add(UNNotificationRequest(
                 identifier: reminder.identifier, content: content,

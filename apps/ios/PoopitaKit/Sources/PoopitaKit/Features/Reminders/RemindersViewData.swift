@@ -22,3 +22,7 @@ struct RemindersDayViewData: Identifiable, Equatable, Sendable {
     let title: String
     let isOn: Bool
 }
+
+enum RemindersRoute: Equatable, Sendable {
+    case log, insights
+}

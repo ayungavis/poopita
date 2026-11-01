@@ -100,6 +100,23 @@ public struct RootView: View {
         .preferredColorScheme(appearance.colorScheme)
         .task { openDiary() }
         .onChange(of: undoModel?.toast?.id) { remindersModel?.reschedule() }
+        .onChange(of: remindersModel?.revision) {
+            model?.load()
+            historyModel?.load()
+            patternsModel?.load()
+        }
+        .onChange(of: remindersModel?.route, initial: true) { _, route in
+            guard let route else { return }
+            remindersModel?.consumeRoute()
+            isShowingSettings = false
+            switch route {
+            case .log:
+                selectedTab = .today
+                model?.presentLogSheet()
+            case .insights:
+                selectedTab = .insights
+            }
+        }
         .onChange(of: undoModel?.revision) {
             model?.load()
             historyModel?.load()
@@ -181,7 +198,7 @@ public struct RootView: View {
             historyModel = try container.makeHistoryViewModel()
             patternsModel = try container.makePatternsViewModel()
             settingsModel = try container.makeSettingsViewModel()
-            remindersModel = try container.makeRemindersViewModel()
+            remindersModel = try container.remindersViewModel()
             undoModel = try container.undoModel()
             errorMessage = nil
         } catch {
