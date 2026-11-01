@@ -6,6 +6,7 @@ import Observation
 final class SettingsViewModel {
     private(set) var state: SettingsViewData
     private(set) var errorMessage: String?
+    let footer: String
     private let repository: any DiaryRepository
     private let undoModel: UndoModel
     private let appearance: AppearanceModel
@@ -35,6 +36,7 @@ final class SettingsViewModel {
         self.languageService = languageService
         self.now = now
         self.timeZone = timeZone
+        footer = Self.footer(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
 
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone()
@@ -210,6 +212,10 @@ final class SettingsViewModel {
                 )
             }
         )
+    }
+
+    static func footer(version: String?) -> String {
+        String(localized: "settings.footer \(version ?? "1.0")", bundle: .module)
     }
 
     static func languageName(code: String) -> String {

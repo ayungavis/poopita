@@ -9,29 +9,23 @@ struct SettingsAppearanceView: View {
     let cancelLanguageChange: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.md) {
-            Text("settings.appearance.title", bundle: .module)
-                .font(AppFont.title)
-                .foregroundStyle(AppColor.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-
+        SettingsSectionView("settings.appearance.title") {
             ViewThatFits(in: .horizontal) {
                 HStack {
-                    label("settings.appearance.theme")
+                    Text("settings.appearance.theme", bundle: .module)
                     Spacer(minLength: Spacing.md)
                     themePicker.fixedSize()
                 }
                 VStack(alignment: .leading, spacing: Spacing.sm) {
-                    label("settings.appearance.theme")
+                    Text("settings.appearance.theme", bundle: .module)
                     themePicker
                 }
+                .padding(.vertical, Spacing.md)
             }
-
+            .settingsRow()
+            SettingsDividerView()
             languageMenu
         }
-        .padding(Spacing.lg)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
         .alert(
             Text(verbatim: data.languageChange?.title ?? ""),
             isPresented: Binding(get: { data.languageChange != nil }, set: {
@@ -75,25 +69,18 @@ struct SettingsAppearanceView: View {
             }
         } label: {
             HStack(spacing: Spacing.sm) {
-                label("settings.appearance.language")
+                Text("settings.appearance.language", bundle: .module)
                 Spacer(minLength: Spacing.md)
                 Text(verbatim: data.languageName)
-                    .font(AppFont.body)
                     .foregroundStyle(AppColor.textSecondary)
                 Image(systemName: "chevron.up.chevron.down")
                     .font(AppFont.caption.weight(.semibold))
                     .foregroundStyle(AppColor.textSecondary)
                     .accessibilityHidden(true)
             }
-            .frame(minHeight: Spacing.touchTarget)
+            .settingsRow()
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-    }
-
-    private func label(_ key: LocalizedStringKey) -> some View {
-        Text(key, bundle: .module)
-            .font(AppFont.body)
-            .foregroundStyle(AppColor.textPrimary)
     }
 }

@@ -96,6 +96,11 @@ struct AppearanceTests {
         #expect(service.chosenCode == "en")
     }
 
+    @Test func theFooterNamesTheAppVersionAndFallsBackWithoutOne() {
+        #expect(SettingsViewModel.footer(version: "2.3").contains("Poopita 2.3"))
+        #expect(SettingsViewModel.footer(version: nil).contains("Poopita 1.0"))
+    }
+
     @Test func namesTheAppLanguageInThatLanguage() {
         #expect(SettingsViewModel.languageName(code: "en") == "English")
         #expect(SettingsViewModel.languageName(code: "id") == "Indonesia")

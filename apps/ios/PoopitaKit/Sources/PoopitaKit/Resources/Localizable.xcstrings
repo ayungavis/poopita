@@ -3480,6 +3480,22 @@
         }
       }
     },
+    "settings.backup.notSetUp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not set up"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum diatur"
+          }
+        }
+      }
+    },
     "settings.backup.status" : {
       "localizations" : {
         "en" : {
@@ -3533,13 +3549,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Data management"
+            "value" : "Your data"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kelola data"
+            "value" : "Data Anda"
           }
         }
       }
@@ -3572,6 +3588,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yakin ingin menghapus semua catatan dan konfirmasi? Anda dapat langsung membatalkannya (Undo), namun menutup aplikasi akan membuatnya permanen."
+          }
+        }
+      }
+    },
+    "settings.footer %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita %@ · No account. Your diary stays on this iPhone."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita %@ · Tanpa akun. Catatan Anda tetap di iPhone ini."
           }
         }
       }
@@ -3629,13 +3661,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy & Security"
+            "value" : "Privacy"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privasi & Keamanan"
+            "value" : "Privasi"
           }
         }
       }
@@ -3645,13 +3677,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Daily check-in reminder"
+            "value" : "Daily check-in"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pengingat BAB harian"
+            "value" : "Pengingat harian"
           }
         }
       }
