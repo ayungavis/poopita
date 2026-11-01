@@ -53,8 +53,8 @@ struct TodayWeekStripView: View {
             .padding(.vertical, Spacing.sm)
             .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
             .background {
-                if item.isToday, !isShown {
-                    Capsule().stroke(AppColor.ink, lineWidth: Spacing.borderWidth)
+                if item.isToday {
+                    Capsule().strokeBorder(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }
             }
             .contentShape(Rectangle())

@@ -229,6 +229,8 @@ extension TodayViewModel {
         monthStyle.timeZone = timeZone
         var weekdayStyle = Date.FormatStyle.dateTime.weekday(.wide)
         weekdayStyle.timeZone = timeZone
+        var shortWeekdayStyle = Date.FormatStyle.dateTime.weekday(.abbreviated)
+        shortWeekdayStyle.timeZone = timeZone
 
         return try TodayViewData(
             monthLabel: activeDate.formatted(monthStyle),
@@ -241,7 +243,7 @@ extension TodayViewModel {
                 hasLogs: !dayEntries.isEmpty,
                 latestEntry: latestEntry,
                 checkIn: checkIns.first { $0.day == activeDay },
-                pastWeekday: activeDay == today ? nil : activeDate.formatted(weekdayStyle),
+                pastWeekday: activeDay == today ? nil : activeDate.formatted(shortWeekdayStyle),
                 now: date
             ),
             timeline: timeline(

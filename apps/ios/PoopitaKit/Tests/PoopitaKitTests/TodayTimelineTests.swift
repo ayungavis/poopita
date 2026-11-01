@@ -117,7 +117,7 @@ struct TodayTimelineTests {
         }
         #expect(status == "Not recorded")
         #expect(mark == .unrecorded)
-        #expect(logLabel == "Log for Thursday")
+        #expect(logLabel == "Log for Thu")
         #expect(canConfirm)
         #expect(data.title == "Thursday")
 
