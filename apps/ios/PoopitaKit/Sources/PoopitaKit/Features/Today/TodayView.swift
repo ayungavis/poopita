@@ -4,9 +4,11 @@ import SwiftUI
 struct TodayView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel: TodayViewModel
+    private let openSettings: () -> Void
 
-    init(viewModel: TodayViewModel) {
+    init(viewModel: TodayViewModel, openSettings: @escaping () -> Void) {
         _viewModel = State(initialValue: viewModel)
+        self.openSettings = openSettings
     }
 
     var body: some View {
@@ -21,7 +23,7 @@ struct TodayView: View {
                 }
                 .padding(Spacing.lg)
             case let .loaded(data):
-                TodayContentView(viewModel: viewModel, data: data)
+                TodayContentView(viewModel: viewModel, data: data, openSettings: openSettings)
             }
         }
         .background(AppColor.background)

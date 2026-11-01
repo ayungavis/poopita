@@ -1,7 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {},
+    "" : {
+
+    },
     "checkIn.completed" : {
       "localizations" : {
         "en" : {
@@ -1460,7 +1462,6 @@
       }
     },
     "entry.when" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1604,22 +1605,6 @@
         }
       }
     },
-    "error.notFound" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "We could not find what you were looking for."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kami tidak dapat menemukan yang Anda cari."
-          }
-        }
-      }
-    },
     "error.noteTooLong" : {
       "localizations" : {
         "en" : {
@@ -1632,6 +1617,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batasi catatan hingga 500 karakter."
+          }
+        }
+      }
+    },
+    "error.notFound" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We could not find what you were looking for."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kami tidak dapat menemukan yang Anda cari."
           }
         }
       }
@@ -2198,22 +2199,6 @@
         }
       }
     },
-    "patterns.chart.timeLocal" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Times are shown as recorded at the occurrence location."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waktu ditampilkan sesuai catatan di lokasi kejadian."
-          }
-        }
-      }
-    },
     "patterns.chart.timeline" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2227,6 +2212,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Waktu BAB yang dicatat hari ini"
+          }
+        }
+      }
+    },
+    "patterns.chart.timeLocal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Times are shown as recorded at the occurrence location."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu ditampilkan sesuai catatan di lokasi kejadian."
           }
         }
       }
@@ -3127,22 +3128,6 @@
         }
       }
     },
-    "settings.appLock.disableReason" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Authenticate to disable app lock."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verifikasi untuk menonaktifkan kunci aplikasi."
-          }
-        }
-      }
-    },
     "settings.appLock.disabled" : {
       "localizations" : {
         "en" : {
@@ -3155,6 +3140,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kunci aplikasi dinonaktifkan."
+          }
+        }
+      }
+    },
+    "settings.appLock.disableReason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate to disable app lock."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifikasi untuk menonaktifkan kunci aplikasi."
           }
         }
       }
@@ -3555,6 +3556,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pengaturan"
+          }
+        }
+      }
+    },
+    "tab.insights" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insights"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wawasan"
           }
         }
       }

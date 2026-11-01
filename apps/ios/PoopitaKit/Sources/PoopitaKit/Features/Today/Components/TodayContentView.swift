@@ -4,11 +4,12 @@ import SwiftUI
 struct TodayContentView: View {
     let viewModel: TodayViewModel
     let data: TodayViewData
+    let openSettings: () -> Void
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                TodayHeaderView(data: data)
+                TodayHeaderView(data: data, openSettings: openSettings)
                 TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
                 summary
                 feedback

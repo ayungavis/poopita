@@ -16,6 +16,8 @@ public enum Spacing {
     public static let timelineHour: CGFloat = 52
     public static let timelineBlock: CGFloat = 34
     public static let timelineLabel: CGFloat = 48
+    public static let icon: CGFloat = 18
+    public static let iconGap: CGFloat = 6
     public static let xs: CGFloat = 4
     public static let sm: CGFloat = 8
     public static let md: CGFloat = 12

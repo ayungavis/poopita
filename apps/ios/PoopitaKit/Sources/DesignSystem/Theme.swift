@@ -26,3 +26,11 @@ public enum StoolSwatch {
     public static let black = Color("stoolBlack", bundle: .module)
     public static let red = Color("stoolRed", bundle: .module)
 }
+
+public enum AppIcon {
+    public static let today = Image("iconToday", bundle: .module)
+    public static let history = Image("iconHistory", bundle: .module)
+    public static let insights = Image("iconInsights", bundle: .module)
+    public static let plus = Image("iconPlus", bundle: .module)
+    public static let settings = Image("iconSettings", bundle: .module)
+}
