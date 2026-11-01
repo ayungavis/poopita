@@ -1,10 +1,11 @@
 import DesignSystem
 import SwiftUI
 
-struct EntryFieldSectionView<Content: View>: View {
+struct EntryFieldSectionView<Accessory: View, Content: View>: View {
     let title: Text
     let isOptional: Bool
     let isMissing: Bool
+    @ViewBuilder let accessory: Accessory
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -19,6 +20,7 @@ struct EntryFieldSectionView<Content: View>: View {
                     Text("entry.optional", bundle: .module)
                         .font(AppFont.caption).foregroundStyle(AppColor.textSecondary)
                 }
+                accessory
             }
             content
             if isMissing {
@@ -26,5 +28,11 @@ struct EntryFieldSectionView<Content: View>: View {
                     .font(AppFont.caption.weight(.medium)).foregroundStyle(AppColor.destructive)
             }
         }
+    }
+}
+
+extension EntryFieldSectionView where Accessory == EmptyView {
+    init(title: Text, isOptional: Bool, isMissing: Bool, @ViewBuilder content: () -> Content) {
+        self.init(title: title, isOptional: isOptional, isMissing: isMissing, accessory: { EmptyView() }, content: content)
     }
 }

@@ -92,7 +92,7 @@ struct SettingsContentView: View {
     private var helpSection: some View {
         CardSectionView("settings.help.title") {
             NavigationLink {
-                SettingsBristolGuideView(guide: SettingsViewModel.guide)
+                BristolGuideView(guide: .standard)
             } label: {
                 HStack(spacing: Spacing.sm) {
                     Text("settings.help.bristol", bundle: .module)

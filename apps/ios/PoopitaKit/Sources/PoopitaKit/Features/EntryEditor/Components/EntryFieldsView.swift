@@ -3,10 +3,11 @@ import SwiftUI
 
 struct EntryFieldsView: View {
     let viewModel: EntryEditorViewModel
+    @State private var showsGuide = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xl) {
-            section(.type, title: Text("entry.typeLabel", bundle: .module)) {
+            section(.type, title: Text("entry.typeLabel", bundle: .module), accessory: guideLink) {
                 EntryTileGridView(
                     choices: EntryChoiceViewData.types, selected: viewModel.draft.stoolType.map(String.init),
                     columns: 4, select: viewModel.selectType
@@ -66,15 +67,42 @@ struct EntryFieldsView: View {
     }
 
     private func section(
-        _ field: EntryRequiredField, title: Text, @ViewBuilder content: () -> some View
+        _ field: EntryRequiredField, title: Text, accessory: some View = EmptyView(),
+        @ViewBuilder content: () -> some View
     ) -> some View {
         EntryFieldSectionView(
             title: title,
             isOptional: false,
             isMissing: viewModel.missingFields.contains(field),
+            accessory: { accessory },
             content: content
         )
         .id(EntryFieldStep(field))
+    }
+
+    private var guideLink: some View {
+        Button { showsGuide = true } label: {
+            Text("entry.bristolGuide", bundle: .module)
+                .font(AppFont.caption.weight(.medium))
+                .foregroundStyle(AppColor.accent)
+                .frame(minHeight: Spacing.touchTarget)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.vertical, -Spacing.md)
+        .sheet(isPresented: $showsGuide) {
+            NavigationStack {
+                BristolGuideView(guide: .standard)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button { showsGuide = false } label: {
+                                Text("entry.done", bundle: .module)
+                            }
+                        }
+                    }
+            }
+            .presentationDragIndicator(.visible)
+        }
     }
 
     @ViewBuilder

@@ -533,6 +533,22 @@
         }
       }
     },
+    "entry.bristolGuide" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bristol guide"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panduan Bristol"
+          }
+        }
+      }
+    },
     "entry.cancel" : {
       "localizations" : {
         "en" : {

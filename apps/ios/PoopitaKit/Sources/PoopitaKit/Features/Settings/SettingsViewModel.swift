@@ -177,30 +177,6 @@ extension SettingsViewModel {
         )
     }
 
-    static var guide: SettingsGuideViewData {
-        let rows = EntryChoiceViewData.types.map { type in
-            SettingsGuideViewData.Row(
-                id: type.id, title: type.title + " · " + type.detail,
-                description: String(
-                    localized: String.LocalizationValue("settings.guide.desc" + type.id), bundle: .module
-                ),
-                illustration: type.illustration
-            )
-        }
-        let group = { (id: String, title: String, range: Range<Int>) in
-            SettingsGuideViewData.Group(id: id, title: title, rows: Array(rows[range]))
-        }
-        return SettingsGuideViewData(
-            intro: String(localized: "settings.guide.intro", bundle: .module),
-            groups: [
-                group("harder", String(localized: "settings.guide.harder", bundle: .module), 0 ..< 2),
-                group("typical", String(localized: "settings.guide.typical", bundle: .module), 2 ..< 4),
-                group("looser", String(localized: "settings.guide.looser", bundle: .module), 4 ..< 7),
-            ],
-            note: String(localized: "settings.guide.note", bundle: .module)
-        )
-    }
-
     static func footer(version: String?) -> String {
         String(localized: "settings.footer \(version ?? "1.0")", bundle: .module)
     }

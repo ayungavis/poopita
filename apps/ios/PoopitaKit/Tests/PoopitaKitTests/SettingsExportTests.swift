@@ -47,7 +47,7 @@ struct SettingsExportTests {
     }
 
     @Test func guideCoversAllSevenTypesInThreeGroups() {
-        let guide = SettingsViewModel.guide
+        let guide = BristolGuideViewData.standard
         #expect(guide.groups.map { $0.rows.map(\.id) } == [["1", "2"], ["3", "4"], ["5", "6", "7"]])
         #expect(guide.groups.flatMap(\.rows).allSatisfy { !$0.description.hasPrefix("settings.") })
     }

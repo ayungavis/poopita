@@ -1,8 +1,8 @@
 import DesignSystem
 import SwiftUI
 
-struct SettingsBristolGuideView: View {
-    let guide: SettingsGuideViewData
+struct BristolGuideView: View {
+    let guide: BristolGuideViewData
 
     var body: some View {
         ScrollView {
@@ -40,7 +40,7 @@ struct SettingsBristolGuideView: View {
         .navigationTitle(Text("settings.help.bristol", bundle: .module))
     }
 
-    private func rowView(_ row: SettingsGuideViewData.Row) -> some View {
+    private func rowView(_ row: BristolGuideViewData.Row) -> some View {
         HStack(alignment: .center, spacing: Spacing.md) {
             if let illustration = row.illustration {
                 EntryIllustrationView(kind: illustration)
