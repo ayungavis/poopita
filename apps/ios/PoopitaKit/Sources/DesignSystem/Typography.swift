@@ -7,7 +7,7 @@ public enum AppFont {
     public static let body = Font.custom(sans, size: 16, relativeTo: .body)
     public static let caption = Font.custom(sans, size: 13, relativeTo: .footnote)
     public static let display = Font.custom(sans, size: 48, relativeTo: .largeTitle).weight(.medium)
-    public static let wordmark = Font.custom(sans, size: 30, relativeTo: .title).weight(.bold)
+    public static let wordmark = Font.custom(sans, size: 30, relativeTo: .title).weight(.semibold)
 
     private static let sans = "DM Sans"
 
