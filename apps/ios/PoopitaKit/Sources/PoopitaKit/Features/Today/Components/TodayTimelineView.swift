@@ -35,7 +35,7 @@ struct TodayTimelineView: View {
                 nowLine(now).offset(y: offset(now.minute))
             }
         }
-        .frame(maxWidth: .infinity, minHeight: offset(timeline.endMinute), alignment: .topLeading)
+        .frame(maxWidth: .infinity, minHeight: contentBottom, alignment: .topLeading)
         .padding(.top, Spacing.sm)
     }
 
@@ -44,6 +44,14 @@ struct TodayTimelineView: View {
             let previousBottom = tops.last.map { $0 + blockHeight + Spacing.xs } ?? 0
             tops.append(max(offset(block.minute), previousBottom))
         }
+    }
+
+    private var contentBottom: CGFloat {
+        var bottom = max(offset(timeline.endMinute), (blockTops.last ?? 0) + blockHeight)
+        if timeline.sinceLast != nil, let now = timeline.now {
+            bottom = max(bottom, sinceBottom(now))
+        }
+        return bottom
     }
 
     private var sinceTop: CGFloat {

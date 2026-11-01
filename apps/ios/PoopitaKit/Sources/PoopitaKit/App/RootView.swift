@@ -23,30 +23,30 @@ public struct RootView: View {
                 if settingsModel.state.isAppLockEnabled, !isUnlocked {
                     lockScreen(settingsModel)
                 } else {
-                    TabView(selection: $selectedTab) {
-                        Tab(value: RootTab.today) {
-                            NavigationStack {
-                                TodayView(viewModel: model) { isShowingSettings = true }
-                                    .navigationDestination(isPresented: $isShowingSettings) {
-                                        SettingsView(viewModel: settingsModel)
-                                    }
+                    VStack(spacing: 0) {
+                        TabView(selection: $selectedTab) {
+                            Tab(value: RootTab.today) {
+                                NavigationStack {
+                                    TodayView(viewModel: model) { isShowingSettings = true }
+                                        .navigationDestination(isPresented: $isShowingSettings) {
+                                            SettingsView(viewModel: settingsModel)
+                                        }
+                                }
+                                .hidesSystemTabBar()
                             }
-                            .hidesSystemTabBar()
-                        }
-                        Tab(value: RootTab.history) {
-                            NavigationStack {
-                                HistoryView(viewModel: historyModel)
+                            Tab(value: RootTab.history) {
+                                NavigationStack {
+                                    HistoryView(viewModel: historyModel)
+                                }
+                                .hidesSystemTabBar()
                             }
-                            .hidesSystemTabBar()
-                        }
-                        Tab(value: RootTab.insights) {
-                            NavigationStack {
-                                PatternsView(viewModel: patternsModel)
+                            Tab(value: RootTab.insights) {
+                                NavigationStack {
+                                    PatternsView(viewModel: patternsModel)
+                                }
+                                .hidesSystemTabBar()
                             }
-                            .hidesSystemTabBar()
                         }
-                    }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
                         AppTabBarView(
                             selection: $selectedTab,
                             items: [
