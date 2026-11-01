@@ -175,6 +175,42 @@ final class TodayViewModel {
         }
     }
 
+    @discardableResult
+    func move(id: UUID, toMinute minute: Int) -> Bool {
+        do {
+            guard let entry = try repository.entries().first(where: { $0.id == id }) else { throw AppError.notFound }
+            let date = try dateOnSelectedDay(minute: minute)
+            guard date <= now() else { throw AppError.invalidOccurrence }
+            try repository.save(DiaryEntry(
+                id: entry.id, occurrence: OccurrenceTime(instant: date, timeZone: timeZone()),
+                stoolType: entry.stoolType, amount: entry.amount, effort: entry.effort, blood: entry.blood,
+                color: entry.color, duration: entry.duration, note: entry.note
+            ))
+            undoModel.record(String(localized: "today.moved \(timeLabel(minuteOfDay: minute))", bundle: .module))
+            errorMessage = nil
+            load()
+            return true
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+            return false
+        }
+    }
+
+    func timeLabel(minuteOfDay minute: Int) -> String {
+        var style = Date.FormatStyle.dateTime.hour().minute()
+        style.timeZone = timeZone()
+        return (try? dateOnSelectedDay(minute: minute).formatted(style)) ?? ""
+    }
+
+    private func dateOnSelectedDay(minute: Int) throws -> Date {
+        let calendar = Self.calendar(timeZone())
+        let start = try Self.start(of: selectedDay ?? todayDay(), calendar: calendar)
+        guard let date = calendar.date(byAdding: .minute, value: minute, to: start) else {
+            throw AppError.invalidOccurrence
+        }
+        return date
+    }
+
     private func makeComposer(at date: Date? = nil) throws -> EntryEditorViewModel {
         try EntryEditorViewModel(
             repository: repository, entryID: UUID(),

@@ -6,6 +6,8 @@ struct TodayTimelineView: View {
     let startMinute: Int
     let edit: (UUID) -> Void
     let log: () -> Void
+    var move: (UUID, Int) -> Bool = { _, _ in false }
+    var timeLabel: (Int) -> String = { _ in "" }
     var focusMoved: (CGFloat) -> Void = { _ in }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .body) private var hourHeight = Spacing.timelineHour
@@ -39,9 +41,14 @@ struct TodayTimelineView: View {
             }
             Group {
                 ForEach(Array(zip(timeline.blocks, blockTops)), id: \.0.id) { block, top in
-                    blockButton(block)
-                        .offset(y: top)
-                        .transition(.scale(scale: 0.96).combined(with: .opacity))
+                    TodayTimelineBlockView(
+                        block: block, hourHeight: hourHeight, blockHeight: blockHeight,
+                        latestMinute: timeline.latestMinute, timeLabel: timeLabel, edit: { edit(block.id) },
+                        move: { move(block.id, $0) }
+                    )
+                    .padding(.leading, labelWidth + Spacing.sm)
+                    .offset(y: top)
+                    .transition(.scale(scale: 0.96).combined(with: .opacity))
                 }
             }
             .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: timeline.blocks.map(\.id))
@@ -80,34 +87,6 @@ struct TodayTimelineView: View {
 
     private func offset(_ minute: Int) -> CGFloat {
         CGFloat(minute - startMinute) * hourHeight / 60
-    }
-
-    private func blockButton(_ block: TodayTimelineBlockViewData) -> some View {
-        Button {
-            edit(block.id)
-        } label: {
-            HStack(spacing: Spacing.sm) {
-                if let illustration = block.entry.illustration {
-                    EntryIllustrationView(kind: illustration)
-                        .frame(height: blockHeight - Spacing.sm)
-                }
-                Text(verbatim: block.entry.title)
-                    .font(AppFont.body.weight(.semibold))
-                    .lineLimit(1)
-                Spacer(minLength: Spacing.sm)
-                Text(verbatim: block.entry.timeLabel)
-                    .font(AppFont.caption)
-            }
-            .foregroundStyle(AppColor.textPrimary)
-            .padding(.horizontal, Spacing.md)
-            .frame(height: blockHeight)
-            .background(AppColor.entry, in: RoundedRectangle(cornerRadius: Spacing.sm))
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .padding(.leading, labelWidth + Spacing.sm)
-        .accessibilityLabel(Text(verbatim: [block.entry.timeLabel, block.entry.observations].joined(separator: ", ")))
-        .accessibilityHint(Text("entry.editHint", bundle: .module))
     }
 
     private func sinceLastView(_ since: TodayTimelineMarkViewData, height: CGFloat) -> some View {

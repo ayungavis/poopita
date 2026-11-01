@@ -163,6 +163,7 @@ struct TodayContentView: View {
         case .logged:
             TodayTimelineView(
                 timeline: data.timeline, startMinute: 0, edit: viewModel.edit(id:), log: viewModel.presentLogSheet,
+                move: viewModel.move(id:toMinute:), timeLabel: viewModel.timeLabel(minuteOfDay:),
                 focusMoved: reportFocus
             )
             .transition(.opacity)

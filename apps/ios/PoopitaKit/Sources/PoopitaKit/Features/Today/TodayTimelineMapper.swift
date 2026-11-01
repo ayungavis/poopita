@@ -84,7 +84,7 @@ extension TodayViewModel {
         }
         return TodayTimelineViewData(
             hours: hours, blocks: blocks, now: nowMark, sinceLast: sinceLast,
-            endMinute: 24 * 60
+            endMinute: 24 * 60, latestMinute: nowMark?.minute ?? 24 * 60 - 1
         )
     }
 

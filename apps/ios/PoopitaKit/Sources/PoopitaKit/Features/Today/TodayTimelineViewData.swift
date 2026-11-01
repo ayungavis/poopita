@@ -6,6 +6,7 @@ struct TodayTimelineViewData: Equatable, Sendable {
     let now: TodayTimelineMarkViewData?
     let sinceLast: TodayTimelineMarkViewData?
     let endMinute: Int
+    let latestMinute: Int
 }
 
 struct TodayTimelineHourViewData: Equatable, Sendable, Identifiable {

@@ -195,4 +195,48 @@ struct TodayTimelineTests {
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
         #expect(data.weekDays.first { $0.isSelected }?.dayID == "2026-10-31")
     }
+
+    @Test func draggingALogMovesItsTimeAndCanBeUndone() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        let entry = try Self.entry(-5460)
+        try repository.save(entry)
+        let undo = UndoModel(repository: repository)
+        let model = TodayViewModel(repository: repository, undoModel: undo, now: { Self.now }, timeZone: { .gmt })
+        model.load()
+        await model.loadTask?.value
+
+        #expect(model.move(id: entry.id, toMinute: 450))
+        await model.loadTask?.value
+
+        let moved = try #require(try repository.entries().first)
+        #expect(moved.occurrence.hour == 7 && moved.occurrence.minute == 30)
+        #expect(moved.stoolType == entry.stoolType && moved.note == entry.note)
+        #expect(undo.toast?.message.hasPrefix("Moved to ") == true)
+        #expect(undo.toast?.canUndo == true)
+        guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
+        #expect(data.timeline.blocks.map(\.minute) == [450])
+        #expect(data.timeline.latestMinute == 581)
+
+        undo.undo()
+        #expect(try repository.entries() == [entry])
+    }
+
+    @Test func aLogCannotBeDraggedPastNow() async throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { DiaryPersistenceTests.removeFixture(directory) }
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
+        let entry = try Self.entry(-5460)
+        try repository.save(entry)
+        let model = TodayViewModel(
+            repository: repository, undoModel: UndoModel(repository: repository), now: { Self.now }, timeZone: { .gmt }
+        )
+        model.load()
+        await model.loadTask?.value
+
+        #expect(!model.move(id: entry.id, toMinute: 600))
+        #expect(try repository.entries() == [entry])
+        #expect(model.errorMessage != nil)
+    }
 }

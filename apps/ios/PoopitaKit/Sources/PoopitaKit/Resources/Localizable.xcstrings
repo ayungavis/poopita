@@ -3688,6 +3688,54 @@
         }
       }
     },
+    "today.moved %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moved to %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dipindah ke %@"
+          }
+        }
+      }
+    },
+    "today.moveHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch and hold, then drag to change the time"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentuh lama, lalu geser untuk mengubah waktu"
+          }
+        }
+      }
+    },
+    "today.moveLimit %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can’t be after %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak bisa setelah %@"
+          }
+        }
+      }
+    },
     "today.noLogsYet" : {
       "localizations" : {
         "en" : {
