@@ -3,7 +3,7 @@ import Foundation
 extension InsightsViewModel {
     nonisolated static func when(_ context: InsightsContext) -> InsightsWhenViewData {
         let columns = context.source.period == .year
-            ? monthGroups(context).map { yearColumn($0, context: context) }
+            ? trackedMonths(context).map { yearColumn($0, context: context) }
             : context.days.map { dayColumn($0, context: context) }
         let minutes = columns.flatMap { $0.logMinutes + [$0.checkInMinute].compactMap(\.self) }
         let start = min(5 * 60, (minutes.min() ?? 5 * 60) / 60 * 60)
@@ -65,6 +65,8 @@ extension InsightsViewModel {
             checkInMinute: checkIn?.coverage == .partial ? checkIn.map { $0.reportedAt.hour * 60 + $0.reportedAt.minute } : nil,
             nowMinute: day == context.today ? (nowParts.hour ?? 0) * 60 + (nowParts.minute ?? 0) : nil,
             isUnrecorded: mark == .unrecorded,
+            isConfirmedNone: mark == .noPoop,
+            unknownCount: nil,
             isToday: day == context.today,
             summary: groupName([day], context: context) + " · " + (logs.isEmpty ? status(day, context) : times)
         )
@@ -75,11 +77,13 @@ extension InsightsViewModel {
         return InsightsColumnViewData(
             id: days.first?.id ?? "",
             cell: nil,
-            label: barLabel(days, context: context),
+            label: days.first.map { context.format(context.date($0), .dateTime.month(.abbreviated)) },
             logMinutes: logs.map { $0.occurrence.hour * 60 + $0.occurrence.minute },
             checkInMinute: nil,
             nowMinute: nil,
             isUnrecorded: isUnrecorded(days, context: context),
+            isConfirmedNone: false,
+            unknownCount: days.count { context.marks.mark($0) == .unrecorded },
             isToday: days.contains(context.today),
             summary: groupName(days, context: context) + " · " + TodayViewModel.logCount(logs.count)
         )
@@ -107,15 +111,14 @@ extension InsightsViewModel {
     }
 
     private nonisolated static func groupName(_ days: [DiaryDay], context: InsightsContext) -> String {
-        guard let first = days.first, let last = days.last else { return "" }
+        guard let first = days.first else { return "" }
         if days.count == 1 {
             return context.format(context.date(first), .dateTime.weekday(.abbreviated).day())
         }
         if context.source.period == .year {
             return context.format(context.date(first), .dateTime.month(.abbreviated))
         }
-        return context.format(context.date(first), .dateTime.day()) + " – "
-            + context.format(context.date(last), .dateTime.day().month(.abbreviated))
+        return context.span(days)
     }
 
     private nonisolated static func barLabel(_ days: [DiaryDay], context: InsightsContext) -> String? {
@@ -127,7 +130,12 @@ extension InsightsViewModel {
         }
     }
 
-    private nonisolated static func weekGroups(_ context: InsightsContext) -> [[DiaryDay]] {
+    private nonisolated static func trackedMonths(_ context: InsightsContext) -> [[DiaryDay]] {
+        guard let first = context.marks.firstDay else { return monthGroups(context) }
+        return monthGroups(context).filter { ($0.last ?? first) >= first }
+    }
+
+    nonisolated static func weekGroups(_ context: InsightsContext) -> [[DiaryDay]] {
         var groups: [[DiaryDay]] = []
         for day in context.days {
             if let last = groups.last?.last, isSameWeek(last, day, context) {
@@ -143,7 +151,7 @@ extension InsightsViewModel {
         context.calendar.isDate(context.date(day), equalTo: context.date(other), toGranularity: .weekOfYear)
     }
 
-    private nonisolated static func monthGroups(_ context: InsightsContext) -> [[DiaryDay]] {
+    nonisolated static func monthGroups(_ context: InsightsContext) -> [[DiaryDay]] {
         Dictionary(grouping: context.days, by: \.month).sorted { $0.key < $1.key }.map(\.value)
     }
 

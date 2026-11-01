@@ -4,6 +4,7 @@ import SwiftUI
 struct InsightsContentView: View {
     let viewModel: InsightsViewModel
     let data: InsightsViewData
+    let doctorExport: SettingsExportViewData
     let showFrequency: () -> Void
     let openDay: (String) -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -23,8 +24,21 @@ struct InsightsContentView: View {
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 summary
+                if !data.doctor.isEmpty {
+                    InsightsFlagsView(flags: data.doctor, isDoctor: true, export: doctorExport, openDay: openDay)
+                }
+                if !data.changes.isEmpty {
+                    InsightsFlagsView(flags: data.changes, isDoctor: false, export: nil, openDay: openDay)
+                }
+                InsightsUsualView(data: data.usual)
+                if !data.consistency.rows.isEmpty {
+                    InsightsConsistencyView(data: data.consistency)
+                }
                 section("insights.when", link: "insights.frequency", action: showFrequency)
                 InsightsWhenChartView(data: data.when)
+                if !data.comfort.isEmpty {
+                    InsightsComfortView(rows: data.comfort)
+                }
                 if !data.types.isEmpty {
                     section("insights.type", link: "insights.bristolGuide") { showsGuide = true }
                     CardSectionView(nil) {
@@ -82,11 +96,11 @@ struct InsightsContentView: View {
                 .foregroundStyle(AppColor.textPrimary)
                 .contentTransition(.numericText())
                 .fixedSize(horizontal: false, vertical: true)
-            if let usual = data.usual {
-                Text(verbatim: usual)
+            if let detail = data.headlineDetail {
+                Text(verbatim: detail)
                     .foregroundStyle(AppColor.textSecondary)
             }
-            if data.comparison != nil || data.unrecorded != nil {
+            if data.summaryNote != nil || data.unrecorded != nil {
                 comparisonRow
             }
         }
@@ -95,8 +109,8 @@ struct InsightsContentView: View {
 
     private var comparisonRow: some View {
         HStack {
-            if let comparison = data.comparison {
-                Text(verbatim: comparison)
+            if let note = data.summaryNote {
+                Text(verbatim: note)
                     .font(AppFont.caption)
                     .foregroundStyle(AppColor.textSecondary)
             }

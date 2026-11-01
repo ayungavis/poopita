@@ -29,6 +29,18 @@ struct InsightsContext {
         days.flatMap { marks.logs[$0] ?? [] }
     }
 
+    var pastLogs: [DiaryEntry] {
+        days.filter { $0 <= today }.flatMap { marks.logs[$0] ?? [] }
+    }
+
+    var recordedDays: [DiaryDay] {
+        days.filter { $0 <= today && InsightsStats.isRecorded(marks.mark($0)) }
+    }
+
+    var isSettled: Bool {
+        recordedDays.count >= 4
+    }
+
     func date(_ day: DiaryDay) -> Date {
         (try? TodayViewModel.start(of: day, calendar: calendar)) ?? interval.start
     }
@@ -37,6 +49,13 @@ struct InsightsContext {
         var style = style
         style.timeZone = calendar.timeZone
         return date.formatted(style)
+    }
+
+    func span(_ days: [DiaryDay]) -> String {
+        guard let first = days.first, let last = days.last else { return "" }
+        var style = Date.IntervalFormatStyle().day().month(.abbreviated)
+        style.timeZone = calendar.timeZone
+        return (date(first) ..< date(last)).formatted(style)
     }
 
     func hasUnknown(_ days: [DiaryDay]) -> Bool {
@@ -62,24 +81,50 @@ extension InsightsViewModel {
         let loggedDays = context.days.count { context.marks.logs[$0] != nil }
         let unrecorded = context.days.filter { context.marks.mark($0) == .unrecorded }
         let header = header(context)
+        let baseline = InsightsBaseline(context)
+        let doctor = doctorFlags(context)
+        let changes = changes(context, baseline: baseline)
+        let count = logs.isEmpty ? String(localized: "insights.headline.empty", bundle: .module)
+            : String(
+                localized: "insights.headline \(TodayViewModel.logCount(logs.count)) \(dayCount(loggedDays))",
+                bundle: .module
+            )
+        let verdict = changes.first?.title ?? baseline.flatMap { _ in context.isSettled ? usualHeadline(source.period) : nil }
         return InsightsViewData(
             period: source.period,
             title: header.title,
             detail: header.detail,
             accessibilityLabel: [header.title, header.detail].compactMap(\.self).joined(separator: " "),
             canMoveNext: source.offset < 0,
-            headline: logs.isEmpty ? String(localized: "insights.headline.empty", bundle: .module)
-                : String(localized: "insights.headline \(TodayViewModel.logCount(logs.count)) \(dayCount(loggedDays))",
-                         bundle: .module),
-            usual: usual(logs, context: context),
-            comparison: comparison(context, count: logs.count),
+            headline: verdict ?? count,
+            headlineDetail: verdict == nil ? sinceFirst(context) : count,
+            summaryNote: doctorSummary(doctor),
             unrecorded: unrecorded.first.map {
                 HistoryUnrecordedViewData(dayID: $0.id, label: unrecordedLabel(unrecorded.count))
             },
+            doctor: doctor,
+            changes: changes,
+            usual: usual(context, baseline: baseline),
+            consistency: consistency(context),
             when: when(context),
+            comfort: comfort(context, baseline: baseline),
             types: types(logs, context: context),
             frequency: frequency(context, logs: logs.count, loggedDays: loggedDays)
         )
+    }
+
+    private nonisolated static func usualHeadline(_ period: InsightsPeriod) -> String {
+        switch period {
+        case .week: String(localized: "insights.headline.usualWeek", bundle: .module)
+        case .month: String(localized: "insights.headline.usualMonth", bundle: .module)
+        case .year: String(localized: "insights.headline.usualYear", bundle: .module)
+        }
+    }
+
+    private nonisolated static func sinceFirst(_ context: InsightsContext) -> String? {
+        guard let first = context.marks.firstDay, context.days.contains(first), first != context.days.first else { return nil }
+        let date = context.format(context.date(first), .dateTime.day().month(.abbreviated))
+        return String(localized: "insights.since \(date)", bundle: .module)
     }
 
     nonisolated static func dayCount(_ count: Int) -> String {
@@ -96,8 +141,7 @@ extension InsightsViewModel {
         guard let first = context.days.first, let last = context.days.last else { return "" }
         switch context.source.period {
         case .week:
-            let style = Date.FormatStyle.dateTime.day().month(.abbreviated)
-            return context.format(context.date(first), style) + " – " + context.format(context.date(last), style)
+            return context.span([first, last])
         case .month:
             return context.format(context.date(first), .dateTime.month(.wide).year())
         case .year:
@@ -119,61 +163,6 @@ extension InsightsViewModel {
             return (context.format(start, .dateTime.month(.wide)), context.format(start, .dateTime.year()))
         case .year:
             return (context.format(start, .dateTime.year()), nil)
-        }
-    }
-
-    private nonisolated static func usual(_ logs: [DiaryEntry], context: InsightsContext) -> String? {
-        var parts: [String] = []
-        let hours = logs.map(\.occurrence.hour)
-        if hours.count >= 3 {
-            let best = Set(hours).sorted().max { start, other in
-                hours.count { (start ..< start + 3).contains($0) } < hours.count { (other ..< other + 3).contains($0) }
-            } ?? 0
-            if hours.count(where: { (best ..< best + 3).contains($0) }) * 2 > hours.count {
-                parts.append(String(
-                    localized: "insights.usual \(hourLabel(best, context)) \(hourLabel(best + 3, context))",
-                    bundle: .module
-                ))
-            }
-        }
-        if let choice = mostlyType(logs) {
-            parts.append(parts.isEmpty ? String(localized: "insights.mostlyStart \(choice.title)", bundle: .module)
-                : String(localized: "insights.mostly \(choice.title)", bundle: .module))
-        }
-        return parts.isEmpty ? nil : parts.joined(separator: " · ")
-    }
-
-    private nonisolated static func mostlyType(_ logs: [DiaryEntry]) -> EntryChoiceViewData? {
-        let ranked = Dictionary(grouping: logs.compactMap(\.stoolType)) { $0 }.mapValues(\.count)
-            .sorted { $0.value > $1.value }
-        guard let top = ranked.first, top.value * 2 > ranked.reduce(0, { $0 + $1.value }),
-              top.value > ranked.dropFirst().first?.value ?? 0
-        else { return nil }
-        return EntryChoiceViewData.types.first { $0.id == String(top.key) }
-    }
-
-    private nonisolated static func hourLabel(_ hour: Int, _ context: InsightsContext) -> String {
-        clock(hour * 60, .dateTime.hour().minute(), context)
-    }
-
-    private nonisolated static func comparison(_ context: InsightsContext, count: Int) -> String? {
-        guard !context.hasUnknown(context.days), !context.hasUnknown(context.previousDays) else { return nil }
-        let previous = context.previousDays.reduce(0) { $0 + (context.marks.logs[$1]?.count ?? 0) }
-        let unit = previousName(context.source)
-        let difference = count - previous
-        if difference == 0 {
-            return String(localized: "insights.same \(unit)", bundle: .module)
-        }
-        return difference < 0 ? String(localized: "insights.fewer \(-difference) \(unit)", bundle: .module)
-            : String(localized: "insights.more \(difference) \(unit)", bundle: .module)
-    }
-
-    private nonisolated static func previousName(_ source: InsightsSource) -> String {
-        let isCurrent = source.offset == 0
-        return switch source.period {
-        case .week: String(localized: isCurrent ? "insights.previous.lastWeek" : "insights.previous.week", bundle: .module)
-        case .month: String(localized: isCurrent ? "insights.previous.lastMonth" : "insights.previous.month", bundle: .module)
-        case .year: String(localized: isCurrent ? "insights.previous.lastYear" : "insights.previous.year", bundle: .module)
         }
     }
 

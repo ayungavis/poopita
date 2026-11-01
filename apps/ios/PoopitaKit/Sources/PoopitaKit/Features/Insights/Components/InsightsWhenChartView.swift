@@ -21,11 +21,22 @@ struct InsightsWhenChartView: View {
             if data.columns.contains(where: { $0.label != nil }) {
                 HStack(spacing: 0) {
                     ForEach(data.columns) { column in
-                        Text(verbatim: column.label ?? "")
-                            .font(AppFont.caption)
-                            .foregroundStyle(AppColor.textSecondary)
-                            .fixedSize()
-                            .frame(maxWidth: .infinity)
+                        VStack(spacing: Spacing.xs / 2) {
+                            Text(verbatim: column.label ?? "")
+                                .foregroundStyle(column.isToday ? AppColor.textPrimary : AppColor.textSecondary)
+                            if let unknown = column.unknownCount, unknown > 0 {
+                                HStack(spacing: Spacing.xs / 2) {
+                                    HatchView(color: AppColor.textSecondary)
+                                        .frame(width: Spacing.sm + 2, height: Spacing.sm)
+                                        .clipShape(RoundedRectangle(cornerRadius: 2))
+                                    Text(verbatim: String(unknown))
+                                }
+                                .foregroundStyle(AppColor.textSecondary)
+                            }
+                        }
+                        .font(AppFont.caption)
+                        .fixedSize()
+                        .frame(maxWidth: .infinity, alignment: .top)
                     }
                 }
                 .accessibilityHidden(true)
@@ -71,7 +82,7 @@ struct InsightsWhenChartView: View {
         } label: {
             ZStack(alignment: .top) {
                 if column.isUnrecorded {
-                    HatchView(color: AppColor.marker.opacity(0.5))
+                    HatchView(color: AppColor.textSecondary.opacity(0.7))
                 } else if column.isToday {
                     RoundedRectangle(cornerRadius: Spacing.md).fill(AppColor.track)
                 }
@@ -103,6 +114,12 @@ struct InsightsWhenChartView: View {
                 width: max(Spacing.borderWidth * 2, size.width - inset * 2), height: blockHeight
             )
             context.fill(Path(roundedRect: rect, cornerRadius: blockHeight / 2), with: shading)
+        }
+        if column.isConfirmedNone {
+            let circle = CGRect(
+                x: size.width / 2 - Spacing.xs, y: size.height - Spacing.md, width: Spacing.sm, height: Spacing.sm
+            )
+            context.stroke(Path(ellipseIn: circle), with: .color(AppColor.textSecondary), lineWidth: Spacing.borderWidth)
         }
         if let minute = column.checkInMinute {
             let center = CGPoint(x: size.width / 2, y: y(minute, in: size))

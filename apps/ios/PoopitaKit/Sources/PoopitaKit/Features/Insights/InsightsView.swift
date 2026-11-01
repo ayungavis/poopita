@@ -4,11 +4,16 @@ import SwiftUI
 struct InsightsView: View {
     @State private var viewModel: InsightsViewModel
     @Binding private var isShowingFrequency: Bool
+    private let doctorExport: SettingsExportViewData
     private let openDay: (String) -> Void
 
-    init(viewModel: InsightsViewModel, isShowingFrequency: Binding<Bool>, openDay: @escaping (String) -> Void) {
+    init(
+        viewModel: InsightsViewModel, isShowingFrequency: Binding<Bool>, doctorExport: SettingsExportViewData,
+        openDay: @escaping (String) -> Void
+    ) {
         _viewModel = State(initialValue: viewModel)
         _isShowingFrequency = isShowingFrequency
+        self.doctorExport = doctorExport
         self.openDay = openDay
     }
 
@@ -25,7 +30,8 @@ struct InsightsView: View {
                 .padding(Spacing.lg)
             case let .loaded(data):
                 InsightsContentView(
-                    viewModel: viewModel, data: data, showFrequency: { isShowingFrequency = true }, openDay: openDay
+                    viewModel: viewModel, data: data, doctorExport: doctorExport,
+                    showFrequency: { isShowingFrequency = true }, openDay: openDay
                 )
             }
         }

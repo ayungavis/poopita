@@ -7,12 +7,60 @@ struct InsightsViewData: Equatable, Sendable {
     let accessibilityLabel: String
     let canMoveNext: Bool
     let headline: String
-    let usual: String?
-    let comparison: String?
+    let headlineDetail: String?
+    let summaryNote: String?
     let unrecorded: HistoryUnrecordedViewData?
+    let doctor: [InsightsFlagViewData]
+    let changes: [InsightsFlagViewData]
+    let usual: InsightsUsualViewData
+    let consistency: InsightsConsistencyViewData
     let when: InsightsWhenViewData
+    let comfort: [InsightsComfortRowViewData]
     let types: [InsightsTypeViewData]
     let frequency: InsightsFrequencyViewData
+}
+
+struct InsightsFlagViewData: Equatable, Sendable, Identifiable {
+    let id: String
+    let title: String
+    let detail: String
+    let dayID: String?
+}
+
+struct InsightsUsualViewData: Equatable, Sendable {
+    let rows: [InsightsUsualRowViewData]
+    let note: String
+}
+
+struct InsightsUsualRowViewData: Equatable, Sendable, Identifiable {
+    let id: String
+    let label: String
+    let value: String
+    let lower: Double
+    let upper: Double
+    let current: Double
+}
+
+struct InsightsConsistencyViewData: Equatable, Sendable {
+    let lead: String?
+    let rows: [InsightsShareRowViewData]
+}
+
+struct InsightsShareRowViewData: Equatable, Sendable, Identifiable {
+    let id: String
+    let label: String
+    let hard: Double
+    let usual: Double
+    let loose: Double
+    let isCurrent: Bool
+    let isDimmed: Bool
+    let accessibilityLabel: String
+}
+
+struct InsightsComfortRowViewData: Equatable, Sendable, Identifiable {
+    let id: String
+    let label: String
+    let value: String
 }
 
 struct InsightsWhenViewData: Equatable, Sendable {
@@ -39,6 +87,8 @@ struct InsightsColumnViewData: Equatable, Sendable, Identifiable {
     let checkInMinute: Int?
     let nowMinute: Int?
     let isUnrecorded: Bool
+    let isConfirmedNone: Bool
+    let unknownCount: Int?
     let isToday: Bool
     let summary: String
 }

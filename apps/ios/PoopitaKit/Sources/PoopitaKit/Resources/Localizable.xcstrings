@@ -2149,6 +2149,438 @@
         }
       }
     },
+    "insights.change.earlier" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih awal dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.fewer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fewer than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih jarang dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.fewerDetail %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ a day on recorded days; you usually have %2$@."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ per hari pada hari tercatat; biasanya %2$@."
+          }
+        }
+      }
+    },
+    "insights.change.harder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harder than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih keras dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.harderDetail %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type 1–2 on %@. More fibre and water often help. If it lasts past 3 weeks, mention it to your doctor."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipe 1–2 pada %@. Serat dan air yang lebih banyak sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
+          }
+        }
+      }
+    },
+    "insights.change.later" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih siang dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.looser" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looser than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih lembek dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.looserDetail %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type 6–7 on %@. Drinking more water often helps. If it lasts past 3 weeks, mention it to your doctor."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipe 6–7 pada %@. Minum lebih banyak air sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
+          }
+        }
+      }
+    },
+    "insights.change.seeDays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See these days ›"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lihat hari-hari ini ›"
+          }
+        }
+      }
+    },
+    "insights.change.straining" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More straining than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih sering mengejan dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.change.strainingDetail %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld logs were difficult. Fibre, water and not rushing often help."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld dari %2$lld catatan terasa sulit. Serat, air, dan tidak terburu-buru sering membantu."
+          }
+        }
+      }
+    },
+    "insights.change.timingDetail %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most logs were outside %1$@–%2$@, your usual time. A regular breakfast can help."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sebagian besar catatan di luar %1$@–%2$@, waktu biasa Anda. Sarapan teratur dapat membantu."
+          }
+        }
+      }
+    },
+    "insights.change.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worth a look"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perlu dilihat"
+          }
+        }
+      }
+    },
+    "insights.comfort.amount" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jumlah"
+          }
+        }
+      }
+    },
+    "insights.comfort.duration" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time on the toilet"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu di toilet"
+          }
+        }
+      }
+    },
+    "insights.comfort.mostly %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostly %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebanyakan %@"
+          }
+        }
+      }
+    },
+    "insights.comfort.straining" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Straining"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengejan"
+          }
+        }
+      }
+    },
+    "insights.comfort.strainingValue %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld logs"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld dari %2$lld catatan"
+          }
+        }
+      }
+    },
+    "insights.comfort.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comfort"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenyamanan"
+          }
+        }
+      }
+    },
+    "insights.consistency.hard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hard 1–2"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keras 1–2"
+          }
+        }
+      }
+    },
+    "insights.consistency.hard %lld %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld logs were hard (%3$lld%%), past the 25%% line."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld dari %2$lld catatan keras (%3$lld%%), melewati garis 25%%."
+          }
+        }
+      }
+    },
+    "insights.consistency.loose %lld %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld logs were loose (%3$lld%%), past the 25%% line."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld dari %2$lld catatan lembek (%3$lld%%), melewati garis 25%%."
+          }
+        }
+      }
+    },
+    "insights.consistency.looseLabel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loose 6–7"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lembek 6–7"
+          }
+        }
+      }
+    },
+    "insights.consistency.row %@ %lld %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld hard, %3$lld usual, %4$lld loose"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$lld keras, %3$lld biasa, %4$lld lembek"
+          }
+        }
+      }
+    },
+    "insights.consistency.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consistency"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konsistensi"
+          }
+        }
+      }
+    },
+    "insights.consistency.under %lld %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld hard and %2$lld loose of %3$lld logs, all under the 25%% line."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld keras dan %2$lld lembek dari %3$lld catatan, semua di bawah garis 25%%."
+          }
+        }
+      }
+    },
+    "insights.consistency.usual" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usual 3–5"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biasa 3–5"
+          }
+        }
+      }
+    },
     "insights.dayCount %lld" : {
       "localizations" : {
         "en" : {
@@ -2181,18 +2613,274 @@
         }
       }
     },
-    "insights.fewer %lld %@" : {
+    "insights.doctor.again" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld fewer than %2$@"
+            "value" : "If it happens again, show a doctor this summary."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld lebih sedikit dari %2$@"
+            "value" : "Jika terjadi lagi, tunjukkan ringkasan ini ke dokter."
+          }
+        }
+      }
+    },
+    "insights.doctor.blackDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it happens again or you feel unwell, contact a doctor soon."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika terjadi lagi atau Anda merasa tidak enak badan, segera hubungi dokter."
+          }
+        }
+      }
+    },
+    "insights.doctor.blackOn %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black stool on %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja hitam pada %@"
+          }
+        }
+      }
+    },
+    "insights.doctor.bloodDays %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood seen on %lld days"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darah terlihat pada %lld hari"
+          }
+        }
+      }
+    },
+    "insights.doctor.bloodOn %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood seen on %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darah terlihat pada %@"
+          }
+        }
+      }
+    },
+    "insights.doctor.bloodOnce %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seen once, at %@. If it happens again, or your poop is black, show a doctor this summary."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terlihat sekali, pukul %@. Jika terjadi lagi, atau tinja Anda hitam, tunjukkan ringkasan ini ke dokter."
+          }
+        }
+      }
+    },
+    "insights.doctor.continues" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it continues, show a doctor this summary."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika berlanjut, tunjukkan ringkasan ini ke dokter."
+          }
+        }
+      }
+    },
+    "insights.doctor.export" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export for your doctor"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekspor untuk dokter Anda"
+          }
+        }
+      }
+    },
+    "insights.doctor.paleDays %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pale stool on %lld days"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja pucat pada %lld hari"
+          }
+        }
+      }
+    },
+    "insights.doctor.redOn %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red stool on %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja merah pada %@"
+          }
+        }
+      }
+    },
+    "insights.doctor.short.black" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black stool"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja hitam"
+          }
+        }
+      }
+    },
+    "insights.doctor.short.blood" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood seen"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darah terlihat"
+          }
+        }
+      }
+    },
+    "insights.doctor.short.pale" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pale stool"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja pucat"
+          }
+        }
+      }
+    },
+    "insights.doctor.short.red" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red stool"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja merah"
+          }
+        }
+      }
+    },
+    "insights.doctor.summary %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld things worth a doctor's look"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hal yang perlu dilihat dokter"
+          }
+        }
+      }
+    },
+    "insights.doctor.summaryOne %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · worth a doctor's look"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · perlu dilihat dokter"
+          }
+        }
+      }
+    },
+    "insights.doctor.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worth a doctor's look"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perlu dilihat dokter"
           }
         }
       }
@@ -2241,6 +2929,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Belum ada catatan"
+          }
+        }
+      }
+    },
+    "insights.headline.usualMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A usual month"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulan yang biasa"
+          }
+        }
+      }
+    },
+    "insights.headline.usualWeek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A usual week"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minggu yang biasa"
+          }
+        }
+      }
+    },
+    "insights.headline.usualYear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A usual year"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahun yang biasa"
           }
         }
       }
@@ -2309,54 +3045,6 @@
         }
       }
     },
-    "insights.more %lld %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld more than %2$@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld lebih banyak dari %2$@"
-          }
-        }
-      }
-    },
-    "insights.mostly %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mostly %@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "kebanyakan %@"
-          }
-        }
-      }
-    },
-    "insights.mostlyStart %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostly %@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kebanyakan %@"
-          }
-        }
-      }
-    },
     "insights.noLogs" : {
       "localizations" : {
         "en" : {
@@ -2421,114 +3109,34 @@
         }
       }
     },
-    "insights.previous.lastMonth" : {
+    "insights.since %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "last month"
+            "value" : "Since %@"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "bulan lalu"
+            "value" : "Sejak %@"
           }
         }
       }
     },
-    "insights.previous.lastWeek" : {
+    "insights.soFar %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "last week"
+            "value" : "%@ so far"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "minggu lalu"
-          }
-        }
-      }
-    },
-    "insights.previous.lastYear" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "last year"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tahun lalu"
-          }
-        }
-      }
-    },
-    "insights.previous.month" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the month before"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "bulan sebelumnya"
-          }
-        }
-      }
-    },
-    "insights.previous.week" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the week before"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "minggu sebelumnya"
-          }
-        }
-      }
-    },
-    "insights.previous.year" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the year before"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tahun sebelumnya"
-          }
-        }
-      }
-    },
-    "insights.same %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Same as %@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sama seperti %@"
+            "value" : "%@ sejauh ini"
           }
         }
       }
@@ -2565,18 +3173,226 @@
         }
       }
     },
-    "insights.usual %@ %@" : {
+    "insights.usual.basis.month" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usually between %1$@ and %2$@"
+            "value" : "Compared with your previous 3 months."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Biasanya antara %1$@ dan %2$@"
+            "value" : "Dibandingkan dengan 3 bulan sebelumnya."
+          }
+        }
+      }
+    },
+    "insights.usual.basis.week" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compared with your last 28 recorded days."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dibandingkan dengan 28 hari tercatat terakhir Anda."
+          }
+        }
+      }
+    },
+    "insights.usual.basis.year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your usual for a year needs an earlier year to compare with. Until then, Week and Month compare you with your recent days."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebiasaan tahunan perlu tahun sebelumnya sebagai pembanding. Sampai saat itu, Minggu dan Bulan membandingkan dengan hari-hari terakhir Anda."
+          }
+        }
+      }
+    },
+    "insights.usual.notEnough" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log a few more days to see your usual."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat beberapa hari lagi untuk melihat kebiasaan Anda."
+          }
+        }
+      }
+    },
+    "insights.usual.often" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How often"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seberapa sering"
+          }
+        }
+      }
+    },
+    "insights.usual.oftenValue %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ a day · usual %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ per hari · biasanya %2$@"
+          }
+        }
+      }
+    },
+    "insights.usual.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu"
+          }
+        }
+      }
+    },
+    "insights.usual.timeValue %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · usual %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · biasanya %2$@"
+          }
+        }
+      }
+    },
+    "insights.usual.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebiasaan Anda"
+          }
+        }
+      }
+    },
+    "insights.usual.type" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jenis"
+          }
+        }
+      }
+    },
+    "insights.usual.typeValue %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostly %1$lld · usual %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebanyakan %1$lld · biasanya %2$@"
+          }
+        }
+      }
+    },
+    "insights.vs.asUsual" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "as usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "seperti biasa"
+          }
+        }
+      }
+    },
+    "insights.vs.less" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "less than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lebih sedikit dari biasanya"
+          }
+        }
+      }
+    },
+    "insights.vs.more" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "more than usual"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lebih banyak dari biasanya"
           }
         }
       }

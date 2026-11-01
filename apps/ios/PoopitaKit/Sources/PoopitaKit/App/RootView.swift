@@ -50,7 +50,10 @@ public struct RootView: View {
                             }
                             Tab(value: RootTab.insights) {
                                 NavigationStack {
-                                    InsightsView(viewModel: insightsModel, isShowingFrequency: $isShowingFrequency) { dayID in
+                                    InsightsView(
+                                        viewModel: insightsModel, isShowingFrequency: $isShowingFrequency,
+                                        doctorExport: settingsModel.pdfExport
+                                    ) { dayID in
                                         historyModel.open(id: dayID)
                                         selectedTab = .history
                                     }

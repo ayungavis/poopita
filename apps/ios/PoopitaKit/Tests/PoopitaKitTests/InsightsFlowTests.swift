@@ -11,8 +11,14 @@ struct InsightsFlowTests {
         #expect(data.title == "This week")
         #expect(!data.canMoveNext)
         #expect(data.headline == "5 logs on 3 days")
-        #expect(try data.usual == "Usually between \(clock("06:00")) and \(clock("09:00")) · mostly Type 4")
-        #expect(data.comparison == nil)
+        #expect(data.headlineDetail == nil)
+        #expect(data.usual.rows.isEmpty)
+        #expect(data.usual.note == "Log a few more days to see your usual.")
+        #expect(data.summaryNote == nil)
+        #expect(data.doctor.isEmpty)
+        #expect(data.changes.isEmpty)
+        #expect(data.consistency.rows.count == 4)
+        #expect(data.consistency.lead == "0 hard and 0 loose of 5 logs, all under the 25% line.")
         #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-29", label: "1 day not recorded"))
         #expect(data.types.map(\.id) == [4, 3])
         #expect(data.types.first?.days == "Mon, Tue, Sat")
@@ -36,18 +42,69 @@ struct InsightsFlowTests {
         #expect(frequency.breakdown.map(\.count) == ["3", "1", "1", "1", "1"])
     }
 
-    @Test func comparisonOnlyShowsWhenBothWeeksAreFullyRecorded() throws {
-        let lastWeek = try (19 ... 25).map { try entry(day: $0, hour: 8, type: 4) }
-        let thisWeek = try (26 ... 31).map { try entry(day: $0, hour: 8, type: 4) } + [entry(day: 1, month: 11, hour: 8, type: 4)]
-        let same = try InsightsViewModel.viewData(source(lastWeek + thisWeek, checkIns: [], period: .week, now: sundayNight))
-        #expect(same.comparison == "Same as last week")
-        let extra = try entry(day: 27, hour: 20, type: 4)
-        let more = try InsightsViewModel.viewData(source(lastWeek + thisWeek + [extra], checkIns: [], period: .week,
-                                                         now: sundayNight))
-        #expect(more.comparison == "1 more than last week")
-        let gap = try InsightsViewModel.viewData(source(Array(lastWeek.dropFirst()) + thisWeek, checkIns: [],
-                                                        period: .week, now: sundayNight))
-        #expect(gap.comparison == nil)
+    @Test func aChangeFromYourUsualLeadsAndRedFlagsAreSummarised() throws {
+        let usualDays = try (1 ... 28).map { offset in
+            try entry(date: date("2026-10-26T07:00:00Z").addingTimeInterval(Double(-offset) * 86400), type: 4)
+        }
+        let looser = try (26 ... 30).map { try entry(day: $0, hour: 13, type: 6) }
+        let base = try entry(day: 31, hour: 7, minute: 20, type: 6)
+        let bloody = DiaryEntry(
+            id: base.id, occurrence: base.occurrence, stoolType: 6, amount: nil, effort: nil, blood: .seen, note: ""
+        )
+        let data = try InsightsViewModel.viewData(source(usualDays + looser + [bloody], checkIns: [], period: .week))
+        #expect(data.headline == "Looser than usual")
+        #expect(data.headlineDetail == "6 logs on 6 days")
+        #expect(data.changes.map(\.id) == ["looser", "timing"])
+        #expect(data.changes.first?.dayID == "2026-10-26")
+        #expect(data.doctor.map(\.id) == ["blood"])
+        var style = Date.FormatStyle.dateTime.weekday(.abbreviated).day().month(.abbreviated)
+        style.timeZone = zone
+        let saturday = try "Blood seen on " + date("2026-10-31T07:20:00Z").formatted(style)
+        #expect(data.doctor.first?.title == saturday)
+        let twice = try InsightsViewModel.viewData(source(usualDays + looser + [bloody, DiaryEntry(
+            id: UUID(), occurrence: bloody.occurrence, stoolType: 6, amount: nil, effort: nil, blood: .seen, note: ""
+        )], checkIns: [], period: .week))
+        #expect(twice.doctor.first?.title == saturday)
+        #expect(data.summaryNote == "Blood seen · worth a doctor's look")
+        #expect(data.usual.rows.map(\.id) == ["often", "type", "time"])
+        #expect(data.usual.rows[1].value == "Mostly 6 · usual 4")
+        #expect(data.consistency.lead == "6 of 6 logs were loose (100%), past the 25% line.")
+        #expect(data.consistency.rows.last?.loose == 1)
+    }
+
+    @Test func aWeekLikeYourUsualSaysSoWithoutFlags() throws {
+        let usualDays = try (1 ... 28).map { offset in
+            try entry(date: date("2026-10-26T07:00:00Z").addingTimeInterval(Double(-offset) * 86400), type: 4)
+        }
+        let week = try (26 ... 31).map { try entry(day: $0, hour: 7, type: 4) }
+        let data = try InsightsViewModel.viewData(source(usualDays + week, checkIns: [], period: .week))
+        #expect(data.headline == "A usual week")
+        #expect(data.changes.isEmpty)
+        #expect(data.doctor.isEmpty)
+        #expect(data.usual.note == "Compared with your last 28 recorded days.")
+        #expect(data.usual.rows.first?.value == "1 a day · usual 1")
+
+        let fresh = try InsightsViewModel.viewData(source(
+            usualDays + week,
+            checkIns: [],
+            period: .week,
+            now: date("2026-11-02T00:30:00Z")
+        ))
+        #expect(fresh.headline == "No logs yet")
+
+        let oneHardDay = try (0 ..< 6).map { try entry(day: 1, month: 11, hour: 8 + $0, type: 1) }
+        let thin = try InsightsViewModel.viewData(source(
+            usualDays + week + oneHardDay, checkIns: [], period: .month, now: date("2026-11-02T00:30:00Z")
+        ))
+        #expect(thin.changes.isEmpty)
+        #expect(thin.headline == "6 logs on 1 day")
+        var span = Date.IntervalFormatStyle().day().month(.abbreviated)
+        span.timeZone = zone
+        #expect(try fresh.consistency.rows[2].label == (date("2026-10-26T00:00:00Z") ..< date("2026-11-01T00:00:00Z"))
+            .formatted(span))
+        #expect(try fresh.consistency.rows[2].label.contains(date("2026-10-26T00:00:00Z").formatted(
+            Date.FormatStyle(timeZone: zone).month(.abbreviated)
+        )))
     }
 
     @Test func monthAndYearGroupTheSameChartsByWeekAndMonth() throws {
@@ -57,15 +114,19 @@ struct InsightsFlowTests {
         #expect(month.when.columns.allSatisfy { $0.cell == nil })
         #expect(month.frequency.bars.count == 5)
         #expect(month.frequency.breakdownTitle == "This month's 31 days")
+        #expect(month.consistency.rows.count == 5)
+        #expect(month.when.columns[27].isConfirmedNone)
 
         let year = try InsightsViewModel.viewData(source(figmaWeek(), checkIns: figmaCheckIns(), period: .year))
         #expect(year.title == "2026")
-        #expect(year.when.columns.count == 12)
+        #expect(year.when.columns.count == 3)
         #expect(year.frequency.bars.count == 12)
-        #expect(year.when.columns[9].logMinutes.count == 5)
-        #expect(year.when.columns[11].isUnrecorded == false)
-        #expect(year.when.columns[0].isUnrecorded == false)
+        #expect(year.when.columns[0].logMinutes.count == 5)
+        #expect(year.when.columns[0].unknownCount == 1)
+        #expect(year.when.columns[2].isUnrecorded == false)
         #expect(year.when.isAggregated)
+        #expect(year.usual.rows.isEmpty)
+        #expect(year.consistency.rows.map(\.label) == ["Oct so far"])
         #expect(year.unrecorded?.dayID == "2026-10-29")
         #expect(year.frequency.breakdown.last?.id == "untracked")
     }
@@ -119,6 +180,13 @@ struct InsightsFlowTests {
             NoPoopCheckIn(day: DiaryDay(year: 2026, month: 10, day: 30),
                           reportedAt: occurrence("2026-10-30T20:10:00Z"), coverage: .partial),
         ]
+    }
+
+    private func entry(date: Date, type: Int) throws -> DiaryEntry {
+        try DiaryEntry(
+            id: UUID(), occurrence: OccurrenceTime(instant: date, timeZone: zone), stoolType: type, amount: nil, effort: nil,
+            note: ""
+        )
     }
 
     private func entry(day: Int, month: Int = 10, hour: Int, minute: Int = 0, type: Int) throws -> DiaryEntry {
