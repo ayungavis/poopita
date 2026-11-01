@@ -27,32 +27,36 @@ struct TodayView: View {
             }
         }
         .background(AppColor.background)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: openSettings) {
-                    AppIcon.settings
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Spacing.icon, height: Spacing.icon)
-                        .foregroundStyle(AppColor.textPrimary)
+        #if os(iOS)
+            .toolbarBackground(AppColor.background, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        #endif
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: openSettings) {
+                        AppIcon.settings
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Spacing.icon, height: Spacing.icon)
+                            .foregroundStyle(AppColor.textPrimary)
+                    }
+                    .accessibilityLabel(Text("settings.title", bundle: .module))
                 }
-                .accessibilityLabel(Text("settings.title", bundle: .module))
             }
-        }
-        .font(AppFont.body)
-        .foregroundStyle(AppColor.textPrimary)
-        .tint(AppColor.accent)
-        .privacySensitive()
-        .task {
-            viewModel.load()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-            viewModel.load()
-        }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
+            .font(AppFont.body)
+            .foregroundStyle(AppColor.textPrimary)
+            .tint(AppColor.accent)
+            .privacySensitive()
+            .task {
                 viewModel.load()
             }
-        }
+            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+                viewModel.load()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    viewModel.load()
+                }
+            }
     }
 }

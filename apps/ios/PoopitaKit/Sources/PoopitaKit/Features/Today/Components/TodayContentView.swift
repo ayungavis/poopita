@@ -7,30 +7,17 @@ struct TodayContentView: View {
     @State private var headerHeight: CGFloat = 0
     @State private var isHeaderHidden = false
 
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: Spacing.lg, pinnedViews: .sectionHeaders) {
-                TodayHeaderView(data: data)
-                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
-                Section {
-                    feedback
-                    day
-                } header: {
-                    VStack(alignment: .leading, spacing: Spacing.lg) {
-                        TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
-                        summary
+        ScrollViewReader { proxy in
+            scrollView
+                .onAppear { proxy.scrollTo(TodayTimelineView.focusID, anchor: .center) }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        proxy.scrollTo(TodayTimelineView.focusID, anchor: .center)
                     }
-                    .background(AppColor.background)
                 }
-            }
-            .padding(.horizontal, Spacing.lg)
-            .padding(.bottom, Spacing.xl)
-        }
-        .defaultScrollAnchor(scrollAnchor, for: .initialOffset)
-        .onScrollGeometryChange(for: Bool.self) { geometry in
-            geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
-        } action: { _, isHidden in
-            isHeaderHidden = isHidden
         }
         .id(data.weekDays.first(where: \.isSelected)?.dayID)
         .toolbar {
@@ -51,9 +38,30 @@ struct TodayContentView: View {
         }
     }
 
-    private var scrollAnchor: UnitPoint {
-        let minute = data.timeline.now?.minute ?? data.timeline.blocks.first?.minute ?? 0
-        return UnitPoint(x: 0, y: Double(minute) / Double(data.timeline.endMinute))
+    private var scrollView: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: Spacing.lg, pinnedViews: .sectionHeaders) {
+                TodayHeaderView(data: data)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                Section {
+                    feedback
+                    day
+                } header: {
+                    VStack(alignment: .leading, spacing: Spacing.lg) {
+                        TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
+                        summary
+                    }
+                    .background(AppColor.background)
+                }
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.xl)
+        }
+        .onScrollGeometryChange(for: Bool.self) { geometry in
+            geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
+        } action: { _, isHidden in
+            isHeaderHidden = isHidden
+        }
     }
 
     private var summary: some View {

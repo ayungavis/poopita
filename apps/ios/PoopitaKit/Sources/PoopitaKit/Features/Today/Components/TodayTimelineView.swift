@@ -10,8 +10,16 @@ struct TodayTimelineView: View {
     @ScaledMetric(relativeTo: .body) private var blockHeight = Spacing.timelineBlock
     @ScaledMetric(relativeTo: .caption) private var labelWidth = Spacing.timelineLabel
 
+    static let focusID = "today.timeline.focus"
+
     var body: some View {
         ZStack(alignment: .topLeading) {
+            if let minute = timeline.now?.minute ?? timeline.blocks.first?.minute {
+                Color.clear
+                    .frame(height: Spacing.borderWidth)
+                    .padding(.top, max(0, offset(minute)))
+                    .id(Self.focusID)
+            }
             ForEach(timeline.hours.filter { $0.minute >= startMinute }) { hour in
                 HStack(spacing: Spacing.sm) {
                     Text(verbatim: hour.label)
