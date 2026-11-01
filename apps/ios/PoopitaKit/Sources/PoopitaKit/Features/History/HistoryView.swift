@@ -23,13 +23,19 @@ struct HistoryView: View {
                 HistoryContentView(viewModel: viewModel, data: data)
             }
         }
-        .font(AppFont.body)
-        .foregroundStyle(AppColor.textPrimary)
-        .tint(AppColor.accent)
-        .privacySensitive()
-        .task { viewModel.load() }
-        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-            viewModel.load()
-        }
+        .background(AppColor.background)
+        #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColor.background, for: .navigationBar)
+            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        #endif
+            .font(AppFont.body)
+            .foregroundStyle(AppColor.textPrimary)
+            .tint(AppColor.accent)
+            .privacySensitive()
+            .task { viewModel.load() }
+            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+                viewModel.load()
+            }
     }
 }

@@ -5,11 +5,14 @@ struct HistoryContentView: View {
     let viewModel: HistoryViewModel
     let data: HistoryViewData
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var headerHeight: CGFloat = 0
+    @State private var isHeaderHidden = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 HistoryMonthHeaderView(data: data, move: viewModel.moveMonth)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }
@@ -26,21 +29,37 @@ struct HistoryContentView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xl)
         }
+        .onScrollGeometryChange(for: Bool.self) { geometry in
+            geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
+        } action: { _, isHidden in
+            isHeaderHidden = isHidden
+        }
         .background(AppColor.background)
-        #if os(iOS)
-            .toolbarVisibility(.hidden, for: .navigationBar)
-        #endif
-            .fullScreenModal(item: editorBinding, onDismiss: viewModel.dismissEditor) { editor in
-                EntryEditorView(
-                    viewModel: editor, saved: viewModel.savedEditor,
-                    delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage
-                )
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(verbatim: data.monthLabel)
+                    .font(AppFont.body.weight(.semibold))
+                    .foregroundStyle(AppColor.textPrimary)
+                    .contentTransition(.opacity)
+                    .opacity(isHeaderHidden ? 1 : 0)
+                    .offset(y: isHeaderHidden || reduceMotion ? 0 : Spacing.sm)
+                    .accessibilityHidden(!isHeaderHidden)
+                    .animation(.snappy(duration: 0.25), value: isHeaderHidden)
+                    .animation(.easeInOut(duration: 0.2), value: data.monthLabel)
             }
-            .onChange(of: viewModel.errorMessage) { _, error in
-                if let error {
-                    AccessibilityNotification.Announcement(error).post()
-                }
+            .sharedBackgroundVisibility(.hidden)
+        }
+        .fullScreenModal(item: editorBinding, onDismiss: viewModel.dismissEditor) { editor in
+            EntryEditorView(
+                viewModel: editor, saved: viewModel.savedEditor,
+                delete: { viewModel.delete(id: editor.id) }, deletionError: viewModel.errorMessage
+            )
+        }
+        .onChange(of: viewModel.errorMessage) { _, error in
+            if let error {
+                AccessibilityNotification.Announcement(error).post()
             }
+        }
     }
 
     private var summary: some View {
