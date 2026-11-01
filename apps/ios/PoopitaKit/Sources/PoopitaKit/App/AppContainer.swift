@@ -9,6 +9,9 @@ public final class AppContainer {
 
     public init() {
         AppFont.registerFonts()
+        #if os(iOS)
+            NavigationBarStyle.apply()
+        #endif
     }
 
     func makeTodayViewModel() throws -> TodayViewModel {

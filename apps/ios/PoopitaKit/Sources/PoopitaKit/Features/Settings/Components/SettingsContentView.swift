@@ -6,15 +6,10 @@ struct SettingsContentView: View {
     let viewModel: SettingsViewModel
     let data: SettingsViewData
     @State private var confirmDeleteAll = false
-    @State private var isTitleCompact = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xl - Spacing.xs) {
-                Text("settings.title", bundle: .module)
-                    .font(AppFont.largeTitle)
-                    .foregroundStyle(AppColor.textPrimary)
-                    .accessibilityAddTraits(.isHeader)
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error)
                         .font(AppFont.caption)
@@ -30,23 +25,9 @@ struct SettingsContentView: View {
                 dataSection
                 footer
             }
-            .padding(.horizontal, Spacing.xl)
+            .padding(.horizontal, Spacing.lg)
             .padding(.top, Spacing.sm)
             .padding(.bottom, Spacing.xxl)
-        }
-        .onScrollGeometryChange(for: Bool.self) { geometry in
-            geometry.contentOffset.y + geometry.contentInsets.top > Spacing.xxl
-        } action: { _, compact in
-            withAnimation(reduceMotion ? nil : .snappy(duration: 0.2)) { isTitleCompact = compact }
-        }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("settings.title", bundle: .module)
-                    .font(AppFont.body.weight(.semibold))
-                    .foregroundStyle(AppColor.textPrimary)
-                    .opacity(isTitleCompact ? 1 : 0)
-                    .accessibilityHidden(!isTitleCompact)
-            }
         }
         .confirmationDialog(Text("settings.deleteHistoryQuestion", bundle: .module), isPresented: $confirmDeleteAll) {
             Button(role: .destructive) {
