@@ -3544,6 +3544,38 @@
         }
       }
     },
+    "settings.data.exportCSV" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export all data"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekspor semua data"
+          }
+        }
+      }
+    },
+    "settings.data.exportPDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export for your doctor"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekspor untuk dokter"
+          }
+        }
+      }
+    },
     "settings.data.title" : {
       "localizations" : {
         "en" : {
@@ -3608,6 +3640,230 @@
         }
       }
     },
+    "settings.guide.desc1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separate hard lumps, like nuts. Hard to pass."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gumpalan keras terpisah, seperti kacang. Sulit dikeluarkan."
+          }
+        }
+      }
+    },
+    "settings.guide.desc2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sausage-shaped but lumpy."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbentuk sosis tetapi bergumpal."
+          }
+        }
+      }
+    },
+    "settings.guide.desc3" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like a sausage with cracks on the surface."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seperti sosis dengan retakan di permukaannya."
+          }
+        }
+      }
+    },
+    "settings.guide.desc4" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like a sausage or snake, smooth and soft."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seperti sosis atau ular, halus dan lunak."
+          }
+        }
+      }
+    },
+    "settings.guide.desc5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soft blobs with clear-cut edges. Easy to pass."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gumpalan lunak dengan tepi jelas. Mudah dikeluarkan."
+          }
+        }
+      }
+    },
+    "settings.guide.desc6" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fluffy, mushy pieces with ragged edges."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potongan lembek dengan tepi tidak rata."
+          }
+        }
+      }
+    },
+    "settings.guide.desc7" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watery, no solid pieces."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cair, tanpa bagian padat."
+          }
+        }
+      }
+    },
+    "settings.guide.harder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harder"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih keras"
+          }
+        }
+      }
+    },
+    "settings.guide.intro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Bristol scale sorts stool into seven types by shape. Pick the closest one; it doesn’t need to be exact."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skala Bristol membagi tinja menjadi tujuh jenis berdasarkan bentuknya. Pilih yang paling mirip; tidak harus persis."
+          }
+        }
+      }
+    },
+    "settings.guide.looser" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looser"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih encer"
+          }
+        }
+      }
+    },
+    "settings.guide.note" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This guide isn’t a diagnosis. Talk to a doctor if something changes or worries you."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panduan ini bukan diagnosis. Bicarakan dengan dokter jika ada perubahan atau kekhawatiran."
+          }
+        }
+      }
+    },
+    "settings.guide.typical" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typical"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umum"
+          }
+        }
+      }
+    },
+    "settings.help.bristol" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bristol scale guide"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Panduan skala Bristol"
+          }
+        }
+      }
+    },
+    "settings.help.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bantuan"
+          }
+        }
+      }
+    },
     "settings.history.deleted" : {
       "localizations" : {
         "en" : {
@@ -3652,6 +3908,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pratinjau pengalih aplikasi selalu disembunyikan secara otomatis."
+          }
+        }
+      }
+    },
+    "settings.privacy.hideInSwitcher" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide in app switcher"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sembunyikan di pengalih aplikasi"
           }
         }
       }
@@ -3764,6 +4036,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pengingat"
+          }
+        }
+      }
+    },
+    "settings.report.checkIn" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checked in: no bowel movement"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konfirmasi: tidak BAB"
+          }
+        }
+      }
+    },
+    "settings.report.created %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dibuat %@"
+          }
+        }
+      }
+    },
+    "settings.report.empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No logs yet."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum ada catatan."
+          }
+        }
+      }
+    },
+    "settings.report.logs %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs: %lld"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan: %lld"
+          }
+        }
+      }
+    },
+    "settings.report.period %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Periode: %@"
+          }
+        }
+      }
+    },
+    "settings.report.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bowel diary"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan BAB"
           }
         }
       }

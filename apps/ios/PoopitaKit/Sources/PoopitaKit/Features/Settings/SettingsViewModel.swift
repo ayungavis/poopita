@@ -47,7 +47,7 @@ final class SettingsViewModel {
             reminderDate: initialTime,
             isAppLockEnabled: false,
             isBiometricsAvailable: biometricService.isAvailable(),
-            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService, pending: nil)
+            appearance: Self.appearanceViewData(appearance: appearance, language: languageService, pending: nil)
         )
     }
 
@@ -116,6 +116,29 @@ final class SettingsViewModel {
         updateState()
     }
 
+    func setHidesInAppSwitcher(_ hides: Bool) {
+        do {
+            try appearance.setHidesInAppSwitcher(hides)
+            updateState()
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+        }
+    }
+
+    var csvExport: SettingsExportViewData {
+        SettingsExportViewData(fileName: "poopita-diary.csv", isPDF: false) { [weak self] in
+            self?.exportData { Data(DiaryCSV.make(entries: $0, checkIns: $1).utf8) } ?? Data()
+        }
+    }
+
+    var pdfExport: SettingsExportViewData {
+        SettingsExportViewData(fileName: "poopita-report.pdf", isPDF: true) { [weak self] in
+            guard let self else { return Data() }
+            let date = now()
+            return exportData { DiaryReport(entries: $0, checkIns: $1, now: date).pdf() }
+        }
+    }
+
     func cancelLanguageChange() {
         pendingLanguage = nil
         updateState()
@@ -141,6 +164,16 @@ final class SettingsViewModel {
     func authenticateToUnlock() async -> Bool {
         let reason = String(localized: "settings.appLock.reason", bundle: .module)
         return await biometricService.authenticate(reason: reason)
+    }
+
+    private func exportData(_ make: ([DiaryEntry], [NoPoopCheckIn]) -> Data) -> Data {
+        do {
+            return try make(repository.entries(), repository.checkIns())
+        } catch {
+            errorMessage = AppError(wrapping: error).userMessage
+            Log.report(error, context: Log.Context(operation: "settings.export"))
+            return Data()
+        }
     }
 
     private func scheduleCurrentReminder() async {
@@ -174,11 +207,13 @@ final class SettingsViewModel {
             isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
             isBiometricsAvailable: state.isBiometricsAvailable,
             appearance: Self.appearanceViewData(
-                theme: appearance.theme, language: languageService, pending: pendingLanguage
+                appearance: appearance, language: languageService, pending: pendingLanguage
             )
         )
     }
+}
 
+extension SettingsViewModel {
     static func viewData(
         isReminderEnabled: Bool,
         reminderDate: Date,
@@ -196,8 +231,9 @@ final class SettingsViewModel {
     }
 
     static func appearanceViewData(
-        theme: AppTheme, language: any LanguageService, pending: String?
+        appearance: AppearanceModel, language: any LanguageService, pending: String?
     ) -> SettingsAppearanceViewData {
+        let theme = appearance.theme
         let chosen = language.chosenCode
         return SettingsAppearanceViewData(
             themes: AppTheme.allCases.map { SettingsChoiceViewData(id: $0.rawValue, title: title(for: $0)) },
@@ -210,7 +246,32 @@ final class SettingsViewModel {
                     title: String(localized: "settings.appearance.switchTitle \(name)", bundle: .module),
                     message: String(localized: "settings.appearance.switchMessage \(name)", bundle: .module)
                 )
-            }
+            },
+            hidesInAppSwitcher: appearance.hidesInAppSwitcher
+        )
+    }
+
+    static var guide: SettingsGuideViewData {
+        let rows = EntryChoiceViewData.types.map { type in
+            SettingsGuideViewData.Row(
+                id: type.id, title: type.title + " · " + type.detail,
+                description: String(
+                    localized: String.LocalizationValue("settings.guide.desc" + type.id), bundle: .module
+                ),
+                illustration: type.illustration
+            )
+        }
+        let group = { (id: String, title: String, range: Range<Int>) in
+            SettingsGuideViewData.Group(id: id, title: title, rows: Array(rows[range]))
+        }
+        return SettingsGuideViewData(
+            intro: String(localized: "settings.guide.intro", bundle: .module),
+            groups: [
+                group("harder", String(localized: "settings.guide.harder", bundle: .module), 0 ..< 2),
+                group("typical", String(localized: "settings.guide.typical", bundle: .module), 2 ..< 4),
+                group("looser", String(localized: "settings.guide.looser", bundle: .module), 4 ..< 7),
+            ],
+            note: String(localized: "settings.guide.note", bundle: .module)
         )
     }
 

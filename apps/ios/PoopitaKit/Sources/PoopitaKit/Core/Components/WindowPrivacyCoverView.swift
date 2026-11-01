@@ -6,11 +6,16 @@ import SwiftUI
 
 #if os(iOS)
     struct WindowPrivacyCoverView: UIViewRepresentable {
+        var isEnabled = true
+
         func makeUIView(context _: Context) -> PrivacyWindowView {
             PrivacyWindowView(frame: .zero)
         }
 
-        func updateUIView(_: PrivacyWindowView, context _: Context) {}
+        func updateUIView(_ uiView: PrivacyWindowView, context _: Context) {
+            uiView.isEnabled = isEnabled
+        }
+
         static func dismantleUIView(_ uiView: PrivacyWindowView, coordinator _: Void) {
             uiView.stop()
         }
@@ -18,6 +23,7 @@ import SwiftUI
 
     final class PrivacyWindowView: UIView {
         private var cover: UIView?
+        var isEnabled = true
 
         override func didMoveToWindow() {
             super.didMoveToWindow()
@@ -46,7 +52,7 @@ import SwiftUI
         }
 
         @objc private func hideDiary() {
-            guard let window else { return }
+            guard isEnabled, let window else { return }
             if let cover {
                 window.bringSubviewToFront(cover); return
             }
@@ -67,6 +73,8 @@ import SwiftUI
     }
 #else
     struct WindowPrivacyCoverView: View {
+        var isEnabled = true
+
         var body: some View {
             EmptyView()
         }

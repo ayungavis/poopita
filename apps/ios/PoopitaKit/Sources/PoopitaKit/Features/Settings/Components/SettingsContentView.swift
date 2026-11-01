@@ -22,7 +22,8 @@ struct SettingsContentView: View {
                     cancelLanguageChange: viewModel.cancelLanguageChange
                 )
                 privacySection
-                dataSection
+                SettingsDataView(csvExport: viewModel.csvExport, pdfExport: viewModel.pdfExport)
+                helpSection
                 footer
             }
             .padding(.horizontal, Spacing.lg)
@@ -74,7 +75,7 @@ struct SettingsContentView: View {
     }
 
     private var privacySection: some View {
-        SettingsSectionView("settings.privacy.title", footnote: "settings.privacy.appSwitcherHint") {
+        SettingsSectionView("settings.privacy.title") {
             Toggle(isOn: Binding(
                 get: { data.isAppLockEnabled },
                 set: { enabled in Task { await viewModel.toggleAppLock(enabled) } }
@@ -84,33 +85,32 @@ struct SettingsContentView: View {
             .tint(AppColor.ink)
             .disabled(!data.isBiometricsAvailable)
             .settingsRow()
+            SettingsDividerView()
+            Toggle(isOn: Binding(get: { data.appearance.hidesInAppSwitcher }, set: viewModel.setHidesInAppSwitcher)) {
+                Text("settings.privacy.hideInSwitcher", bundle: .module)
+            }
+            .tint(AppColor.ink)
+            .settingsRow()
         }
     }
 
-    private var dataSection: some View {
-        SettingsSectionView("settings.data.title") {
-            HStack(spacing: Spacing.sm) {
-                Text("settings.backup.title", bundle: .module)
-                Spacer(minLength: Spacing.md)
-                Text("settings.backup.notSetUp", bundle: .module)
-                    .foregroundStyle(AppColor.textSecondary)
-            }
-            .settingsRow()
-            .accessibilityElement(children: .combine)
-            SettingsDividerView()
-            DisclosureGroup {
-                VStack(alignment: .leading, spacing: Spacing.sm) {
-                    Text("settings.backup.explainer1", bundle: .module)
-                    Text("settings.backup.explainer2", bundle: .module)
-                }
-                .font(AppFont.caption)
-                .foregroundStyle(AppColor.textSecondary)
-                .padding(.bottom, Spacing.md)
+    private var helpSection: some View {
+        SettingsSectionView("settings.help.title") {
+            NavigationLink {
+                SettingsBristolGuideView(guide: SettingsViewModel.guide)
             } label: {
-                Text("settings.backup.howItWorks", bundle: .module)
-                    .settingsRow()
+                HStack(spacing: Spacing.sm) {
+                    Text("settings.help.bristol", bundle: .module)
+                    Spacer(minLength: Spacing.md)
+                    Image(systemName: "chevron.right")
+                        .font(AppFont.caption.weight(.semibold))
+                        .foregroundStyle(AppColor.textSecondary)
+                        .accessibilityHidden(true)
+                }
+                .settingsRow()
+                .contentShape(Rectangle())
             }
-            .foregroundStyle(AppColor.textSecondary)
+            .buttonStyle(.plain)
         }
     }
 

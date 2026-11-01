@@ -87,7 +87,7 @@ public struct RootView: View {
         }
         .font(AppFont.body)
         .background(AppColor.background)
-        .background { WindowPrivacyCoverView() }
+        .background { WindowPrivacyCoverView(isEnabled: appearance.hidesInAppSwitcher) }
         .preferredColorScheme(appearance.colorScheme)
         .task { openDiary() }
         .onChange(of: undoModel?.revision) {

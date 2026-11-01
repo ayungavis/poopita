@@ -5,11 +5,13 @@ import SwiftUI
 @Observable
 final class AppearanceModel {
     private(set) var theme: AppTheme
+    private(set) var hidesInAppSwitcher: Bool
     private let repository: any AppearanceRepository
 
     init(repository: any AppearanceRepository) {
         self.repository = repository
         theme = repository.theme()
+        hidesInAppSwitcher = repository.hidesInAppSwitcher()
     }
 
     var colorScheme: ColorScheme? {
@@ -24,5 +26,11 @@ final class AppearanceModel {
         guard theme != self.theme else { return }
         try repository.setTheme(theme)
         self.theme = theme
+    }
+
+    func setHidesInAppSwitcher(_ hides: Bool) throws {
+        guard hides != hidesInAppSwitcher else { return }
+        try repository.setHidesInAppSwitcher(hides)
+        hidesInAppSwitcher = hides
     }
 }
