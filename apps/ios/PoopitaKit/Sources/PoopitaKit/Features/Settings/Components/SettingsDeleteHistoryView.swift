@@ -12,13 +12,12 @@ struct SettingsDeleteHistoryView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xl - Spacing.xs) {
-                Text("settings.delete.intro", bundle: .module)
-                    .foregroundStyle(AppColor.textSecondary)
                 if let data {
                     if data.isEmpty {
-                        Text("settings.delete.empty", bundle: .module)
-                            .foregroundStyle(AppColor.textSecondary)
+                        empty
                     } else {
+                        Text("settings.delete.intro", bundle: .module)
+                            .foregroundStyle(AppColor.textSecondary)
                         content(data)
                     }
                 }
@@ -32,6 +31,20 @@ struct SettingsDeleteHistoryView: View {
         .navigationTitle(Text("settings.data.deleteAll", bundle: .module))
         .font(AppFont.body)
         .task { data = viewModel.deleteViewData() }
+    }
+
+    private var empty: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text("settings.delete.empty", bundle: .module)
+                .font(AppFont.body.weight(.semibold))
+                .foregroundStyle(AppColor.textPrimary)
+            Text("settings.delete.emptyDetail", bundle: .module)
+                .foregroundStyle(AppColor.textSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(Spacing.lg)
+        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
+        .accessibilityElement(children: .combine)
     }
 
     @ViewBuilder

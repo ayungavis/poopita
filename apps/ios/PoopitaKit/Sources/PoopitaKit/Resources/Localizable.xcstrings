@@ -4141,13 +4141,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There’s nothing to delete yet."
+            "value" : "Nothing to delete yet"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Belum ada yang bisa dihapus."
+            "value" : "Belum ada yang perlu dihapus"
+          }
+        }
+      }
+    },
+    "settings.delete.emptyDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your diary is still empty. Once you log a movement or check in, you can save a copy or clear it here."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diari Anda masih kosong. Setelah Anda mencatat BAB atau melakukan konfirmasi, Anda bisa menyimpan salinan atau menghapusnya di sini."
           }
         }
       }
