@@ -28,14 +28,6 @@ struct TodayView: View {
         }
         .background(AppColor.background)
         .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Text(verbatim: "poopita")
-                    .font(AppFont.wordmark)
-                    .foregroundStyle(AppColor.textPrimary)
-                    .fixedSize()
-                    .accessibilityHidden(true)
-            }
-            .sharedBackgroundVisibility(.hidden)
             ToolbarItem(placement: .primaryAction) {
                 Button(action: openSettings) {
                     AppIcon.settings

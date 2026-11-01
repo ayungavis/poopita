@@ -4,26 +4,40 @@ import SwiftUI
 struct TodayContentView: View {
     let viewModel: TodayViewModel
     let data: TodayViewData
+    @State private var headerHeight: CGFloat = 0
+    @State private var isHeaderHidden = false
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Spacing.lg) {
-                feedback
-                day
+            LazyVStack(alignment: .leading, spacing: Spacing.lg, pinnedViews: .sectionHeaders) {
+                TodayHeaderView(data: data)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+                Section {
+                    feedback
+                    day
+                } header: {
+                    VStack(alignment: .leading, spacing: Spacing.lg) {
+                        TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
+                        summary
+                    }
+                    .background(AppColor.background)
+                }
             }
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xl)
         }
         .defaultScrollAnchor(scrollAnchor, for: .initialOffset)
+        .onScrollGeometryChange(for: Bool.self) { geometry in
+            geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
+        } action: { _, isHidden in
+            isHeaderHidden = isHidden
+        }
         .id(data.weekDays.first(where: \.isSelected)?.dayID)
-        .safeAreaBar(edge: .top) {
-            VStack(alignment: .leading, spacing: Spacing.lg) {
-                TodayHeaderView(data: data)
-                TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
-                summary
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                TodayToolbarTitleView(monthLabel: data.monthLabel, title: data.title, isCompact: isHeaderHidden)
             }
-            .padding(.horizontal, Spacing.lg)
-            .background(AppColor.background)
+            .sharedBackgroundVisibility(.hidden)
         }
         .onChange(of: viewModel.feedback) { _, message in
             if let message {
