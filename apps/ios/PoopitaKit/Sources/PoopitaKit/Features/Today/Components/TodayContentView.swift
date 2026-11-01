@@ -4,19 +4,24 @@ import SwiftUI
 struct TodayContentView: View {
     let viewModel: TodayViewModel
     let data: TodayViewData
-    let openSettings: () -> Void
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                TodayHeaderView(data: data, openSettings: openSettings)
-                TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
-                summary
                 feedback
                 day
             }
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xl)
+        }
+        .safeAreaBar(edge: .top) {
+            VStack(alignment: .leading, spacing: Spacing.lg) {
+                TodayHeaderView(data: data)
+                TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
+                summary
+            }
+            .padding(.horizontal, Spacing.lg)
+            .background(AppColor.background)
         }
         .onChange(of: viewModel.feedback) { _, message in
             if let message {

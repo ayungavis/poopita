@@ -23,27 +23,44 @@ struct TodayView: View {
                 }
                 .padding(Spacing.lg)
             case let .loaded(data):
-                TodayContentView(viewModel: viewModel, data: data, openSettings: openSettings)
+                TodayContentView(viewModel: viewModel, data: data)
             }
         }
         .background(AppColor.background)
-        #if os(iOS)
-            .toolbarVisibility(.hidden, for: .navigationBar)
-        #endif
-            .font(AppFont.body)
-            .foregroundStyle(AppColor.textPrimary)
-            .tint(AppColor.accent)
-            .privacySensitive()
-            .task {
-                viewModel.load()
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Text(verbatim: "poopita")
+                    .font(AppFont.wordmark)
+                    .foregroundStyle(AppColor.textPrimary)
+                    .fixedSize()
+                    .accessibilityHidden(true)
             }
-            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-                viewModel.load()
-            }
-            .onChange(of: scenePhase) { _, phase in
-                if phase == .active {
-                    viewModel.load()
+            .sharedBackgroundVisibility(.hidden)
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: openSettings) {
+                    AppIcon.settings
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Spacing.icon, height: Spacing.icon)
+                        .foregroundStyle(AppColor.textPrimary)
                 }
+                .accessibilityLabel(Text("settings.title", bundle: .module))
             }
+        }
+        .font(AppFont.body)
+        .foregroundStyle(AppColor.textPrimary)
+        .tint(AppColor.accent)
+        .privacySensitive()
+        .task {
+            viewModel.load()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            viewModel.load()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                viewModel.load()
+            }
+        }
     }
 }
