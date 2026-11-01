@@ -4,11 +4,11 @@ import SwiftUI
 struct RemindersPreviewView: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
-            EntryIllustrationView(kind: .amount3)
-                .foregroundStyle(AppColor.onInk)
-                .padding(Spacing.xs)
+            Image("appIcon", bundle: .module)
+                .resizable()
                 .frame(width: Spacing.touchTarget, height: Spacing.touchTarget)
-                .background(AppColor.ink, in: RoundedRectangle(cornerRadius: Spacing.sm + Spacing.xs / 2))
+                .clipShape(RoundedRectangle(cornerRadius: Spacing.sm + Spacing.xs / 2))
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.xs / 2) {
                 HStack {
                     Text(verbatim: "POOPITA")
