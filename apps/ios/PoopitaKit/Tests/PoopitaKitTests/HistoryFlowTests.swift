@@ -18,7 +18,7 @@ struct HistoryFlowTests {
 
         let data = try HistoryViewModel.viewData(HistorySourceData(
             entries: entries, checkIns: checkIns, month: today, selectedDay: loggedDay,
-            today: today, timeZone: zone, canUndo: false
+            today: today, timeZone: zone
         ))
         let days = Dictionary(uniqueKeysWithValues: data.calendar.days.compactMap(\.self).map { ($0.dayID, $0.status) })
         #expect(days["2026-10-03"] == .logged)
@@ -36,7 +36,7 @@ struct HistoryFlowTests {
         let storedDay = DiaryDay(occurrence: entry.occurrence)
         let data = try HistoryViewModel.viewData(HistorySourceData(
             entries: [entry], checkIns: [], month: date("2026-10-15T12:00:00Z"), selectedDay: storedDay,
-            today: date("2026-10-30T12:00:00Z"), timeZone: displayZone, canUndo: false
+            today: date("2026-10-30T12:00:00Z"), timeZone: displayZone
         ))
         #expect(data.selected.entries.count == 1)
         #expect(data.selected.status == .logged)
@@ -46,7 +46,12 @@ struct HistoryFlowTests {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
         var clock = try date("2026-10-20T12:00:00Z")
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
-        let model = try HistoryViewModel(repository: repository, now: { clock }, timeZone: { zone })
+        let model = try HistoryViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { clock },
+            timeZone: { zone }
+        )
         model.load()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-20")
         model.moveMonth(-1)
@@ -68,7 +73,8 @@ struct HistoryFlowTests {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
         let clock = try date("2026-10-20T12:00:00Z")
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
-        let model = try HistoryViewModel(repository: repository, now: { clock }, timeZone: { zone })
+        let undo = UndoModel(repository: repository)
+        let model = try HistoryViewModel(repository: repository, undoModel: undo, now: { clock }, timeZone: { zone })
         model.select(id: "2026-10-03")
         model.addEntry()
         let editor = try #require(model.editor)
@@ -81,7 +87,8 @@ struct HistoryFlowTests {
         let entry = try #require(try repository.entries().first)
         #expect(model.delete(id: entry.id))
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-03")
-        model.undo()
+        undo.undo()
+        model.load()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-03")
         #expect(try repository.entries().count == 1)
     }

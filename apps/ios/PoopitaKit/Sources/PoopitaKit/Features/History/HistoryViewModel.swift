@@ -8,14 +8,18 @@ final class HistoryViewModel {
     private var selectedDay: DiaryDay
     private(set) var editor: EntryEditorViewModel?
     private(set) var errorMessage: String?
-    private(set) var feedback: String?
     private let repository: any DiaryRepository
+    private let undoModel: UndoModel
     private let now: () -> Date
     private let timeZone: () -> TimeZone
     private var month: Date
 
-    init(repository: any DiaryRepository, now: @escaping () -> Date, timeZone: @escaping () -> TimeZone) throws {
+    init(
+        repository: any DiaryRepository, undoModel: UndoModel, now: @escaping () -> Date,
+        timeZone: @escaping () -> TimeZone
+    ) throws {
         self.repository = repository
+        self.undoModel = undoModel
         self.now = now
         self.timeZone = timeZone
         let current = now()
@@ -29,7 +33,7 @@ final class HistoryViewModel {
         do {
             state = try .loaded(Self.viewData(HistorySourceData(
                 entries: repository.entries(), checkIns: repository.checkIns(), month: month,
-                selectedDay: selectedDay, today: now(), timeZone: timeZone(), canUndo: repository.canUndo
+                selectedDay: selectedDay, today: now(), timeZone: timeZone()
             )))
             errorMessage = nil
         } catch {
@@ -112,7 +116,7 @@ final class HistoryViewModel {
     }
 
     func savedEditor() {
-        feedback = editor?.saveMessage ?? String(localized: "diary.saved", bundle: .module)
+        undoModel.record(editor?.saveMessage ?? String(localized: "diary.saved", bundle: .module))
         editor = nil
         load()
     }
@@ -120,7 +124,7 @@ final class HistoryViewModel {
     func delete(id: UUID) -> Bool {
         do {
             try repository.delete(id: id)
-            feedback = String(localized: "diary.deleted", bundle: .module)
+            undoModel.record(String(localized: "diary.deleted", bundle: .module))
             load()
             return true
         } catch {
@@ -135,23 +139,12 @@ final class HistoryViewModel {
             guard DiaryDay(occurrence: report) > selectedDay else { throw AppError.invalidCheckIn }
             let checkIn = NoPoopCheckIn(day: selectedDay, reportedAt: report, coverage: .completed)
             try repository.saveCheckIn(checkIn)
-            feedback = String(localized: "checkIn.saved", bundle: .module)
+            undoModel.record(String(localized: "checkIn.saved", bundle: .module))
             load()
             return true
         } catch {
             errorMessage = AppError(wrapping: error).userMessage
             return false
-        }
-    }
-
-    func undo() {
-        do {
-            try repository.undo()
-            feedback = String(localized: "diary.undone", bundle: .module)
-            errorMessage = nil
-            load()
-        } catch {
-            errorMessage = AppError(wrapping: error).userMessage
         }
     }
 
@@ -177,8 +170,7 @@ final class HistoryViewModel {
             canMoveNext: monthStart < (calendar.dateInterval(of: .month, for: source.today)?.start ?? source.today),
             calendar: HistoryCalendarViewData(weekdays: weekdays(calendar), days: days),
             selected: selection(source, entries: selectedEntries, today: today, calendar: calendar),
-            todayID: String(format: "%04d-%02d-%02d", today.year, today.month, today.day),
-            canUndo: source.canUndo
+            todayID: String(format: "%04d-%02d-%02d", today.year, today.month, today.day)
         )
     }
 

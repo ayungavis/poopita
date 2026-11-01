@@ -10,10 +10,6 @@ struct HistoryContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                if let feedback = viewModel.feedback {
-                    Text(verbatim: feedback)
-                        .accessibilityAddTraits(.updatesFrequently)
-                }
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }
@@ -111,10 +107,6 @@ struct HistoryContentView: View {
                 .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
             }
             .buttonStyle(.borderedProminent)
-            if viewModel.feedback != nil, data.canUndo {
-                Button(action: viewModel.undo) { Text("diary.undo", bundle: .module) }
-                    .frame(minHeight: Spacing.touchTarget)
-            }
         }
         .padding(Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -122,11 +114,6 @@ struct HistoryContentView: View {
         .onChange(of: viewModel.errorMessage) { _, error in
             if let error {
                 AccessibilityNotification.Announcement(error).post()
-            }
-        }
-        .onChange(of: viewModel.feedback) { _, feedback in
-            if let feedback {
-                AccessibilityNotification.Announcement(feedback).post()
             }
         }
     }

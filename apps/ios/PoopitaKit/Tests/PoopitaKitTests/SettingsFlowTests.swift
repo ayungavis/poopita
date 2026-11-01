@@ -12,7 +12,8 @@ struct SettingsFlowTests {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
 
         let model = SettingsViewModel(
-            repository: repository, reminderService: reminder, biometricService: biometric,
+            repository: repository, undoModel: UndoModel(repository: repository), reminderService: reminder,
+            biometricService: biometric,
             now: { clock }, timeZone: { zone }
         )
 
@@ -36,7 +37,8 @@ struct SettingsFlowTests {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
 
         let model = SettingsViewModel(
-            repository: repository, reminderService: reminder, biometricService: biometric,
+            repository: repository, undoModel: UndoModel(repository: repository), reminderService: reminder,
+            biometricService: biometric,
             now: { clock }, timeZone: { zone }
         )
 
@@ -60,7 +62,8 @@ struct SettingsFlowTests {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
 
         let model = SettingsViewModel(
-            repository: repository, reminderService: reminder, biometricService: biometric,
+            repository: repository, undoModel: UndoModel(repository: repository), reminderService: reminder,
+            biometricService: biometric,
             now: { clock }, timeZone: { zone }
         )
 
@@ -92,8 +95,9 @@ struct SettingsFlowTests {
         #expect(try repository.entries().count == 1)
         #expect(try repository.checkIns().count == 1)
 
+        let undo = UndoModel(repository: repository)
         let model = SettingsViewModel(
-            repository: repository, reminderService: reminder, biometricService: biometric,
+            repository: repository, undoModel: undo, reminderService: reminder, biometricService: biometric,
             now: { clock }, timeZone: { zone }
         )
 
@@ -101,7 +105,7 @@ struct SettingsFlowTests {
         #expect(try repository.entries().isEmpty)
         #expect(try repository.checkIns().isEmpty)
 
-        try model.undo()
+        undo.undo()
         #expect(try repository.entries().count == 1)
         #expect(try repository.checkIns().count == 1)
     }

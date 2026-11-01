@@ -9,7 +9,8 @@ struct TodayFlowTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let date = Date(timeIntervalSince1970: 1_792_800_000)
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
-        let model = TodayViewModel(repository: repository, now: { date }, timeZone: { .gmt })
+        let undo = UndoModel(repository: repository)
+        let model = TodayViewModel(repository: repository, undoModel: undo, now: { date }, timeZone: { .gmt })
         model.load()
         await model.loadTask?.value
         let composer = try #require(model.composer)
@@ -42,13 +43,15 @@ struct TodayFlowTests {
         model.savedEditor()
         await model.loadTask?.value
         #expect(try repository.entries().first?.amount == .large)
-        model.undo()
+        undo.undo()
+        model.load()
         await model.loadTask?.value
         #expect(try repository.entries().first?.amount == .small)
         #expect(model.delete(id: composer.id))
         await model.loadTask?.value
         #expect(try repository.entries().isEmpty)
-        model.undo()
+        undo.undo()
+        model.load()
         await model.loadTask?.value
         #expect(try repository.entries().count == 1)
     }
@@ -58,7 +61,12 @@ struct TodayFlowTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         var clock = Date(timeIntervalSince1970: 1_792_800_000)
-        let model = TodayViewModel(repository: repository, now: { clock }, timeZone: { .gmt })
+        let model = TodayViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { clock },
+            timeZone: { .gmt }
+        )
         model.load()
         await model.loadTask?.value
         clock = clock.addingTimeInterval(3600)
@@ -81,7 +89,8 @@ struct TodayFlowTests {
         let date = Date(timeIntervalSince1970: 1_792_800_000)
         let store = try SwiftDataValueStore(directory: directory, commit: { _ in throw CocoaError(.fileWriteOutOfSpace) })
         let repository = LocalDiaryRepository(store: store)
-        let model = TodayViewModel(repository: repository, now: { date }, timeZone: { .gmt })
+        let undo = UndoModel(repository: repository)
+        let model = TodayViewModel(repository: repository, undoModel: undo, now: { date }, timeZone: { .gmt })
         model.load()
         await model.loadTask?.value
         let composer = try #require(model.composer)
@@ -89,7 +98,7 @@ struct TodayFlowTests {
         composer.pickRequiredObservations()
         #expect(!composer.save())
         #expect(composer.draft.note == "keep my draft")
-        #expect(model.feedback == nil)
+        #expect(undo.toast == nil)
         #expect(composer.error == .storageWrite)
         composer.setDate(date.addingTimeInterval(1))
         #expect(!composer.save())
@@ -102,7 +111,12 @@ struct TodayFlowTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let now = Date(timeIntervalSince1970: 1_792_800_000)
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
-        let model = TodayViewModel(repository: repository, now: { now }, timeZone: { .gmt })
+        let model = TodayViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { now },
+            timeZone: { .gmt }
+        )
 
         model.load()
         await model.loadTask?.value
@@ -127,7 +141,12 @@ struct TodayFlowTests {
         )
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         try repository.save(previous)
-        let model = TodayViewModel(repository: repository, now: { now }, timeZone: { .gmt })
+        let model = TodayViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { now },
+            timeZone: { .gmt }
+        )
 
         model.load()
         await model.loadTask?.value
@@ -145,7 +164,12 @@ struct TodayFlowTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let date = Date(timeIntervalSince1970: 1_792_800_000)
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
-        let model = TodayViewModel(repository: repository, now: { date }, timeZone: { .gmt })
+        let model = TodayViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { date },
+            timeZone: { .gmt }
+        )
         model.load()
         await model.loadTask?.value
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }

@@ -6,7 +6,6 @@ struct HistoryViewData: Equatable, Sendable {
     let calendar: HistoryCalendarViewData
     let selected: HistorySelectionViewData
     let todayID: String
-    let canUndo: Bool
 }
 
 struct HistorySelectionViewData: Equatable, Sendable {

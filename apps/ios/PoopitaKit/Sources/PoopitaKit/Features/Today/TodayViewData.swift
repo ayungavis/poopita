@@ -8,7 +8,6 @@ struct TodayViewData: Equatable, Sendable {
     let fillIn: TodayFillInViewData?
     let dayState: TodayDayStateViewData
     let timeline: TodayTimelineViewData
-    let canUndo: Bool
 }
 
 struct TodayFillInViewData: Equatable, Sendable {

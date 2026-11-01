@@ -26,11 +26,6 @@ struct TodayContentView: View {
             }
             .sharedBackgroundVisibility(.hidden)
         }
-        .onChange(of: viewModel.feedback) { _, message in
-            if let message {
-                AccessibilityNotification.Announcement(message.message).post()
-            }
-        }
         .onChange(of: viewModel.errorMessage) { _, message in
             if let message {
                 AccessibilityNotification.Announcement(message).post()
@@ -44,7 +39,7 @@ struct TodayContentView: View {
                 TodayHeaderView(data: data)
                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 Section {
-                    feedback
+                    error
                     day
                 } header: {
                     VStack(alignment: .leading, spacing: Spacing.lg) {
@@ -115,22 +110,7 @@ struct TodayContentView: View {
     }
 
     @ViewBuilder
-    private var feedback: some View {
-        if let message = viewModel.feedback {
-            HStack {
-                Text(verbatim: message.message)
-                Spacer()
-                if data.canUndo {
-                    Button(action: viewModel.undo) {
-                        Text("diary.undo", bundle: .module)
-                            .font(AppFont.body.weight(.semibold))
-                    }
-                    .frame(minHeight: Spacing.touchTarget)
-                }
-            }
-            .padding(.horizontal, Spacing.md)
-            .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
-        }
+    private var error: some View {
         if let error = viewModel.errorMessage {
             Text(verbatim: error)
                 .foregroundStyle(AppColor.destructive)

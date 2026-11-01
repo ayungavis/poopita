@@ -45,13 +45,17 @@ struct TodayTimelineTests {
         for checkIn in checkIns {
             try repository.saveCheckIn(checkIn)
         }
-        return (TodayViewModel(repository: repository, now: { now }, timeZone: { .gmt }), repository)
+        return (
+            TodayViewModel(repository: repository, undoModel: UndoModel(repository: repository), now: { now },
+                           timeZone: { .gmt }),
+            repository
+        )
     }
 
     @Test func weekStripKeepsUnknownDaysApartFromConfirmedAndPartialOnes() throws {
         let (entries, checkIns) = try Self.week()
         let data = try TodayViewModel.viewData(
-            entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt, canUndo: false
+            entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt
         )
 
         #expect(data.weekDays.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .noneSoFar, .logs(2), .future])
@@ -66,7 +70,7 @@ struct TodayTimelineTests {
     @Test func timelinePlacesLogsAtTheirTimeAndMeasuresFromTheLastOne() throws {
         let (entries, checkIns) = try Self.week()
         let data = try TodayViewModel.viewData(
-            entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt, canUndo: false
+            entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt
         )
         let timeline = data.timeline
 
@@ -137,7 +141,12 @@ struct TodayTimelineTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         try repository.save(Self.entry(-3 * Self.day - 45360))
-        let model = TodayViewModel(repository: repository, now: { Self.now }, timeZone: { .gmt })
+        let model = TodayViewModel(
+            repository: repository,
+            undoModel: UndoModel(repository: repository),
+            now: { Self.now },
+            timeZone: { .gmt }
+        )
         model.load()
         await model.loadTask?.value
         guard case let .loaded(data) = model.state,

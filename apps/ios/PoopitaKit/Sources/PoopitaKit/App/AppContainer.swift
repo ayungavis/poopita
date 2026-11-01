@@ -4,17 +4,18 @@ import Foundation
 @MainActor
 public final class AppContainer {
     private var diary: (any DiaryRepository)?
+    private var undo: UndoModel?
 
     public init() {
         AppFont.registerFonts()
     }
 
     func makeTodayViewModel() throws -> TodayViewModel {
-        try TodayViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
+        try TodayViewModel(repository: diaryRepository(), undoModel: undoModel(), now: { .now }, timeZone: { .current })
     }
 
     func makeHistoryViewModel() throws -> HistoryViewModel {
-        try HistoryViewModel(repository: diaryRepository(), now: { .now }, timeZone: { .current })
+        try HistoryViewModel(repository: diaryRepository(), undoModel: undoModel(), now: { .now }, timeZone: { .current })
     }
 
     func makePatternsViewModel() throws -> PatternsViewModel {
@@ -24,11 +25,21 @@ public final class AppContainer {
     func makeSettingsViewModel() throws -> SettingsViewModel {
         try SettingsViewModel(
             repository: diaryRepository(),
+            undoModel: undoModel(),
             reminderService: UserNotificationsReminderService(),
             biometricService: LocalAuthenticationBiometricService(),
             now: { .now },
             timeZone: { .current }
         )
+    }
+
+    func undoModel() throws -> UndoModel {
+        if let undo {
+            return undo
+        }
+        let model = try UndoModel(repository: diaryRepository())
+        undo = model
+        return model
     }
 
     private func diaryRepository() throws -> any DiaryRepository {

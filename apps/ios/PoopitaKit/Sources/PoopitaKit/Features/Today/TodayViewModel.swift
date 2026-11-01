@@ -8,16 +8,20 @@ final class TodayViewModel {
     private(set) var checkIn: CheckInViewModel?
     private(set) var composer: EntryEditorViewModel?
     private(set) var editor: EntryEditorViewModel?
-    private(set) var feedback: TodayFeedbackViewData?
     private(set) var errorMessage: String?
     private(set) var loadTask: Task<Void, Never>?
     private let repository: any DiaryRepository
+    private let undoModel: UndoModel
     private let now: () -> Date
     private let timeZone: () -> TimeZone
     private var selectedDay: DiaryDay?
 
-    init(repository: any DiaryRepository, now: @escaping () -> Date, timeZone: @escaping () -> TimeZone) {
+    init(
+        repository: any DiaryRepository, undoModel: UndoModel, now: @escaping () -> Date,
+        timeZone: @escaping () -> TimeZone
+    ) {
         self.repository = repository
+        self.undoModel = undoModel
         self.now = now
         self.timeZone = timeZone
     }
@@ -46,8 +50,7 @@ final class TodayViewModel {
                     checkIns: checkIns,
                     date: now(),
                     selectedDay: targetDay,
-                    timeZone: timeZone(),
-                    canUndo: repository.canUndo
+                    timeZone: timeZone()
                 ))
             } catch is CancellationError {
             } catch {
@@ -136,7 +139,7 @@ final class TodayViewModel {
             let message = composer?.saveMessage ?? String(localized: "diary.saved", bundle: .module)
             composer = try makeComposer()
             editor = nil
-            feedback = TodayFeedbackViewData(id: UUID(), message: message)
+            undoModel.record(message)
             errorMessage = nil
             load()
         } catch {
@@ -146,14 +149,14 @@ final class TodayViewModel {
 
     func savedEditor() {
         let message = editor?.saveMessage ?? String(localized: "diary.updated", bundle: .module)
-        feedback = TodayFeedbackViewData(id: UUID(), message: message)
+        undoModel.record(message)
         editor = nil
         errorMessage = nil
         load()
     }
 
     func savedCheckIn() {
-        feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "checkIn.saved", bundle: .module))
+        undoModel.record(String(localized: "checkIn.saved", bundle: .module))
         errorMessage = nil
         load()
     }
@@ -162,24 +165,13 @@ final class TodayViewModel {
     func delete(id: UUID) -> Bool {
         do {
             try repository.delete(id: id)
-            feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "diary.deleted", bundle: .module))
+            undoModel.record(String(localized: "diary.deleted", bundle: .module))
             errorMessage = nil
             load()
             return true
         } catch {
             errorMessage = AppError(wrapping: error).userMessage
             return false
-        }
-    }
-
-    func undo() {
-        do {
-            try repository.undo()
-            feedback = TodayFeedbackViewData(id: UUID(), message: String(localized: "diary.undone", bundle: .module))
-            errorMessage = nil
-            load()
-        } catch {
-            errorMessage = AppError(wrapping: error).userMessage
         }
     }
 
@@ -216,8 +208,7 @@ extension TodayViewModel {
         checkIns: [NoPoopCheckIn] = [],
         date: Date,
         selectedDay: DiaryDay? = nil,
-        timeZone: TimeZone,
-        canUndo: Bool
+        timeZone: TimeZone
     ) throws -> TodayViewData {
         let calendar = calendar(timeZone)
         let today = try DiaryDay(date: date, timeZone: timeZone)
@@ -262,8 +253,7 @@ extension TodayViewModel {
             timeline: timeline(
                 dayEntries: dayEntries, isToday: activeDay == today, now: date,
                 activeDate: activeDate, calendar: calendar
-            ),
-            canUndo: canUndo
+            )
         )
     }
 

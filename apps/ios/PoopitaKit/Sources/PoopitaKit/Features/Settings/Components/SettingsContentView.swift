@@ -9,10 +9,6 @@ struct SettingsContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xl) {
-                if let feedback = viewModel.feedback {
-                    Text(verbatim: feedback)
-                        .accessibilityAddTraits(.updatesFrequently)
-                }
                 if let error = viewModel.errorMessage {
                     Text(verbatim: error).foregroundStyle(AppColor.destructive)
                 }
@@ -37,11 +33,6 @@ struct SettingsContentView: View {
         .onChange(of: viewModel.errorMessage) { _, error in
             if let error {
                 AccessibilityNotification.Announcement(error).post()
-            }
-        }
-        .onChange(of: viewModel.feedback) { _, feedback in
-            if let feedback {
-                AccessibilityNotification.Announcement(feedback).post()
             }
         }
     }
@@ -169,15 +160,6 @@ struct SettingsContentView: View {
             }
             .buttonStyle(.bordered)
             .tint(AppColor.destructive)
-
-            if data.canUndo {
-                Button {
-                    try? viewModel.undo()
-                } label: {
-                    Text("diary.undo", bundle: .module)
-                        .frame(minHeight: Spacing.touchTarget)
-                }
-            }
         }
         .padding(Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)

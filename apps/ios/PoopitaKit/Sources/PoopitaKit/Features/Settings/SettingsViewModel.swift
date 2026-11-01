@@ -5,9 +5,9 @@ import Observation
 @Observable
 final class SettingsViewModel {
     private(set) var state: SettingsViewData
-    private(set) var feedback: String?
     private(set) var errorMessage: String?
     private let repository: any DiaryRepository
+    private let undoModel: UndoModel
     private let reminderService: any ReminderService
     private let biometricService: any BiometricService
     private let now: () -> Date
@@ -16,12 +16,14 @@ final class SettingsViewModel {
 
     init(
         repository: any DiaryRepository,
+        undoModel: UndoModel,
         reminderService: any ReminderService,
         biometricService: any BiometricService,
         now: @escaping () -> Date,
         timeZone: @escaping () -> TimeZone
     ) {
         self.repository = repository
+        self.undoModel = undoModel
         self.reminderService = reminderService
         self.biometricService = biometricService
         self.now = now
@@ -35,8 +37,7 @@ final class SettingsViewModel {
             isReminderEnabled: false,
             reminderDate: initialTime,
             isAppLockEnabled: false,
-            isBiometricsAvailable: biometricService.isAvailable(),
-            canUndo: repository.canUndo
+            isBiometricsAvailable: biometricService.isAvailable()
         )
     }
 
@@ -73,7 +74,7 @@ final class SettingsViewModel {
             let success = await biometricService.authenticate(reason: reason)
             if success {
                 updateState(appLockEnabled: true)
-                feedback = String(localized: "settings.appLock.enabled", bundle: .module)
+                undoModel.record(String(localized: "settings.appLock.enabled", bundle: .module), undoable: false)
             } else {
                 errorMessage = String(localized: "settings.appLock.failed", bundle: .module)
             }
@@ -82,7 +83,7 @@ final class SettingsViewModel {
             let success = await biometricService.authenticate(reason: reason)
             if success {
                 updateState(appLockEnabled: false)
-                feedback = String(localized: "settings.appLock.disabled", bundle: .module)
+                undoModel.record(String(localized: "settings.appLock.disabled", bundle: .module), undoable: false)
             } else {
                 errorMessage = String(localized: "settings.appLock.failed", bundle: .module)
             }
@@ -96,14 +97,7 @@ final class SettingsViewModel {
 
     func deleteAllHistory() throws {
         try repository.deleteAll()
-        feedback = String(localized: "settings.history.deleted", bundle: .module)
-        updateState()
-    }
-
-    func undo() throws {
-        try repository.undo()
-        feedback = String(localized: "diary.undone", bundle: .module)
-        updateState()
+        undoModel.record(String(localized: "settings.history.deleted", bundle: .module))
     }
 
     func authenticateToUnlock() async -> Bool {
@@ -140,8 +134,7 @@ final class SettingsViewModel {
             isReminderEnabled: reminderEnabled ?? state.isReminderEnabled,
             reminderDate: reminderDate ?? state.reminderDate,
             isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
-            isBiometricsAvailable: state.isBiometricsAvailable,
-            canUndo: repository.canUndo
+            isBiometricsAvailable: state.isBiometricsAvailable
         )
     }
 
@@ -149,15 +142,13 @@ final class SettingsViewModel {
         isReminderEnabled: Bool,
         reminderDate: Date,
         isAppLockEnabled: Bool,
-        isBiometricsAvailable: Bool,
-        canUndo: Bool
+        isBiometricsAvailable: Bool
     ) -> SettingsViewData {
         SettingsViewData(
             isReminderEnabled: isReminderEnabled,
             reminderDate: reminderDate,
             isAppLockEnabled: isAppLockEnabled,
-            isBiometricsAvailable: isBiometricsAvailable,
-            canUndo: canUndo
+            isBiometricsAvailable: isBiometricsAvailable
         )
     }
 }

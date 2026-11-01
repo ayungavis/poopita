@@ -3,11 +3,13 @@ import SwiftUI
 
 public struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let container: AppContainer
     @State private var model: TodayViewModel?
     @State private var historyModel: HistoryViewModel?
     @State private var patternsModel: PatternsViewModel?
     @State private var settingsModel: SettingsViewModel?
+    @State private var undoModel: UndoModel?
     @State private var isUnlocked = false
     @State private var errorMessage: String?
     @State private var selectedTab = RootTab.today
@@ -47,6 +49,8 @@ public struct RootView: View {
                                 .hidesSystemTabBar()
                             }
                         }
+                        .overlay(alignment: .bottom) { undoToast }
+                        .animation(reduceMotion ? .default : .snappy, value: undoModel?.toast?.id)
                         AppTabBarView(
                             selection: $selectedTab,
                             items: [
@@ -83,6 +87,11 @@ public struct RootView: View {
         .background(AppColor.background)
         .background { WindowPrivacyCoverView() }
         .task { openDiary() }
+        .onChange(of: undoModel?.revision) {
+            model?.load()
+            historyModel?.load()
+            patternsModel?.load()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
                 isUnlocked = false
@@ -99,6 +108,23 @@ public struct RootView: View {
                 }
             }
         )
+    }
+
+    @ViewBuilder
+    private var undoToast: some View {
+        if let undoModel, let toast = undoModel.toast {
+            ToastView(
+                message: toast.message,
+                actionTitle: toast.canUndo ? Text("diary.undo", bundle: .module) : nil,
+                staysUntilDismissed: toast.staysUntilDismissed,
+                action: undoModel.undo,
+                dismiss: { undoModel.dismiss(id: toast.id) }
+            )
+            .id(toast.id)
+            .padding(.horizontal, Spacing.lg + Spacing.xs)
+            .padding(.bottom, Spacing.sm)
+            .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+        }
     }
 
     private func presentLog() {
@@ -137,6 +163,7 @@ public struct RootView: View {
             historyModel = try container.makeHistoryViewModel()
             patternsModel = try container.makePatternsViewModel()
             settingsModel = try container.makeSettingsViewModel()
+            undoModel = try container.undoModel()
             errorMessage = nil
         } catch {
             errorMessage = AppError(wrapping: error).userMessage

@@ -7,5 +7,4 @@ struct HistorySourceData {
     let selectedDay: DiaryDay
     let today: Date
     let timeZone: TimeZone
-    let canUndo: Bool
 }

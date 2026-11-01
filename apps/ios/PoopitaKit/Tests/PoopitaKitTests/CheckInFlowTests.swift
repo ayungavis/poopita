@@ -188,7 +188,8 @@ struct CheckInFlowTests {
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         let date = Date(timeIntervalSince1970: 1_793_511_000)
-        let model = TodayViewModel(repository: repository, now: { date }, timeZone: { .gmt })
+        let undo = UndoModel(repository: repository)
+        let model = TodayViewModel(repository: repository, undoModel: undo, now: { date }, timeZone: { .gmt })
         model.load()
         await model.loadTask?.value
         let checkInModel = try #require(model.checkIn)
@@ -201,9 +202,10 @@ struct CheckInFlowTests {
         #expect(composer.save())
         model.savedComposer()
         await model.loadTask?.value
-        #expect(model.feedback?.message == "Day updated")
+        #expect(undo.toast?.message == "Day updated")
         #expect(try repository.checkIns().isEmpty)
-        model.undo()
+        undo.undo()
+        model.load()
         await model.loadTask?.value
         #expect(try repository.checkIns() == [checkIn])
         #expect(try repository.entries().isEmpty)
@@ -217,9 +219,10 @@ struct CheckInFlowTests {
         #expect(editor.save())
         model.savedEditor()
         await model.loadTask?.value
-        #expect(model.feedback?.message == "Day updated")
+        #expect(undo.toast?.message == "Day updated")
         #expect(try repository.checkIns().isEmpty)
-        model.undo()
+        undo.undo()
+        model.load()
         await model.loadTask?.value
         #expect(try repository.entries() == [entry])
         #expect(try repository.checkIns() == [checkIn])
