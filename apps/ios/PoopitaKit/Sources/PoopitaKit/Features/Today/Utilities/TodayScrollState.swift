@@ -9,6 +9,7 @@ struct TodayScrollState {
     var focusY: CGFloat?
     var offset: CGFloat = 0
     var height: CGFloat = 0
+    private var dayID: String?
     private var requestedY: CGFloat?
     private var passes = 0
     private var isDone = false
@@ -17,6 +18,18 @@ struct TodayScrollState {
         self.focusY = focusY
         self.offset = offset
         self.height = height
+    }
+
+    mutating func prepare(for dayID: String?) {
+        guard dayID != self.dayID else { return }
+        self.dayID = dayID
+        restart()
+    }
+
+    mutating func restart() {
+        requestedY = nil
+        passes = 0
+        isDone = false
     }
 
     mutating func nextTarget() -> CGFloat? {

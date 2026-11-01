@@ -7,6 +7,7 @@ struct TodayTimelineView: View {
     let edit: (UUID) -> Void
     let log: () -> Void
     var focusMoved: (CGFloat) -> Void = { _ in }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .body) private var hourHeight = Spacing.timelineHour
     @ScaledMetric(relativeTo: .body) private var blockHeight = Spacing.timelineBlock
     @ScaledMetric(relativeTo: .caption) private var labelWidth = Spacing.timelineLabel
@@ -20,6 +21,7 @@ struct TodayTimelineView: View {
                         proxy.frame(in: .scrollView(axis: .vertical)).minY
                     } action: { focusMoved($0) }
                     .padding(.top, max(0, offset(minute)))
+                    .transaction { $0.animation = nil }
             }
             ForEach(timeline.hours.filter { $0.minute >= startMinute }) { hour in
                 HStack(spacing: Spacing.sm) {
@@ -35,9 +37,14 @@ struct TodayTimelineView: View {
             if let since = timeline.sinceLast, let now = timeline.now {
                 sinceLastView(since, height: sinceBottom(now) - sinceTop).offset(y: sinceTop)
             }
-            ForEach(Array(zip(timeline.blocks, blockTops)), id: \.0.id) { block, top in
-                blockButton(block).offset(y: top)
+            Group {
+                ForEach(Array(zip(timeline.blocks, blockTops)), id: \.0.id) { block, top in
+                    blockButton(block)
+                        .offset(y: top)
+                        .transition(.scale(scale: 0.96).combined(with: .opacity))
+                }
             }
+            .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: timeline.blocks.map(\.id))
             if timeline.sinceLast != nil, let now = timeline.now {
                 nowLine(now).offset(y: sinceBottom(now))
             } else if let now = timeline.now {

@@ -4,6 +4,12 @@ import SwiftUI
 struct TodayWeekStripView: View {
     let weekDays: [TodayWeekDayViewData]
     let selectDay: (String) -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var selection
+
+    private var selectedDayID: String? {
+        weekDays.first(where: \.isSelected)?.dayID
+    }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -11,6 +17,8 @@ struct TodayWeekStripView: View {
                 dayButton(item)
             }
         }
+        .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: selectedDayID)
+        .sensoryFeedback(.selection, trigger: selectedDayID)
     }
 
     private func dayButton(_ item: TodayWeekDayViewData) -> some View {
@@ -31,7 +39,7 @@ struct TodayWeekStripView: View {
             .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
             .background {
                 if item.isSelected {
-                    Capsule().fill(AppColor.ink)
+                    Capsule().fill(AppColor.ink).matchedGeometryEffect(id: "selection", in: selection)
                 } else if item.isToday {
                     Capsule().stroke(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }

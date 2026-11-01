@@ -13,11 +13,9 @@ struct TodayContentView: View {
 
     var body: some View {
         scrollView
-            .id(selectedDayID)
-            .onChange(of: selectedDayID) { scroll = TodayScrollState() }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active {
-                    scroll = TodayScrollState(focusY: scroll.focusY, offset: scroll.offset, height: scroll.height)
+                    scroll.restart()
                     centerOnFocus()
                 }
             }
@@ -80,6 +78,7 @@ struct TodayContentView: View {
     }
 
     private func centerOnFocus() {
+        scroll.prepare(for: selectedDayID)
         if let target = scroll.nextTarget() {
             position.scrollTo(y: target)
         }
