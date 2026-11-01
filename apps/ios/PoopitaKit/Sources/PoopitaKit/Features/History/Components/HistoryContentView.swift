@@ -48,6 +48,16 @@ struct HistoryContentView: View {
                     .animation(.easeInOut(duration: 0.2), value: data.monthLabel)
             }
             .sharedBackgroundVisibility(.hidden)
+            if !data.isShowingToday {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: viewModel.showToday) {
+                        Text("diary.today", bundle: .module)
+                            .font(AppFont.body.weight(.medium))
+                            .foregroundStyle(AppColor.textPrimary)
+                    }
+                    .accessibilityHint(Text("history.today.hint", bundle: .module))
+                }
+            }
         }
         .fullScreenModal(item: editorBinding, onDismiss: viewModel.dismissEditor) { editor in
             EntryEditorView(

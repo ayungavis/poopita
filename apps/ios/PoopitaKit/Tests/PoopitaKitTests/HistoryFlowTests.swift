@@ -57,7 +57,9 @@ struct HistoryFlowTests {
         )
         model.load()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-20")
+        #expect(Self.loaded(model.state)?.isShowingToday == true)
         model.moveMonth(-1)
+        #expect(Self.loaded(model.state)?.isShowingToday == false)
         #expect(Self.loaded(model.state)?.monthLabel == "September 2026")
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-09-20")
         model.moveMonth(1)
@@ -70,6 +72,7 @@ struct HistoryFlowTests {
         clock = try date("2026-10-21T12:00:00Z")
         model.showToday()
         #expect(Self.loaded(model.state)?.selected.dayID == "2026-10-21")
+        #expect(Self.loaded(model.state)?.isShowingToday == true)
     }
 
     @Test func saveDeleteAndUndoKeepTheSelectedHistoryDay() throws {

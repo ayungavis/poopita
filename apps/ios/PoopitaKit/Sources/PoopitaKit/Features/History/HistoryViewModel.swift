@@ -189,7 +189,8 @@ final class HistoryViewModel {
             unrecorded: unrecorded.first.map {
                 HistoryUnrecordedViewData(dayID: $0.dayID, label: unrecordedLabel(unrecorded.count))
             },
-            selected: selection(source, logs: logs[source.selectedDay] ?? [], today: today, calendar: calendar)
+            selected: selection(source, logs: logs[source.selectedDay] ?? [], today: today, calendar: calendar),
+            isShowingToday: source.selectedDay == today
         )
     }
 

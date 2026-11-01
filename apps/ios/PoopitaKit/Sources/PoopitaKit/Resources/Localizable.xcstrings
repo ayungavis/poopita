@@ -1989,6 +1989,22 @@
         }
       }
     },
+    "history.today.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows the current month and selects today."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menampilkan bulan ini dan memilih hari ini."
+          }
+        }
+      }
+    },
     "history.unrecordedDays %lld" : {
       "localizations" : {
         "en" : {

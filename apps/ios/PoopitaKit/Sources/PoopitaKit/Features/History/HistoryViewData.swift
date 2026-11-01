@@ -9,6 +9,7 @@ struct HistoryViewData: Equatable, Sendable {
     let logSummary: String
     let unrecorded: HistoryUnrecordedViewData?
     let selected: HistorySelectionViewData
+    let isShowingToday: Bool
 }
 
 struct HistoryUnrecordedViewData: Equatable, Sendable {
