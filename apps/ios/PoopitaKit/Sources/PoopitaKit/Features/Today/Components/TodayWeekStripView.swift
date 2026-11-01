@@ -5,42 +5,55 @@ struct TodayWeekStripView: View {
     let weekDays: [TodayWeekDayViewData]
     let selectDay: (String) -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var selection
+    @State private var shownIndex: Int?
 
-    private var selectedDayID: String? {
-        weekDays.first(where: \.isSelected)?.dayID
+    private var selectedIndex: Int? {
+        weekDays.firstIndex(where: \.isSelected)
     }
 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(weekDays) { item in
-                dayButton(item)
+            ForEach(Array(weekDays.enumerated()), id: \.element.id) { index, item in
+                dayButton(item, isShown: index == (shownIndex ?? selectedIndex))
             }
         }
-        .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: selectedDayID)
-        .sensoryFeedback(.selection, trigger: selectedDayID)
+        .background(alignment: .leading) {
+            if let index = shownIndex ?? selectedIndex {
+                GeometryReader { proxy in
+                    let cellWidth = proxy.size.width / CGFloat(max(weekDays.count, 1))
+                    Capsule()
+                        .fill(AppColor.ink)
+                        .frame(width: cellWidth)
+                        .offset(x: cellWidth * CGFloat(index))
+                }
+            }
+        }
+        .onChange(of: selectedIndex) { _, index in
+            withAnimation(reduceMotion ? nil : .snappy(duration: 0.3)) {
+                shownIndex = index
+            }
+        }
+        .sensoryFeedback(.selection, trigger: selectedIndex)
     }
 
-    private func dayButton(_ item: TodayWeekDayViewData) -> some View {
+    private func dayButton(_ item: TodayWeekDayViewData, isShown: Bool) -> some View {
         Button {
             selectDay(item.dayID)
         } label: {
             VStack(spacing: Spacing.xs) {
                 Text(verbatim: item.weekdaySymbol)
                     .font(AppFont.caption)
-                    .foregroundStyle(item.isSelected ? AppColor.onInk : AppColor.textSecondary)
+                    .foregroundStyle(isShown ? AppColor.onInk : AppColor.textSecondary)
                 Text(verbatim: item.dayNumber)
                     .font(AppFont.title.weight(.regular))
-                    .foregroundStyle(numberColor(item))
-                TodayDayMarkView(mark: item.mark, isSelected: item.isSelected)
+                    .foregroundStyle(numberColor(item, isShown: isShown))
+                TodayDayMarkView(mark: item.mark, isSelected: isShown)
                     .frame(height: Spacing.sm)
             }
             .padding(.vertical, Spacing.sm)
             .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
             .background {
-                if item.isSelected {
-                    Capsule().fill(AppColor.ink).matchedGeometryEffect(id: "selection", in: selection)
-                } else if item.isToday {
+                if item.isToday, !isShown {
                     Capsule().stroke(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }
             }
@@ -53,8 +66,8 @@ struct TodayWeekStripView: View {
         .accessibilityAddTraits(item.isSelected ? .isSelected : [])
     }
 
-    private func numberColor(_ item: TodayWeekDayViewData) -> Color {
-        if item.isSelected {
+    private func numberColor(_ item: TodayWeekDayViewData, isShown: Bool) -> Color {
+        if isShown {
             AppColor.onInk
         } else if item.mark == .future {
             AppColor.marker
