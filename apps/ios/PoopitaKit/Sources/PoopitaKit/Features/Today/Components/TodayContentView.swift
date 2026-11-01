@@ -14,6 +14,8 @@ struct TodayContentView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xl)
         }
+        .defaultScrollAnchor(scrollAnchor, for: .initialOffset)
+        .id(data.weekDays.first(where: \.isSelected)?.dayID)
         .safeAreaBar(edge: .top) {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 TodayHeaderView(data: data)
@@ -33,6 +35,11 @@ struct TodayContentView: View {
                 AccessibilityNotification.Announcement(message).post()
             }
         }
+    }
+
+    private var scrollAnchor: UnitPoint {
+        let minute = data.timeline.now?.minute ?? data.timeline.blocks.first?.minute ?? 0
+        return UnitPoint(x: 0, y: Double(minute) / Double(data.timeline.endMinute))
     }
 
     private var summary: some View {

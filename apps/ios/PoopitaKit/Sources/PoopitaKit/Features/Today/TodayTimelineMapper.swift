@@ -60,26 +60,21 @@ extension TodayViewModel {
         dayEntries: [DiaryEntry], isToday: Bool, now: Date, activeDate: Date, calendar: Calendar
     ) throws -> TodayTimelineViewData {
         let nowParts = calendar.dateComponents([.hour, .minute], from: now)
-        let nowHour = nowParts.hour ?? 0
-        let firstHour = dayEntries.first?.occurrence.hour ?? 6
-        let lastHour = dayEntries.last?.occurrence.hour ?? 0
-        let startHour = min(6, firstHour, isToday ? max(0, nowHour - 3) : 6)
-        let endHour = min(23, max(isToday ? nowHour + 4 : 21, lastHour + 1))
         var hourStyle = Date.FormatStyle.dateTime.hour().minute()
         hourStyle.timeZone = calendar.timeZone
 
-        let hours = (startHour ... endHour).map { hour in
+        let hours = (0 ..< 24).map { hour in
             let date = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: activeDate) ?? activeDate
-            return TodayTimelineHourViewData(minute: (hour - startHour) * 60, label: date.formatted(hourStyle))
+            return TodayTimelineHourViewData(minute: hour * 60, label: date.formatted(hourStyle))
         }
         let blocks = try dayEntries.map { entry in
             try TodayTimelineBlockViewData(
-                minute: entry.occurrence.hour * 60 + entry.occurrence.minute - startHour * 60, entry: row(entry)
+                minute: entry.occurrence.hour * 60 + entry.occurrence.minute, entry: row(entry)
             )
         }
         let nowMark = isToday
             ? TodayTimelineMarkViewData(
-                minute: nowHour * 60 + (nowParts.minute ?? 0) - startHour * 60, label: now.formatted(hourStyle)
+                minute: (nowParts.hour ?? 0) * 60 + (nowParts.minute ?? 0), label: now.formatted(hourStyle)
             )
             : nil
         let sinceLast: TodayTimelineMarkViewData? = if isToday, let entry = dayEntries.last, let block = blocks.last {
@@ -89,7 +84,7 @@ extension TodayViewModel {
         }
         return TodayTimelineViewData(
             hours: hours, blocks: blocks, now: nowMark, sinceLast: sinceLast,
-            endMinute: (endHour - startHour + 1) * 60
+            endMinute: 24 * 60
         )
     }
 

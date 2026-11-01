@@ -71,14 +71,14 @@ struct TodayTimelineTests {
         let timeline = data.timeline
 
         #expect(data.dayState == .logged)
-        #expect(timeline.hours.map(\.minute) == Array(stride(from: 0, through: 420, by: 60)))
-        #expect(timeline.endMinute == 480)
-        #expect(timeline.blocks.map(\.minute) == [45, 130])
+        #expect(timeline.hours.map(\.minute) == Array(stride(from: 0, through: 1380, by: 60)))
+        #expect(timeline.endMinute == 1440)
+        #expect(timeline.blocks.map(\.minute) == [405, 490])
         #expect(timeline.blocks.first?.entry.title == "Type 3 · Cracked")
         #expect(timeline.blocks.map(\.entry.illustration) == [.type3, .type4])
-        #expect(timeline.now?.minute == 221)
+        #expect(timeline.now?.minute == 581)
         let since = try #require(timeline.sinceLast)
-        #expect(since.minute == 130)
+        #expect(since.minute == 490)
         #expect(since.label.hasPrefix("Since "))
         #expect(since.label.contains(timeline.blocks[1].entry.timeLabel))
     }

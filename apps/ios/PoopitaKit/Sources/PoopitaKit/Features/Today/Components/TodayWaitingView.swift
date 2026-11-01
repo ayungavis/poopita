@@ -24,7 +24,7 @@ struct TodayWaitingView: View {
             }
             .frame(width: labelWidth, alignment: .topLeading)
             hero
-                .frame(maxWidth: .infinity, minHeight: CGFloat(nowMinute) * hourHeight / 60, alignment: .topLeading)
+                .frame(maxWidth: .infinity, minHeight: CGFloat(nowMinute) * hourHeight / 60, alignment: .bottomLeading)
                 .background(AppColor.track, in: RoundedRectangle(cornerRadius: Spacing.sm))
         }
         .padding(.top, Spacing.sm)
