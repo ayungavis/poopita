@@ -40,12 +40,14 @@ struct EntryFieldsView: View {
                 )
                 selectionLine(EntryChoiceViewData.colors, viewModel.draft.color)
             }
+            .id(EntryFieldStep.color)
             EntryFieldSectionView(title: Text("entry.durationLabel", bundle: .module), isOptional: true, isMissing: false) {
                 EntryTileGridView(
                     choices: EntryChoiceViewData.durations, selected: viewModel.draft.duration, columns: 4,
                     select: viewModel.setDuration
                 )
             }
+            .id(EntryFieldStep.duration)
             EntryFieldSectionView(title: Text("entry.noteLabel", bundle: .module), isOptional: true, isMissing: false) {
                 TextField(
                     "", text: Binding(get: { viewModel.draft.note }, set: viewModel.setNote),
@@ -72,7 +74,7 @@ struct EntryFieldsView: View {
             isMissing: viewModel.missingFields.contains(field),
             content: content
         )
-        .id(field)
+        .id(EntryFieldStep(field))
     }
 
     @ViewBuilder

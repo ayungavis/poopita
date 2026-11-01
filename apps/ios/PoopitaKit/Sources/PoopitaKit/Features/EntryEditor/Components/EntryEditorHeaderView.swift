@@ -11,13 +11,10 @@ struct EntryEditorHeaderView: View {
                 Text(viewModel.isEditing ? "entry.editTitle" : "entry.newTitle", bundle: .module)
                     .font(AppFont.title).foregroundStyle(AppColor.textPrimary)
                     .accessibilityAddTraits(.isHeader)
-                DatePicker(
-                    selection: Binding(get: { viewModel.draft.occurrenceDate }, set: viewModel.setDate),
-                    in: ...viewModel.maximumDate, displayedComponents: [.date, .hourAndMinute]
-                ) { Text("entry.when", bundle: .module) }
-                    .labelsHidden()
-                    .datePickerStyle(.compact)
-                    .environment(\.timeZone, viewModel.displayTimeZone)
+                HStack(spacing: Spacing.md) {
+                    picker(icon: AppIcon.today, components: .date, label: Text("entry.date", bundle: .module))
+                    picker(icon: AppIcon.clock, components: .hourAndMinute, label: Text("entry.time", bundle: .module))
+                }
             }
             Spacer()
             Button(action: close) {
@@ -32,5 +29,23 @@ struct EntryEditorHeaderView: View {
         .padding(.horizontal, Spacing.xl)
         .padding(.top, Spacing.md)
         .padding(.bottom, Spacing.sm)
+    }
+
+    private func picker(icon: Image, components: DatePickerComponents, label: Text) -> some View {
+        HStack(spacing: Spacing.xs) {
+            icon
+                .resizable()
+                .scaledToFit()
+                .frame(width: Spacing.icon, height: Spacing.icon)
+                .foregroundStyle(AppColor.textSecondary)
+                .accessibilityHidden(true)
+            DatePicker(
+                selection: Binding(get: { viewModel.draft.occurrenceDate }, set: viewModel.setDate),
+                in: ...viewModel.maximumDate, displayedComponents: components
+            ) { label }
+                .labelsHidden()
+                .datePickerStyle(.compact)
+                .environment(\.timeZone, viewModel.displayTimeZone)
+        }
     }
 }

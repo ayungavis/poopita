@@ -709,6 +709,22 @@
         }
       }
     },
+    "entry.date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanggal"
+          }
+        }
+      }
+    },
     "entry.delete" : {
       "localizations" : {
         "en" : {
@@ -1317,6 +1333,22 @@
         }
       }
     },
+    "entry.time" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu"
+          }
+        }
+      }
+    },
     "entry.type1" : {
       "localizations" : {
         "en" : {
@@ -1457,22 +1489,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jenis tinja tidak dicatat"
-          }
-        }
-      }
-    },
-    "entry.when" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "When"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waktu kejadian"
           }
         }
       }

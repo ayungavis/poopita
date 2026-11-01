@@ -33,4 +33,5 @@ public enum AppIcon {
     public static let insights = Image("iconInsights", bundle: .module)
     public static let plus = Image("iconPlus", bundle: .module)
     public static let settings = Image("iconSettings", bundle: .module)
+    public static let clock = Image("iconClock", bundle: .module)
 }

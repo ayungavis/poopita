@@ -3,6 +3,7 @@ import SwiftUI
 
 struct EntryEditorView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: EntryEditorViewModel
     @State private var confirmDiscard = false
     @State private var confirmDelete = false
@@ -41,8 +42,14 @@ struct EntryEditorView: View {
                 .scrollDismissesKeyboard(.interactively)
                 .onChange(of: viewModel.missingFields) { _, missing in
                     guard let first = missing.first else { return }
-                    withAnimation { proxy.scrollTo(first, anchor: .top) }
+                    withAnimation { proxy.scrollTo(EntryFieldStep(first), anchor: .top) }
                     summaryFocused = true
+                }
+                .onChange(of: viewModel.draft) { old, new in
+                    guard let next = EntryFieldStep.next(from: old, to: new) else { return }
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35).delay(0.15)) {
+                        proxy.scrollTo(next, anchor: .top)
+                    }
                 }
             }
             saveBar
