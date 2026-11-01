@@ -4,7 +4,7 @@ struct TodayViewData: Equatable, Sendable {
     let monthLabel: String
     let title: String
     let weekDays: [TodayWeekDayViewData]
-    let weekSummary: String
+    let sinceLastLog: String
     let fillIn: TodayFillInViewData?
     let dayState: TodayDayStateViewData
     let timeline: TodayTimelineViewData

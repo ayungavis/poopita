@@ -3672,6 +3672,38 @@
         }
       }
     },
+    "today.loggedJustNow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logged just now"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baru saja dicatat"
+          }
+        }
+      }
+    },
+    "today.noLogsYet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No logs yet"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum ada catatan"
+          }
+        }
+      }
+    },
     "today.notYet" : {
       "localizations" : {
         "en" : {
@@ -3700,6 +3732,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamu bilang belum BAB pukul %@"
+          }
+        }
+      }
+    },
+    "today.overAYear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Over a year since last log"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lebih dari setahun sejak catatan terakhir"
           }
         }
       }
@@ -3736,18 +3784,18 @@
         }
       }
     },
-    "today.thisWeek %@" : {
+    "today.sinceLastLogShort %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ this week"
+            "value" : "%@ since last log"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ minggu ini"
+            "value" : "%@ sejak catatan terakhir"
           }
         }
       }

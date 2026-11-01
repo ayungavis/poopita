@@ -120,6 +120,32 @@ extension TodayViewModel {
         return style
     }
 
+    static func sinceLastLog(_ last: Date?, now: Date, calendar: Calendar) -> String {
+        guard let last, last < now else {
+            return String(localized: last == nil ? "today.noLogsYet" : "today.loggedJustNow", bundle: .module)
+        }
+        let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: last, to: now)
+        if (parts.year ?? 0) > 0 {
+            return String(localized: "today.overAYear", bundle: .module)
+        }
+        let fields: Set<Date.ComponentsFormatStyle.Field> = if (parts.month ?? 0) > 0 {
+            [.month]
+        } else if (parts.day ?? 0) >= 7 {
+            [.week, .day]
+        } else if (parts.day ?? 0) > 0 {
+            [.day, .hour]
+        } else if (parts.hour ?? 0) > 0 {
+            [.hour, .minute]
+        } else if (parts.minute ?? 0) > 0 {
+            [.minute]
+        } else {
+            []
+        }
+        guard !fields.isEmpty else { return String(localized: "today.loggedJustNow", bundle: .module) }
+        let elapsed = (last ..< now).formatted(.components(style: .wide, fields: fields).calendar(calendar))
+        return String(localized: "today.sinceLastLogShort \(elapsed)", bundle: .module)
+    }
+
     static func row(_ entry: DiaryEntry) throws -> TodayEntryViewData {
         guard let zone = TimeZone(secondsFromGMT: entry.occurrence.utcOffsetSeconds) else {
             throw AppError.invalidStoredData

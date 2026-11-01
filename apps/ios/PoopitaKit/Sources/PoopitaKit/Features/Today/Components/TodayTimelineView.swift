@@ -14,7 +14,7 @@ struct TodayTimelineView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if let minute = timeline.now?.minute ?? timeline.blocks.first?.minute {
+            if let minute = timeline.blocks.last?.minute ?? timeline.now?.minute {
                 Color.clear
                     .frame(height: Spacing.borderWidth)
                     .padding(.top, max(0, offset(minute)))

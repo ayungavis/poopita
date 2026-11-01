@@ -61,7 +61,7 @@ struct TodayContentView: View {
 
     private var summary: some View {
         HStack {
-            Text(verbatim: data.weekSummary)
+            Text(verbatim: data.sinceLastLog)
                 .font(AppFont.caption)
                 .foregroundStyle(AppColor.textSecondary)
             Spacer()

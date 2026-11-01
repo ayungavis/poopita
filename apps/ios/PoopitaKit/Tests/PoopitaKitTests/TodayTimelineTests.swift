@@ -60,11 +60,26 @@ struct TodayTimelineTests {
 
         #expect(data.weekDays.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .noneSoFar, .logs(2), .future])
         #expect(data.weekDays.map(\.dayNumber) == ["26", "27", "28", "29", "30", "31", "1"])
-        #expect(data.weekSummary == "5 logs this week")
+        #expect(data.sinceLastLog == "1 hour, 31 minutes since last log")
         #expect(data.fillIn?.dayID == "2026-10-29")
         #expect(data.fillIn?.label == "Fill in Thursday")
         #expect(data.title == "Today")
         #expect(TodayViewModel.logCount(1) == "1 log")
+    }
+
+    @Test(arguments: [
+        (nil, "No logs yet"),
+        (20.0, "Logged just now"),
+        (2700.0, "45 minutes since last log"),
+        (19200.0, "5 hours, 20 minutes since last log"),
+        (180_000.0, "2 days, 2 hours since last log"),
+        (864_000.0, "1 week, 3 days since last log"),
+        (6_048_000.0, "2 months since last log"),
+        (34_560_000.0, "Over a year since last log"),
+    ] as [(TimeInterval?, String)])
+    func sinceLastLogReadsAsAQuickGlance(secondsAgo: TimeInterval?, expected: String) {
+        let last = secondsAgo.map { Self.now.addingTimeInterval(-$0) }
+        #expect(TodayViewModel.sinceLastLog(last, now: Self.now, calendar: TodayViewModel.calendar(.gmt)) == expected)
     }
 
     @Test func timelinePlacesLogsAtTheirTimeAndMeasuresFromTheLastOne() throws {

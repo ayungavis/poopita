@@ -220,13 +220,7 @@ extension TodayViewModel {
         let dayEntries = entries
             .filter { DiaryDay(occurrence: $0.occurrence) == activeDay }
             .sorted { $0.occurrence.instant < $1.occurrence.instant }
-        let weekLogs = weekDays.reduce(0) { total, item in
-            if case let .logs(count) = item.mark {
-                total + count
-            } else {
-                total
-            }
-        }
+        let latestEntry = entries.max { $0.occurrence.instant < $1.occurrence.instant }
         let fillIn = weekDays.first { $0.mark == .unrecorded && !$0.isSelected }.map {
             TodayFillInViewData(dayID: $0.dayID, label: String(localized: "today.fillIn \($0.weekdayName)", bundle: .module))
         }
@@ -241,11 +235,11 @@ extension TodayViewModel {
             title: activeDay == today ? String(localized: "diary.today", bundle: .module)
                 : activeDate.formatted(weekdayStyle),
             weekDays: weekDays.map(\.item),
-            weekSummary: String(localized: "today.thisWeek \(logCount(weekLogs))", bundle: .module),
+            sinceLastLog: sinceLastLog(latestEntry?.occurrence.instant, now: date, calendar: calendar),
             fillIn: fillIn,
             dayState: dayState(
                 hasLogs: !dayEntries.isEmpty,
-                latestEntry: entries.max { $0.occurrence.instant < $1.occurrence.instant },
+                latestEntry: latestEntry,
                 checkIn: checkIns.first { $0.day == activeDay },
                 pastWeekday: activeDay == today ? nil : activeDate.formatted(weekdayStyle),
                 now: date
