@@ -54,17 +54,25 @@ public struct RootView: View {
                         }
                         .overlay(alignment: .bottom) { undoToast }
                         .animation(reduceMotion ? .default : .snappy, value: undoModel?.toast?.id)
-                        AppTabBarView(
-                            selection: $selectedTab,
-                            items: [
-                                AppTabBarItem(.today, title: Text("diary.today", bundle: .module), icon: AppIcon.today),
-                                AppTabBarItem(.history, title: Text("history.title", bundle: .module), icon: AppIcon.history),
-                                AppTabBarItem(.insights, title: Text("tab.insights", bundle: .module), icon: AppIcon.insights),
-                            ],
-                            actionTitle: Text("tab.log", bundle: .module),
-                            action: presentLog
-                        )
+                        if !isShowingSettings {
+                            AppTabBarView(
+                                selection: $selectedTab,
+                                items: [
+                                    AppTabBarItem(.today, title: Text("diary.today", bundle: .module), icon: AppIcon.today),
+                                    AppTabBarItem(
+                                        .history, title: Text("history.title", bundle: .module), icon: AppIcon.history
+                                    ),
+                                    AppTabBarItem(
+                                        .insights, title: Text("tab.insights", bundle: .module), icon: AppIcon.insights
+                                    ),
+                                ],
+                                actionTitle: Text("tab.log", bundle: .module),
+                                action: presentLog
+                            )
+                            .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                        }
                     }
+                    .animation(reduceMotion ? .default : .snappy, value: isShowingSettings)
                     .fullScreenModal(item: editorBinding) { editor in
                         EntryEditorView(
                             viewModel: editor,
