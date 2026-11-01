@@ -10,6 +10,7 @@ struct TodayContentView: View {
     @State private var scroll = TodayScrollState()
 
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         scrollView
@@ -36,6 +37,14 @@ struct TodayContentView: View {
         data.weekDays.first(where: \.isSelected)?.dayID
     }
 
+    private var dayKind: String {
+        switch data.dayState {
+        case .logged: "logged"
+        case .waiting: "waiting"
+        case .pastDay: "pastDay"
+        }
+    }
+
     private var scrollView: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: Spacing.lg, pinnedViews: .sectionHeaders) {
@@ -43,7 +52,9 @@ struct TodayContentView: View {
                     .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
                 Section {
                     error
-                    day
+                    ZStack(alignment: .top) { day }
+                        .frame(maxWidth: .infinity, minHeight: scroll.height, alignment: .top)
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: dayKind)
                 } header: {
                     VStack(alignment: .leading, spacing: Spacing.lg) {
                         TodayWeekStripView(weekDays: data.weekDays, selectDay: viewModel.selectDay(id:))
@@ -58,9 +69,11 @@ struct TodayContentView: View {
         .scrollPosition($position)
         .onScrollGeometryChange(for: TodayScrollState.Geometry.self) { geometry in
             TodayScrollState.Geometry(
-                offset: geometry.contentOffset.y + geometry.contentInsets.top, height: geometry.containerSize.height
+                offset: geometry.contentOffset.y + geometry.contentInsets.top, height: geometry.containerSize.height,
+                contentHeight: geometry.contentSize.height
             )
         } action: { _, geometry in
+            scroll.prepare(for: selectedDayID)
             scroll.offset = geometry.offset
             scroll.height = geometry.height
             centerOnFocus()
@@ -72,7 +85,14 @@ struct TodayContentView: View {
         }
     }
 
-    private func focusMoved(_ focusY: CGFloat) {
+    private var reportFocus: (CGFloat) -> Void {
+        let dayID = selectedDayID
+        return { focusMoved($0, dayID: dayID) }
+    }
+
+    private func focusMoved(_ focusY: CGFloat, dayID: String?) {
+        guard dayID == selectedDayID else { return }
+        scroll.prepare(for: selectedDayID)
         scroll.focusY = focusY
         centerOnFocus()
     }
@@ -96,6 +116,7 @@ struct TodayContentView: View {
                 } label: {
                     HStack(spacing: Spacing.xs) {
                         Text(verbatim: fillIn.label)
+                            .contentTransition(.opacity)
                         Image(systemName: "chevron.right").accessibilityHidden(true)
                     }
                     .font(AppFont.caption.weight(.semibold))
@@ -105,6 +126,7 @@ struct TodayContentView: View {
                 .buttonStyle(.plain)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: data.fillIn)
     }
 
     @ViewBuilder
@@ -113,8 +135,9 @@ struct TodayContentView: View {
         case .logged:
             TodayTimelineView(
                 timeline: data.timeline, startMinute: 0, edit: viewModel.edit(id:), log: viewModel.presentLogSheet,
-                focusMoved: focusMoved
+                focusMoved: reportFocus
             )
+            .transition(.opacity)
         case let .waiting(headline, detail, partialNote):
             let nowMinute = data.timeline.now?.minute ?? 0
             VStack(spacing: 0) {
@@ -124,14 +147,16 @@ struct TodayContentView: View {
                 )
                 TodayTimelineView(
                     timeline: data.timeline, startMinute: nowMinute, edit: viewModel.edit(id:),
-                    log: viewModel.presentLogSheet, focusMoved: focusMoved
+                    log: viewModel.presentLogSheet, focusMoved: reportFocus
                 )
             }
+            .transition(.opacity)
         case let .pastDay(status, detail, logLabel, canConfirm):
             TodayPastDayView(
                 status: status, detail: detail, logLabel: logLabel, canConfirm: canConfirm,
                 log: viewModel.presentLogForSelectedDay, confirm: viewModel.confirmNoPoopForSelectedDay
             )
+            .transition(.opacity.combined(with: .offset(y: Spacing.sm)))
         }
     }
 

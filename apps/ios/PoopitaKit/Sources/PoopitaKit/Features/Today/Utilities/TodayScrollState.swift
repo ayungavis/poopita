@@ -4,6 +4,7 @@ struct TodayScrollState {
     struct Geometry: Equatable {
         let offset: CGFloat
         let height: CGFloat
+        let contentHeight: CGFloat
     }
 
     var focusY: CGFloat?
@@ -11,6 +12,7 @@ struct TodayScrollState {
     var height: CGFloat = 0
     private var dayID: String?
     private var requestedY: CGFloat?
+    private var offsetAtRequest: CGFloat?
     private var passes = 0
     private var isDone = false
 
@@ -23,11 +25,13 @@ struct TodayScrollState {
     mutating func prepare(for dayID: String?) {
         guard dayID != self.dayID else { return }
         self.dayID = dayID
+        focusY = nil
         restart()
     }
 
     mutating func restart() {
         requestedY = nil
+        offsetAtRequest = nil
         passes = 0
         isDone = false
     }
@@ -35,9 +39,13 @@ struct TodayScrollState {
     mutating func nextTarget() -> CGFloat? {
         guard !isDone, let focusY, height > 0 else { return nil }
         let delta = focusY - height / 2
-        guard abs(delta) > 2, passes < 3 else {
+        guard abs(delta) > 2, passes < 5 else {
             isDone = true
             return nil
+        }
+        passes += 1
+        if let requestedY, let offsetAtRequest, abs(offset - offsetAtRequest) < 1 {
+            return requestedY
         }
         let target = max(0, (requestedY ?? offset) + delta)
         guard target != requestedY else {
@@ -45,7 +53,7 @@ struct TodayScrollState {
             return nil
         }
         requestedY = target
-        passes += 1
+        offsetAtRequest = offset
         return target
     }
 }

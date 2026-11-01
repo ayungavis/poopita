@@ -17,9 +17,11 @@ struct TodayToolbarTitleView: View {
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 0) {
                 Text(verbatim: monthLabel)
+                    .contentTransition(.opacity)
                     .font(AppFont.caption)
                     .foregroundStyle(AppColor.textSecondary)
                 Text(verbatim: title)
+                    .contentTransition(.opacity)
                     .font(AppFont.body.weight(.semibold))
                     .foregroundStyle(AppColor.textPrimary)
             }
@@ -30,5 +32,6 @@ struct TodayToolbarTitleView: View {
         }
         .fixedSize()
         .animation(.snappy(duration: 0.25), value: isCompact)
+        .animation(.easeInOut(duration: 0.2), value: title)
     }
 }
