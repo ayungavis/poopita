@@ -57,7 +57,7 @@ struct AppearanceTests {
         #expect(model.state.appearance.selectedThemeID == "light")
     }
 
-    @Test func choosingAnotherLanguageSavesItAndSaysWhenItApplies() throws {
+    @Test func pickingAnotherLanguageAsksFirstAndOnlyConfirmingRelaunches() throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
@@ -65,19 +65,24 @@ struct AppearanceTests {
         let model = try Self.settings(repository: repository, appearance: Self.model(), language: language)
         #expect(model.state.appearance.languages.map(\.id) == ["en", "id"])
         #expect(model.state.appearance.selectedLanguageID == "en")
-        #expect(model.state.appearance.languageNote == nil)
-
-        model.selectLanguage(id: "id")
-        #expect(language.chosenCode == "id")
-        #expect(model.state.appearance.selectedLanguageID == "id")
-        #expect(model.state.appearance.languageName == "Indonesia")
-        #expect(model.state.appearance.languageNote != nil)
-
-        model.selectLanguage(id: "fr")
-        #expect(language.chosenCode == "id")
 
         model.selectLanguage(id: "en")
-        #expect(model.state.appearance.languageNote == nil)
+        model.selectLanguage(id: "fr")
+        #expect(model.state.appearance.languageChange == nil)
+
+        model.selectLanguage(id: "id")
+        #expect(model.state.appearance.languageChange?.title.contains("Indonesia") == true)
+        #expect(model.state.appearance.selectedLanguageID == "en")
+        #expect(language.relaunchedIn == nil)
+
+        model.cancelLanguageChange()
+        #expect(model.state.appearance.languageChange == nil)
+        #expect(language.relaunchedIn == nil)
+
+        model.selectLanguage(id: "id")
+        model.confirmLanguageChange()
+        #expect(language.relaunchedIn == "id")
+        #expect(model.state.appearance.languageChange == nil)
     }
 
     @Test func readsTheSavedLanguageAndIgnoresOnesTheAppLacks() throws {
@@ -87,7 +92,7 @@ struct AppearanceTests {
         #expect(service.chosenCode == "id")
         defaults.set(["fr-FR"], forKey: "AppleLanguages")
         #expect(service.chosenCode == service.activeCode)
-        service.choose("en")
+        defaults.set(["en"], forKey: "AppleLanguages")
         #expect(service.chosenCode == "en")
     }
 
@@ -111,9 +116,10 @@ struct AppearanceTests {
 final class TestLanguageService: LanguageService {
     let availableCodes = ["en", "id"]
     let activeCode = "en"
-    private(set) var chosenCode = "en"
+    let chosenCode = "en"
+    private(set) var relaunchedIn: String?
 
-    func choose(_ code: String) {
-        chosenCode = code
+    func relaunch(in code: String) {
+        relaunchedIn = code
     }
 }

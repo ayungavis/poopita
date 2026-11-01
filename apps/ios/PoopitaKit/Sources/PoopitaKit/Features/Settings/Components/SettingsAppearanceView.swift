@@ -5,6 +5,8 @@ struct SettingsAppearanceView: View {
     let data: SettingsAppearanceViewData
     let selectTheme: (String) -> Void
     let selectLanguage: (String) -> Void
+    let confirmLanguageChange: () -> Void
+    let cancelLanguageChange: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
@@ -26,18 +28,28 @@ struct SettingsAppearanceView: View {
             }
 
             languageMenu
-
-            if let note = data.languageNote {
-                Text(verbatim: note)
-                    .font(AppFont.caption)
-                    .foregroundStyle(AppColor.textSecondary)
-                    .transition(.opacity)
-            }
         }
         .padding(Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.lg))
-        .animation(.snappy, value: data.languageNote)
+        .alert(
+            Text(verbatim: data.languageChange?.title ?? ""),
+            isPresented: Binding(get: { data.languageChange != nil }, set: {
+                if !$0 {
+                    cancelLanguageChange()
+                }
+            }),
+            presenting: data.languageChange
+        ) { _ in
+            Button(role: .cancel, action: cancelLanguageChange) {
+                Text("entry.cancel", bundle: .module)
+            }
+            Button(action: confirmLanguageChange) {
+                Text("settings.appearance.switchConfirm", bundle: .module)
+            }
+        } message: { change in
+            Text(verbatim: change.message)
+        }
     }
 
     private var themePicker: some View {

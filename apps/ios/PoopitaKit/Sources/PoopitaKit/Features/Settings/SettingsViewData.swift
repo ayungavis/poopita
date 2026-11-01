@@ -14,7 +14,12 @@ struct SettingsAppearanceViewData: Equatable, Sendable {
     let languages: [SettingsChoiceViewData]
     let selectedLanguageID: String
     let languageName: String
-    let languageNote: String?
+    let languageChange: SettingsLanguageChangeViewData?
+}
+
+struct SettingsLanguageChangeViewData: Equatable, Sendable {
+    let title: String
+    let message: String
 }
 
 struct SettingsChoiceViewData: Identifiable, Equatable, Sendable {

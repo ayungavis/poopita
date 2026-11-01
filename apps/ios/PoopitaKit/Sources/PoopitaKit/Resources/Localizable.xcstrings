@@ -3208,22 +3208,6 @@
         }
       }
     },
-    "settings.appearance.languageNote %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poopita switches to %@ the next time you open it."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poopita beralih ke %@ saat dibuka lagi."
-          }
-        }
-      }
-    },
     "settings.appearance.light" : {
       "localizations" : {
         "en" : {
@@ -3236,6 +3220,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terang"
+          }
+        }
+      }
+    },
+    "settings.appearance.switchConfirm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close and switch"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutup dan ganti"
+          }
+        }
+      }
+    },
+    "settings.appearance.switchMessage %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita will close so it can open in %@. Your diary isn’t affected."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita akan ditutup agar bisa dibuka dalam bahasa %@. Catatanmu tetap aman."
+          }
+        }
+      }
+    },
+    "settings.appearance.switchTitle %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to %@?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganti ke %@?"
           }
         }
       }

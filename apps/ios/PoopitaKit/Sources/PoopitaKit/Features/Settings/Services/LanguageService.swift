@@ -5,7 +5,7 @@ protocol LanguageService {
     var availableCodes: [String] { get }
     var activeCode: String { get }
     var chosenCode: String { get }
-    func choose(_ code: String)
+    func relaunch(in code: String)
 }
 
 @MainActor
@@ -34,7 +34,9 @@ final class AppleLanguagesService: LanguageService {
         return preferred
     }
 
-    func choose(_ code: String) {
+    func relaunch(in code: String) {
         defaults.set([code], forKey: Self.key)
+        defaults.synchronize()
+        exit(0)
     }
 }

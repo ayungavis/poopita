@@ -15,6 +15,7 @@ final class SettingsViewModel {
     private let now: () -> Date
     private let timeZone: () -> TimeZone
     private var reminderTime: Date
+    private var pendingLanguage: String?
 
     init(
         repository: any DiaryRepository,
@@ -44,7 +45,7 @@ final class SettingsViewModel {
             reminderDate: initialTime,
             isAppLockEnabled: false,
             isBiometricsAvailable: biometricService.isAvailable(),
-            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService)
+            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService, pending: nil)
         )
     }
 
@@ -109,8 +110,20 @@ final class SettingsViewModel {
 
     func selectLanguage(id: String) {
         guard id != languageService.chosenCode, languageService.availableCodes.contains(id) else { return }
-        languageService.choose(id)
+        pendingLanguage = id
         updateState()
+    }
+
+    func cancelLanguageChange() {
+        pendingLanguage = nil
+        updateState()
+    }
+
+    func confirmLanguageChange() {
+        guard let code = pendingLanguage else { return }
+        pendingLanguage = nil
+        updateState()
+        languageService.relaunch(in: code)
     }
 
     func updateReminderSchedule() async {
@@ -158,7 +171,9 @@ final class SettingsViewModel {
             reminderDate: reminderDate ?? state.reminderDate,
             isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
             isBiometricsAvailable: state.isBiometricsAvailable,
-            appearance: Self.appearanceViewData(theme: appearance.theme, language: languageService)
+            appearance: Self.appearanceViewData(
+                theme: appearance.theme, language: languageService, pending: pendingLanguage
+            )
         )
     }
 
@@ -178,7 +193,9 @@ final class SettingsViewModel {
         )
     }
 
-    static func appearanceViewData(theme: AppTheme, language: any LanguageService) -> SettingsAppearanceViewData {
+    static func appearanceViewData(
+        theme: AppTheme, language: any LanguageService, pending: String?
+    ) -> SettingsAppearanceViewData {
         let chosen = language.chosenCode
         return SettingsAppearanceViewData(
             themes: AppTheme.allCases.map { SettingsChoiceViewData(id: $0.rawValue, title: title(for: $0)) },
@@ -186,8 +203,12 @@ final class SettingsViewModel {
             languages: language.availableCodes.map { SettingsChoiceViewData(id: $0, title: languageName(code: $0)) },
             selectedLanguageID: chosen,
             languageName: languageName(code: chosen),
-            languageNote: chosen == language.activeCode ? nil
-                : String(localized: "settings.appearance.languageNote \(languageName(code: chosen))", bundle: .module)
+            languageChange: pending.map(languageName).map { name in
+                SettingsLanguageChangeViewData(
+                    title: String(localized: "settings.appearance.switchTitle \(name)", bundle: .module),
+                    message: String(localized: "settings.appearance.switchMessage \(name)", bundle: .module)
+                )
+            }
         )
     }
 

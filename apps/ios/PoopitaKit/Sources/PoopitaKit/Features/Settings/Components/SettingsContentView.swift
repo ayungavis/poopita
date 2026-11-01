@@ -14,7 +14,9 @@ struct SettingsContentView: View {
                 }
                 reminderSection
                 SettingsAppearanceView(
-                    data: data.appearance, selectTheme: viewModel.selectTheme, selectLanguage: viewModel.selectLanguage
+                    data: data.appearance, selectTheme: viewModel.selectTheme, selectLanguage: viewModel.selectLanguage,
+                    confirmLanguageChange: viewModel.confirmLanguageChange,
+                    cancelLanguageChange: viewModel.cancelLanguageChange
                 )
                 privacySection
                 backupSection
