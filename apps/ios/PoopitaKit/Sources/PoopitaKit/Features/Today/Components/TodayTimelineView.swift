@@ -23,12 +23,14 @@ struct TodayTimelineView: View {
                 .alignmentGuide(VerticalAlignment.top) { $0.height / 2 }
                 .offset(y: offset(hour.minute))
             }
+            if let since = timeline.sinceLast, let now = timeline.now {
+                sinceLastView(since, height: sinceBottom(now) - sinceTop).offset(y: sinceTop)
+            }
             ForEach(Array(zip(timeline.blocks, blockTops)), id: \.0.id) { block, top in
                 blockButton(block).offset(y: top)
             }
-            if let since = timeline.sinceLast, let now = timeline.now {
-                sinceLastView(since).offset(y: sinceTop)
-                nowLine(now).offset(y: max(offset(now.minute), sinceTop + blockHeight))
+            if timeline.sinceLast != nil, let now = timeline.now {
+                nowLine(now).offset(y: sinceBottom(now))
             } else if let now = timeline.now {
                 nowLine(now).offset(y: offset(now.minute))
             }
@@ -45,7 +47,11 @@ struct TodayTimelineView: View {
     }
 
     private var sinceTop: CGFloat {
-        (blockTops.last ?? 0) + blockHeight
+        blockTops.last ?? 0
+    }
+
+    private func sinceBottom(_ now: TodayTimelineMarkViewData) -> CGFloat {
+        max(offset(now.minute), sinceTop + blockHeight * 2 + Spacing.xs)
     }
 
     private func offset(_ minute: Int) -> CGFloat {
@@ -56,7 +62,11 @@ struct TodayTimelineView: View {
         Button {
             edit(block.id)
         } label: {
-            HStack {
+            HStack(spacing: Spacing.sm) {
+                if let illustration = block.entry.illustration {
+                    EntryIllustrationView(kind: illustration)
+                        .frame(height: blockHeight - Spacing.sm)
+                }
                 Text(verbatim: block.entry.title)
                     .font(AppFont.body.weight(.semibold))
                     .lineLimit(1)
@@ -76,7 +86,7 @@ struct TodayTimelineView: View {
         .accessibilityHint(Text("entry.editHint", bundle: .module))
     }
 
-    private func sinceLastView(_ since: TodayTimelineMarkViewData) -> some View {
+    private func sinceLastView(_ since: TodayTimelineMarkViewData, height: CGFloat) -> some View {
         HStack {
             Text(verbatim: since.label)
                 .font(AppFont.caption)
@@ -93,7 +103,8 @@ struct TodayTimelineView: View {
         }
         .padding(.leading, Spacing.md)
         .frame(height: blockHeight)
-        .background { HatchView() }
+        .frame(height: height, alignment: .bottom)
+        .background(AppColor.track, in: RoundedRectangle(cornerRadius: Spacing.sm))
         .padding(.leading, labelWidth + Spacing.sm)
     }
 

@@ -25,7 +25,7 @@ struct TodayWaitingView: View {
             .frame(width: labelWidth, alignment: .topLeading)
             hero
                 .frame(maxWidth: .infinity, minHeight: CGFloat(nowMinute) * hourHeight / 60, alignment: .topLeading)
-                .background { HatchView() }
+                .background(AppColor.track, in: RoundedRectangle(cornerRadius: Spacing.sm))
         }
         .padding(.top, Spacing.sm)
     }
@@ -34,7 +34,7 @@ struct TodayWaitingView: View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text(verbatim: headline)
                 .font(AppFont.display)
-                .foregroundStyle(AppColor.accent)
+                .foregroundStyle(AppColor.textPrimary)
                 .fixedSize(horizontal: false, vertical: true)
             if let detail {
                 Text(verbatim: detail)

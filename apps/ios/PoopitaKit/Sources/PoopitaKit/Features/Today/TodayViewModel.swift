@@ -249,7 +249,6 @@ extension TodayViewModel {
             monthLabel: activeDate.formatted(monthStyle),
             title: activeDay == today ? String(localized: "diary.today", bundle: .module)
                 : activeDate.formatted(weekdayStyle),
-            dayNumber: "\(activeDay.day)",
             weekDays: weekDays.map(\.item),
             weekSummary: String(localized: "today.thisWeek \(logCount(weekLogs))", bundle: .module),
             fillIn: fillIn,

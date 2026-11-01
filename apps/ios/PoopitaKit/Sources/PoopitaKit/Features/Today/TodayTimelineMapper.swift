@@ -134,11 +134,13 @@ extension TodayViewModel {
         dateStyle.timeZone = zone
         timeStyle.timeZone = zone
         let title: String
+        var illustration: EntryIllustrationKind?
         if let type = entry.stoolType {
             guard let choice = EntryChoiceViewData.types.first(where: { $0.id == String(type) }) else {
                 throw AppError.invalidStoredData
             }
             title = choice.title + " · " + choice.detail
+            illustration = choice.illustration
         } else {
             title = String(localized: "entry.typeSkipped", bundle: .module)
         }
@@ -155,7 +157,7 @@ extension TodayViewModel {
         }
         return TodayEntryViewData(
             id: entry.id, dateLabel: entry.occurrence.instant.formatted(dateStyle),
-            timeLabel: entry.occurrence.instant.formatted(timeStyle), title: title,
+            timeLabel: entry.occurrence.instant.formatted(timeStyle), title: title, illustration: illustration,
             observations: observations.joined(separator: " · "), note: entry.note
         )
     }

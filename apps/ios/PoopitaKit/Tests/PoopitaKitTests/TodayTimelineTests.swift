@@ -60,7 +60,6 @@ struct TodayTimelineTests {
         #expect(data.fillIn?.dayID == "2026-10-29")
         #expect(data.fillIn?.label == "Fill in Thursday")
         #expect(data.title == "Today")
-        #expect(data.dayNumber == "31")
         #expect(TodayViewModel.logCount(1) == "1 log")
     }
 
@@ -76,6 +75,7 @@ struct TodayTimelineTests {
         #expect(timeline.endMinute == 480)
         #expect(timeline.blocks.map(\.minute) == [45, 130])
         #expect(timeline.blocks.first?.entry.title == "Type 3 · Cracked")
+        #expect(timeline.blocks.map(\.entry.illustration) == [.type3, .type4])
         #expect(timeline.now?.minute == 221)
         let since = try #require(timeline.sinceLast)
         #expect(since.minute == 130)

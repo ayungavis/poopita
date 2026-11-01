@@ -3,7 +3,6 @@ import Foundation
 struct TodayViewData: Equatable, Sendable {
     let monthLabel: String
     let title: String
-    let dayNumber: String
     let weekDays: [TodayWeekDayViewData]
     let weekSummary: String
     let fillIn: TodayFillInViewData?

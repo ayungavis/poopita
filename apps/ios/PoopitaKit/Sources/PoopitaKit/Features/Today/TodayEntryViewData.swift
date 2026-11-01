@@ -5,6 +5,7 @@ struct TodayEntryViewData: Equatable, Sendable, Identifiable {
     let dateLabel: String
     let timeLabel: String
     let title: String
+    let illustration: EntryIllustrationKind?
     let observations: String
     let note: String
 }
