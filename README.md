@@ -2,7 +2,7 @@
 
 iOS app scaffold (`com.ayungavis.Poopita`), SwiftUI, iOS 27+, Swift 6. The local Swift package supports iOS 26+.
 
-Diary features and encrypted backup are not implemented.
+Encrypted backup is not implemented yet.
 
 ## Setup
 
@@ -59,3 +59,11 @@ Apple-side prerequisites (team `QHL64K2LPL`):
 ## Architecture
 
 MVVM + `@Observable`, dependencies injected through `AppContainer`.
+
+## License
+
+Code is licensed under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE).
+
+## Trademarks
+
+The name "Poopita", the app icon and the mascot artwork are not covered by the Apache License. Forks and redistributed builds must use a different name and icon.
