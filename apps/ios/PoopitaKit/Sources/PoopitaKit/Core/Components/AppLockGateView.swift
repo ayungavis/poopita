@@ -7,11 +7,14 @@ struct AppLockGateView<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {
-        if appLock.isLocked {
-            locked
-        } else {
-            content
-        }
+        content
+            .accessibilityHidden(appLock.isLocked)
+            .allowsHitTesting(!appLock.isLocked)
+            .overlay {
+                if appLock.isLocked {
+                    locked
+                }
+            }
     }
 
     private var locked: some View {
@@ -39,7 +42,7 @@ struct AppLockGateView<Content: View>: View {
         .padding(.horizontal, Spacing.lg)
         .padding(.bottom, Spacing.sm)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColor.background)
+        .background { AppColor.background.ignoresSafeArea() }
         .task {
             if asksOnAppear {
                 await appLock.unlock()

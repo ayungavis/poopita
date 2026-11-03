@@ -23,10 +23,10 @@ struct TodayContentView: View {
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active {
-                    scroll.restart()
-                    centerOnFocus()
+                    recenter()
                 }
             }
+            .onAppear(perform: recenter)
             .toolbar {
                 ToolbarItem(placement: .navigation) {
                     TodayToolbarTitleView(monthLabel: data.monthLabel, title: data.title, isCompact: isHeaderHidden)
@@ -109,6 +109,11 @@ struct TodayContentView: View {
         if next != scroll {
             scroll = next
         }
+        centerOnFocus()
+    }
+
+    private func recenter() {
+        scroll.restart()
         centerOnFocus()
     }
 
