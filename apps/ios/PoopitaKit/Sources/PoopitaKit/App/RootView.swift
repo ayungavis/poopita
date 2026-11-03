@@ -12,8 +12,8 @@ public struct RootView: View {
     @State private var remindersModel: RemindersViewModel?
     @State private var undoModel: UndoModel?
     @State private var onboardingModel: OnboardingViewModel?
+    @State private var appLock: AppLockModel?
     @State private var appearance: AppearanceModel
-    @State private var isUnlocked = false
     @State private var errorMessage: String?
     @State private var selectedTab = RootTab.today
     @State private var isShowingSettings = false
@@ -26,10 +26,8 @@ public struct RootView: View {
 
     public var body: some View {
         Group {
-            if let model, let historyModel, let insightsModel, let settingsModel, let remindersModel {
-                if settingsModel.state.isAppLockEnabled, !isUnlocked {
-                    lockScreen(settingsModel)
-                } else {
+            if let model, let historyModel, let insightsModel, let settingsModel, let remindersModel, let appLock {
+                AppLockGateView(appLock: appLock, asksOnAppear: true) {
                     VStack(spacing: 0) {
                         TabView(selection: $selectedTab) {
                             Tab(value: RootTab.today) {
@@ -85,12 +83,17 @@ public struct RootView: View {
                     .animation(reduceMotion ? .default : .snappy, value: isShowingSettings)
                     .animation(reduceMotion ? .default : .snappy, value: isShowingFrequency)
                     .fullScreenModal(item: editorBinding) { editor in
-                        EntryEditorView(
-                            viewModel: editor,
-                            saved: editor.isEditing ? model.savedEditor : model.savedComposer,
-                            delete: { model.delete(id: editor.id) },
-                            deletionError: model.errorMessage
-                        )
+                        AppLockGateView(appLock: appLock, asksOnAppear: false) {
+                            EntryEditorView(
+                                viewModel: editor,
+                                saved: editor.isEditing ? model.savedEditor : model.savedComposer,
+                                delete: { model.delete(id: editor.id) },
+                                deletionError: model.errorMessage
+                            )
+                        }
+                    }
+                    .sheet(isPresented: offerBinding) {
+                        AppLockOfferView(appLock: appLock)
                     }
                     .fullScreenModal(isPresented: onboardingBinding) {
                         if let onboardingModel {
@@ -116,6 +119,10 @@ public struct RootView: View {
         .preferredColorScheme(appearance.colorScheme)
         .task { openDiary() }
         .onChange(of: undoModel?.toast?.id) { remindersModel?.reschedule() }
+        .task(id: undoModel?.toast?.id) {
+            guard await (try? Task.sleep(for: .seconds(1))) != nil else { return }
+            appLock?.considerOffer()
+        }
         .onChange(of: remindersModel?.revision) {
             model?.load()
             historyModel?.load()
@@ -141,8 +148,11 @@ public struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
-                isUnlocked = false
-            } else if phase == .active, let remindersModel {
+                appLock?.didEnterBackground()
+                return
+            }
+            appLock?.willEnterForeground()
+            if phase == .active, let remindersModel {
                 Task {
                     await remindersModel.refreshPermission()
                     remindersModel.reschedule()
@@ -157,6 +167,17 @@ public struct RootView: View {
             set: { isPresented in
                 if !isPresented {
                     onboardingModel?.finish()
+                }
+            }
+        )
+    }
+
+    private var offerBinding: Binding<Bool> {
+        Binding(
+            get: { appLock?.isOffering ?? false },
+            set: { isPresented in
+                if !isPresented {
+                    appLock?.declineOffer()
                 }
             }
         )
@@ -194,32 +215,6 @@ public struct RootView: View {
         model?.presentLogSheet()
     }
 
-    private func lockScreen(_ settings: SettingsViewModel) -> some View {
-        VStack(spacing: Spacing.xl) {
-            Image(systemName: "lock.shield")
-                .font(AppFont.largeTitle)
-                .foregroundStyle(AppColor.accent)
-            Text("settings.appLock.lockedTitle", bundle: .module)
-                .font(AppFont.title)
-                .foregroundStyle(AppColor.textPrimary)
-            PrimaryButtonView(Text("settings.appLock.unlockButton", bundle: .module)) {
-                Task {
-                    if await settings.authenticateToUnlock() {
-                        isUnlocked = true
-                    }
-                }
-            }
-        }
-        .padding(Spacing.lg)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColor.background)
-        .task {
-            if await settings.authenticateToUnlock() {
-                isUnlocked = true
-            }
-        }
-    }
-
     private func openDiary() {
         do {
             model = try container.makeTodayViewModel()
@@ -229,6 +224,7 @@ public struct RootView: View {
             remindersModel = try container.remindersViewModel()
             undoModel = try container.undoModel()
             onboardingModel = try container.makeOnboardingViewModel()
+            appLock = try container.appLockModel()
             errorMessage = nil
         } catch {
             errorMessage = AppError(wrapping: error).userMessage

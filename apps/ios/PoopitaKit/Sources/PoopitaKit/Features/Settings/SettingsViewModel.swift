@@ -10,7 +10,7 @@ final class SettingsViewModel {
     private let repository: any DiaryRepository
     private let undoModel: UndoModel
     private let appearance: AppearanceModel
-    private let biometricService: any BiometricService
+    private let appLock: AppLockModel
     private let languageService: any LanguageService
     private let now: () -> Date
     private var pendingLanguage: String?
@@ -19,46 +19,39 @@ final class SettingsViewModel {
         repository: any DiaryRepository,
         undoModel: UndoModel,
         appearance: AppearanceModel,
-        biometricService: any BiometricService,
+        appLock: AppLockModel,
         languageService: any LanguageService,
         now: @escaping () -> Date
     ) {
         self.repository = repository
         self.undoModel = undoModel
         self.appearance = appearance
-        self.biometricService = biometricService
+        self.appLock = appLock
         self.languageService = languageService
         self.now = now
         footer = Self.footer(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
 
         state = Self.viewData(
-            isAppLockEnabled: false,
-            isBiometricsAvailable: biometricService.isAvailable(),
+            isAppLockEnabled: appLock.isEnabled,
+            isBiometricsAvailable: appLock.isAvailable,
             appearance: Self.appearanceViewData(appearance: appearance, language: languageService, pending: nil)
         )
     }
 
     func toggleAppLock(_ enabled: Bool) async {
         guard enabled != state.isAppLockEnabled else { return }
-        if enabled {
-            let reason = String(localized: "settings.appLock.reason", bundle: .module)
-            let success = await biometricService.authenticate(reason: reason)
-            if success {
-                updateState(appLockEnabled: true)
-                undoModel.record(String(localized: "settings.appLock.enabled", bundle: .module), undoable: false)
-            } else {
-                errorMessage = String(localized: "settings.appLock.failed", bundle: .module)
-            }
-        } else {
-            let reason = String(localized: "settings.appLock.disableReason", bundle: .module)
-            let success = await biometricService.authenticate(reason: reason)
-            if success {
-                updateState(appLockEnabled: false)
-                undoModel.record(String(localized: "settings.appLock.disabled", bundle: .module), undoable: false)
-            } else {
-                errorMessage = String(localized: "settings.appLock.failed", bundle: .module)
-            }
+        guard await appLock.setEnabled(enabled) else {
+            errorMessage = String(localized: "settings.appLock.failed", bundle: .module)
+            return
         }
+        errorMessage = nil
+        updateState()
+        let key: String.LocalizationValue = enabled ? "settings.appLock.enabled" : "settings.appLock.disabled"
+        undoModel.record(String(localized: key, bundle: .module), undoable: false)
+    }
+
+    func refresh() {
+        updateState()
     }
 
     func selectTheme(id: String) {
@@ -121,11 +114,6 @@ final class SettingsViewModel {
         undoModel.record(String(localized: "settings.history.deleted", bundle: .module))
     }
 
-    func authenticateToUnlock() async -> Bool {
-        let reason = String(localized: "settings.appLock.reason", bundle: .module)
-        return await biometricService.authenticate(reason: reason)
-    }
-
     private func exportData(_ make: ([DiaryEntry], [NoPoopCheckIn]) -> Data) -> Data {
         do {
             return try make(repository.entries(), repository.checkIns())
@@ -136,10 +124,10 @@ final class SettingsViewModel {
         }
     }
 
-    private func updateState(appLockEnabled: Bool? = nil) {
+    private func updateState() {
         state = Self.viewData(
-            isAppLockEnabled: appLockEnabled ?? state.isAppLockEnabled,
-            isBiometricsAvailable: state.isBiometricsAvailable,
+            isAppLockEnabled: appLock.isEnabled,
+            isBiometricsAvailable: appLock.isAvailable,
             appearance: Self.appearanceViewData(
                 appearance: appearance, language: languageService, pending: pendingLanguage
             )

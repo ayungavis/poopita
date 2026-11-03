@@ -60,7 +60,7 @@ struct SettingsExportTests {
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         let model = SettingsViewModel(
             repository: repository, undoModel: UndoModel(repository: repository), appearance: appearance,
-            biometricService: TestBiometricService(),
+            appLock: AppLockTests.model(diary: repository),
             languageService: TestLanguageService(), now: { .now }
         )
         #expect(model.state.appearance.hidesInAppSwitcher)

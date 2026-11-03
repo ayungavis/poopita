@@ -4,6 +4,7 @@ import LocalAuthentication
 @MainActor
 protocol BiometricService: Sendable {
     func isAvailable() -> Bool
+    func method() -> AppLockMethod
     func authenticate(reason: String) async -> Bool
 }
 
@@ -13,6 +14,18 @@ final class LocalAuthenticationBiometricService: BiometricService {
         let context = LAContext()
         var error: NSError?
         return context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error)
+    }
+
+    func method() -> AppLockMethod {
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else { return .passcode }
+        return switch context.biometryType {
+        case .faceID: .faceID
+        case .touchID: .touchID
+        case .opticID: .opticID
+        default: .passcode
+        }
     }
 
     func authenticate(reason: String) async -> Bool {

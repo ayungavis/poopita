@@ -6,6 +6,7 @@ public final class AppContainer {
     private var diary: (any DiaryRepository)?
     private var undo: UndoModel?
     private var appearance: AppearanceModel?
+    private var appLock: AppLockModel?
     private var reminders: RemindersViewModel?
     private let reminderResponses = UserNotificationsResponseService()
 
@@ -37,7 +38,7 @@ public final class AppContainer {
             repository: diaryRepository(),
             undoModel: undoModel(),
             appearance: appearanceModel(),
-            biometricService: LocalAuthenticationBiometricService(),
+            appLock: appLockModel(),
             languageService: AppleLanguagesService(),
             now: { .now }
         )
@@ -59,6 +60,18 @@ public final class AppContainer {
             service: UserNotificationsReminderService(), now: { .now }, timeZone: { .current }
         )
         reminders = model
+        return model
+    }
+
+    func appLockModel() throws -> AppLockModel {
+        if let appLock {
+            return appLock
+        }
+        let model = try AppLockModel(
+            repository: LocalAppLockRepository(store: UserDefaultsValueStore()), diary: diaryRepository(),
+            biometricService: LocalAuthenticationBiometricService(), now: { .now }
+        )
+        appLock = model
         return model
     }
 

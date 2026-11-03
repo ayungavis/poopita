@@ -11,7 +11,7 @@ struct SettingsFlowTests {
 
         let model = try SettingsViewModel(
             repository: repository, undoModel: UndoModel(repository: repository), appearance: AppearanceTests.model(),
-            biometricService: biometric, languageService: TestLanguageService(),
+            appLock: AppLockTests.model(biometric: biometric, diary: repository), languageService: TestLanguageService(),
             now: { clock }
         )
 
@@ -45,7 +45,7 @@ struct SettingsFlowTests {
         let undo = UndoModel(repository: repository)
         let model = try SettingsViewModel(
             repository: repository, undoModel: undo, appearance: AppearanceTests.model(),
-            biometricService: biometric, languageService: TestLanguageService(),
+            appLock: AppLockTests.model(biometric: biometric, diary: repository), languageService: TestLanguageService(),
             now: { clock }
         )
 
@@ -81,6 +81,10 @@ final class TestBiometricService: BiometricService {
 
     func isAvailable() -> Bool {
         available
+    }
+
+    func method() -> AppLockMethod {
+        .faceID
     }
 
     func authenticate(reason _: String) async -> Bool {

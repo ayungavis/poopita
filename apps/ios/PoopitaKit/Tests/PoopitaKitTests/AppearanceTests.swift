@@ -111,7 +111,7 @@ struct AppearanceTests {
     ) -> SettingsViewModel {
         SettingsViewModel(
             repository: repository, undoModel: UndoModel(repository: repository), appearance: appearance,
-            biometricService: TestBiometricService(),
+            appLock: AppLockTests.model(diary: repository),
             languageService: language, now: { .now }
         )
     }

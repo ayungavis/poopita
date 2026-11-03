@@ -21,6 +21,7 @@ struct SettingsView: View {
             .foregroundStyle(AppColor.textPrimary)
             .tint(AppColor.accent)
             .privacySensitive()
+            .onAppear(perform: viewModel.refresh)
     }
 }
 
