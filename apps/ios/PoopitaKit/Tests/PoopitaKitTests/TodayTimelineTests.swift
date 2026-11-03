@@ -167,7 +167,7 @@ struct TodayTimelineTests {
         model.load()
         await model.loadTask?.value
         guard case let .loaded(data) = model.state,
-              case let .waiting(headline, detail, partialNote) = data.dayState
+              case let .waiting(headline, detail, partialNote, _) = data.dayState
         else { Issue.record("Expected the waiting state"); return }
         #expect(headline.contains("3 days") && headline.contains("12 hours"))
         #expect(detail?.hasPrefix("since your last log, Tuesday at ") == true)
@@ -176,7 +176,7 @@ struct TodayTimelineTests {
         model.recordCheckInToday()
         await model.loadTask?.value
         guard case let .loaded(updated) = model.state,
-              case let .waiting(_, _, note) = updated.dayState
+              case let .waiting(_, _, note, _) = updated.dayState
         else { Issue.record("Expected the waiting state"); return }
         #expect(note != nil)
         #expect(updated.weekDays[5].mark == .noneSoFar)

@@ -10,4 +10,12 @@ public extension View {
             sheet(item: item, onDismiss: onDismiss, content: content)
         #endif
     }
+
+    func fullScreenModal(isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> some View) -> some View {
+        #if os(iOS)
+            fullScreenCover(isPresented: isPresented, content: content)
+        #else
+            sheet(isPresented: isPresented, content: content)
+        #endif
+    }
 }

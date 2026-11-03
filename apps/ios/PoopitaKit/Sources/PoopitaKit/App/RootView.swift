@@ -11,6 +11,7 @@ public struct RootView: View {
     @State private var settingsModel: SettingsViewModel?
     @State private var remindersModel: RemindersViewModel?
     @State private var undoModel: UndoModel?
+    @State private var onboardingModel: OnboardingViewModel?
     @State private var appearance: AppearanceModel
     @State private var isUnlocked = false
     @State private var errorMessage: String?
@@ -91,6 +92,11 @@ public struct RootView: View {
                             deletionError: model.errorMessage
                         )
                     }
+                    .fullScreenModal(isPresented: onboardingBinding) {
+                        if let onboardingModel {
+                            OnboardingView(viewModel: onboardingModel, reminders: remindersModel)
+                        }
+                    }
                 }
             } else {
                 VStack(spacing: Spacing.lg) {
@@ -143,6 +149,17 @@ public struct RootView: View {
                 }
             }
         }
+    }
+
+    private var onboardingBinding: Binding<Bool> {
+        Binding(
+            get: { onboardingModel?.isPresented ?? false },
+            set: { isPresented in
+                if !isPresented {
+                    onboardingModel?.finish()
+                }
+            }
+        )
     }
 
     private var editorBinding: Binding<EntryEditorViewModel?> {
@@ -211,6 +228,7 @@ public struct RootView: View {
             settingsModel = try container.makeSettingsViewModel()
             remindersModel = try container.remindersViewModel()
             undoModel = try container.undoModel()
+            onboardingModel = try container.makeOnboardingViewModel()
             errorMessage = nil
         } catch {
             errorMessage = AppError(wrapping: error).userMessage

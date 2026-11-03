@@ -6,6 +6,7 @@ extension TodayViewModel {
         latestEntry: DiaryEntry?,
         checkIn: NoPoopCheckIn?,
         pastWeekday: String?,
+        isFirstDay: Bool = false,
         now: Date
     ) throws -> TodayDayStateViewData {
         if hasLogs {
@@ -17,7 +18,9 @@ extension TodayViewModel {
             }
             guard let latestEntry else {
                 return .waiting(
-                    headline: String(localized: "today.hero.empty", bundle: .module), detail: nil, partialNote: partialNote
+                    headline: String(localized: "today.hero.empty", bundle: .module),
+                    detail: isFirstDay ? String(localized: "today.firstDay", bundle: .module) : nil,
+                    partialNote: partialNote, canCheckIn: !isFirstDay
                 )
             }
             let seconds = max(0, now.timeIntervalSince(latestEntry.occurrence.instant))
@@ -29,7 +32,7 @@ extension TodayViewModel {
             return .waiting(
                 headline: headline,
                 detail: String(localized: "today.sinceLastLog \(lastDay) \(lastTime)", bundle: .module),
-                partialNote: partialNote
+                partialNote: partialNote, canCheckIn: true
             )
         }
         let logLabel = String(localized: "today.logFor \(weekday)", bundle: .module)

@@ -153,10 +153,11 @@ struct TodayFlowTests {
 
         guard case let .loaded(data) = model.state else { Issue.record("Expected loaded diary"); return }
         #expect(data.timeline.blocks.isEmpty)
-        guard case let .waiting(headline, detail, _) = data.dayState else { Issue.record("Expected waiting"); return }
+        guard case let .waiting(headline, detail, _, canCheckIn) = data.dayState else { Issue.record("Expected waiting"); return }
         #expect(headline.contains("2 days"))
         #expect(headline.contains("3 hours"))
         #expect(detail?.hasPrefix("since your last log") == true)
+        #expect(canCheckIn)
     }
 
     @Test func weekStripContainsSevenDaysAndDayStateUpdatesOnSelection() async throws {
@@ -177,7 +178,10 @@ struct TodayFlowTests {
         let foundToday = data.weekDays.first(where: { $0.isToday })
         let todayItem = try #require(foundToday)
         #expect(todayItem.isSelected)
-        #expect(data.dayState == .waiting(headline: "Nothing logged yet", detail: nil, partialNote: nil))
+        #expect(data.dayState == .waiting(
+            headline: "Nothing logged yet", detail: "Tap Log after you go. Days before today stay blank.", partialNote: nil,
+            canCheckIn: false
+        ))
 
         let composer = try #require(model.composer)
         composer.pickRequiredObservations()

@@ -5,6 +5,7 @@ struct TodayWaitingView: View {
     let headline: String
     let detail: String?
     let partialNote: String?
+    let canCheckIn: Bool
     let hours: [TodayTimelineHourViewData]
     let nowMinute: Int
     let checkIn: () -> Void
@@ -49,7 +50,7 @@ struct TodayWaitingView: View {
                         .foregroundStyle(AppColor.textSecondary)
                 }
                 .padding(.top, Spacing.sm)
-            } else {
+            } else if canCheckIn {
                 Button(action: checkIn) {
                     Text("today.notYet", bundle: .module)
                         .font(AppFont.body.weight(.medium))

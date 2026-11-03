@@ -3316,6 +3316,358 @@
         }
       }
     },
+    "onboarding.continue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lanjut"
+          }
+        }
+      }
+    },
+    "onboarding.marks.logs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One dot for each time you went."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu titik untuk setiap kali BAB."
+          }
+        }
+      }
+    },
+    "onboarding.marks.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On a day you don’t go, say so. Otherwise it stays unknown."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Di hari Anda tidak BAB, catat juga. Jika tidak, hari itu tetap tidak diketahui."
+          }
+        }
+      }
+    },
+    "onboarding.marks.noPoop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You told the app you didn’t go that day."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda mencatat tidak BAB hari itu."
+          }
+        }
+      }
+    },
+    "onboarding.marks.noneSoFar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not yet, and the day was never confirmed."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum BAB, dan hari itu tidak pernah dipastikan."
+          }
+        }
+      }
+    },
+    "onboarding.marks.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What the marks mean"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arti tanda-tandanya"
+          }
+        }
+      }
+    },
+    "onboarding.marks.unrecorded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No log, no check-in. Unknown, never zero."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanpa catatan. Tidak diketahui, bukan nol."
+          }
+        }
+      }
+    },
+    "onboarding.notNow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nanti saja"
+          }
+        }
+      }
+    },
+    "onboarding.progress %lld %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step %1$lld of %2$lld"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langkah %1$lld dari %2$lld"
+          }
+        }
+      }
+    },
+    "onboarding.reminder.footnote" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS asks next. Change the time or turn it off in Poopita’s settings."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS akan bertanya berikutnya. Ubah waktu atau matikan di pengaturan Poopita."
+          }
+        }
+      }
+    },
+    "onboarding.reminder.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One quiet reminder, only on days you haven’t logged yet."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu pengingat yang tenang, hanya di hari Anda belum mencatat."
+          }
+        }
+      }
+    },
+    "onboarding.reminder.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Want a daily nudge?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mau diingatkan setiap hari?"
+          }
+        }
+      }
+    },
+    "onboarding.skip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lewati"
+          }
+        }
+      }
+    },
+    "onboarding.turnOn" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on reminder"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyalakan pengingat"
+          }
+        }
+      }
+    },
+    "onboarding.welcome.account" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No account"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanpa akun"
+          }
+        }
+      }
+    },
+    "onboarding.welcome.accountDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing to sign up for."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak perlu mendaftar."
+          }
+        }
+      }
+    },
+    "onboarding.welcome.device" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stays on this phone"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tetap di ponsel ini"
+          }
+        }
+      }
+    },
+    "onboarding.welcome.deviceDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing is uploaded or synced."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada yang diunggah atau disinkronkan."
+          }
+        }
+      }
+    },
+    "onboarding.welcome.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log each time you go. In a few weeks you’ll see your usual, and when it changes."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat setiap kali BAB. Dalam beberapa minggu Anda akan melihat pola biasa Anda, dan kapan polanya berubah."
+          }
+        }
+      }
+    },
+    "onboarding.welcome.sharing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared only by you"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanya dibagikan oleh Anda"
+          }
+        }
+      }
+    },
+    "onboarding.welcome.sharingDetail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a PDF for your doctor if you want."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekspor PDF untuk dokter Anda jika mau."
+          }
+        }
+      }
+    },
+    "onboarding.welcome.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A private diary for your poop"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan pribadi untuk BAB Anda"
+          }
+        }
+      }
+    },
     "period.next" : {
       "localizations" : {
         "en" : {
@@ -5056,6 +5408,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lengkapi %@"
+          }
+        }
+      }
+    },
+    "today.firstDay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap Log after you go. Days before today stay blank."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketuk Catat setelah BAB. Hari-hari sebelumnya tetap kosong."
           }
         }
       }

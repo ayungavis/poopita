@@ -43,6 +43,13 @@ public final class AppContainer {
         )
     }
 
+    func makeOnboardingViewModel() throws -> OnboardingViewModel {
+        try OnboardingViewModel(
+            repository: LocalOnboardingRepository(store: UserDefaultsValueStore()), diary: diaryRepository(),
+            now: { .now }, timeZone: { .current }
+        )
+    }
+
     func remindersViewModel() throws -> RemindersViewModel {
         if let reminders {
             return reminders

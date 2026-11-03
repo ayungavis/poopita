@@ -167,12 +167,12 @@ struct TodayContentView: View {
                 focusMoved: reportFocus
             )
             .transition(.opacity)
-        case let .waiting(headline, detail, partialNote):
+        case let .waiting(headline, detail, partialNote, canCheckIn):
             let nowMinute = data.timeline.now?.minute ?? 0
             VStack(spacing: 0) {
                 TodayWaitingView(
-                    headline: headline, detail: detail, partialNote: partialNote, hours: data.timeline.hours,
-                    nowMinute: nowMinute, checkIn: viewModel.recordCheckInToday
+                    headline: headline, detail: detail, partialNote: partialNote, canCheckIn: canCheckIn,
+                    hours: data.timeline.hours, nowMinute: nowMinute, checkIn: viewModel.recordCheckInToday
                 )
                 TodayTimelineView(
                     timeline: data.timeline, startMinute: nowMinute, edit: viewModel.edit(id:),

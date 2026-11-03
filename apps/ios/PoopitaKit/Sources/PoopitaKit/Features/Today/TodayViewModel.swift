@@ -280,6 +280,7 @@ extension TodayViewModel {
                 latestEntry: latestEntry,
                 checkIn: checkIns.first { $0.day == activeDay },
                 pastWeekday: activeDay == today ? nil : activeDate.formatted(shortWeekdayStyle),
+                isFirstDay: entries.isEmpty && checkIns.isEmpty,
                 now: date
             ),
             timeline: timeline(
