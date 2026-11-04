@@ -61,6 +61,7 @@ body {
 }
 
 .language-link {
+  position: relative;
   display: inline-flex;
   gap: 6px;
   align-items: center;
@@ -161,6 +162,30 @@ body {
 @media (max-width: 420px) {
   .site-header-page {
     display: none;
+  }
+}
+
+.language-code {
+  display: none;
+}
+
+.site-header .app-icon-pair,
+.site-header nav > :first-child {
+  flex: none;
+}
+
+@media (max-width: 600px) {
+  .language-name {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .language-code {
+    display: inline;
   }
 }
 
