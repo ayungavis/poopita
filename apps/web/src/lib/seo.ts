@@ -45,14 +45,14 @@ export function seoFor({ locale, page, meta, imageAlt, appStoreId }: SeoInput): 
   };
 }
 
-export function notFoundSeo(meta: PageMeta): Seo {
+export function notFoundSeo(locale: Locale, meta: PageMeta): Seo {
   return {
     title: meta.title,
     description: meta.description,
-    htmlLang: localeDetails.en.htmlLang,
-    canonical: absoluteUrl("/404.html"),
+    htmlLang: localeDetails[locale].htmlLang,
+    canonical: absoluteUrl(`${pathFor(locale, "home")}404.html`),
     alternates: [],
-    ogLocale: localeDetails.en.ogLocale,
+    ogLocale: localeDetails[locale].ogLocale,
     ogLocaleAlternates: [],
     imageUrl: absoluteUrl(imagePath),
     imageAlt: site.name,

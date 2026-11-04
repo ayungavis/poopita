@@ -19,6 +19,9 @@ export const id: Messages = {
       title: "Halaman tidak ditemukan",
       body: "Halaman ini tidak ada, atau sudah dipindahkan.",
       home: "Ke beranda",
+      calendarLabel:
+        "Satu minggu di Poopita. Dua hari tidak pernah dicatat, jadi tampil sebagai tidak diketahui.",
+      note: "Hari bergaris tidak dicatat, jadi Poopita menampilkannya sebagai tidak diketahui, bukan nol. Halaman ini salah satunya.",
     },
     footer: {
       contact: "Kontak",

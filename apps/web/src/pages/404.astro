@@ -1,13 +1,5 @@
 ---
-import { NotFoundPage } from "../components/NotFoundPage";
-import { messagesFor } from "../i18n";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { notFoundSeo } from "../lib/seo";
-
-const { notFound } = messagesFor("en").common;
-const seo = notFoundSeo({ title: `${notFound.title} — Poopita`, description: notFound.body });
+import NotFound from "../layouts/NotFound.astro";
 ---
 
-<BaseLayout seo={seo}>
-  <NotFoundPage />
-</BaseLayout>
+<NotFound locale="en" />

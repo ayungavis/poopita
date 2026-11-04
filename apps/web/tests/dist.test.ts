@@ -32,12 +32,13 @@ const pages = htmlFiles(distDir).map((file) => ({
   name: relative(distDir, file),
   html: readFileSync(file, "utf8"),
 }));
-const localizedPages = pages.filter((page) => page.name !== "404.html");
+const localizedPages = pages.filter((page) => !page.name.endsWith("404.html"));
 
 describe("built site", () => {
-  test("builds every page in both languages plus a 404", () => {
+  test("builds every page and a 404 page in both languages", () => {
     expect(pages.map((page) => page.name).toSorted()).toEqual([
       "404.html",
+      "id/404.html",
       "id/index.html",
       "id/privacy/index.html",
       "id/support/index.html",
@@ -89,6 +90,21 @@ describe("built site", () => {
   test.each(pages)("$name gives every image an alt attribute", ({ html }) => {
     const images = html.match(/<img\b[^>]*>/g) ?? [];
     expect(images.filter((image) => !/\salt="/.test(image))).toEqual([]);
+  });
+
+  test.each([
+    ["404.html", "en"],
+    ["id/404.html", "id"],
+  ])("serves %s as the not-found page in %s", (name, locale) => {
+    const html = readFileSync(join(distDir, name), "utf8");
+    expect(html).toContain(`<html lang="${locale}">`);
+    expect(html).toContain('id="not-found-title"');
+    expect(html).toContain('class="site-header"');
+  });
+
+  test("keeps not-found pages out of the sitemap", () => {
+    const sitemap = readFileSync(join(distDir, "sitemap-0.xml"), "utf8");
+    expect(sitemap).not.toContain("404");
   });
 
   test("redirects old /en/ links to the unprefixed English pages", () => {

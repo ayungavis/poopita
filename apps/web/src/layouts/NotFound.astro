@@ -1,0 +1,19 @@
+---
+import { NotFoundPage } from "../components/NotFoundPage";
+import { messagesFor } from "../i18n";
+import type { Locale } from "../i18n/locales";
+import { notFoundSeo } from "../lib/seo";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { common } = messagesFor(locale);
+const seo = notFoundSeo(locale, { title: `${common.notFound.title} — Poopita`, description: common.notFound.body });
+---
+
+<BaseLayout seo={seo}>
+  <NotFoundPage locale={locale} common={common} />
+</BaseLayout>

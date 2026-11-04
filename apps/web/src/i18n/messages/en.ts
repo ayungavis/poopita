@@ -19,6 +19,8 @@ export const en: Messages = {
       title: "Page not found",
       body: "This page doesn't exist, or it moved.",
       home: "Go to the home page",
+      calendarLabel: "A week in Poopita. Two days were never recorded, so they show as unknown.",
+      note: "Striped days weren't recorded, so Poopita shows them as unknown, never as zero. This page is one of those.",
     },
     footer: {
       contact: "Contact",

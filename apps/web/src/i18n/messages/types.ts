@@ -48,7 +48,7 @@ export interface Messages {
     document: { inShort: string; onThisPage: string };
     darkTheme: string;
     store: { download: string; comingSoon: string };
-    notFound: { title: string; body: string; home: string };
+    notFound: { title: string; body: string; home: string; calendarLabel: string; note: string };
     footer: {
       contact: string;
       openSource: string;
