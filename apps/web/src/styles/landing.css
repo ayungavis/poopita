@@ -1,20 +1,204 @@
-.hero-stage {
+.display {
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+.display-statement {
+  max-inline-size: 15ch;
+  font-size: clamp(2.75rem, 6.4vw, 5.75rem);
+}
+
+:where(.astryx-text[data-type="large"]) {
+  font-weight: 400;
+}
+
+.limits {
   display: grid;
-  gap: clamp(var(--spacing-8), 6vh, var(--spacing-10));
-  padding-block: clamp(var(--spacing-6), 6vh, var(--spacing-10)) var(--spacing-6);
+  gap: var(--spacing-8);
 }
 
-.hero-copy {
-  max-inline-size: 820px;
-  margin-inline: auto;
+.limits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: var(--spacing-6) var(--spacing-10);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: limit;
 }
 
-.hero-calendar {
+.limits-list li {
   display: grid;
   gap: var(--spacing-3);
-  max-inline-size: 880px;
-  inline-size: 100%;
-  margin-inline: auto;
+  padding-block-start: var(--spacing-4);
+  border-block-start: 1px solid var(--color-border);
+  counter-increment: limit;
+}
+
+.limits-list li::before {
+  content: "0" counter(limit);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.limits-list .astryx-text {
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+.display-hero {
+  font-size: clamp(2.75rem, 4.6vw, 4.75rem);
+}
+
+.display-section {
+  font-size: clamp(2.125rem, 4.4vw, 3.75rem);
+}
+
+.display-manifesto {
+  font-size: clamp(2.25rem, 5.6vw, 5rem);
+  line-height: 1.2;
+}
+
+.on-dark {
+  color: var(--poopita-on-band);
+}
+
+.on-dark :where(.astryx-heading, .astryx-text) {
+  color: inherit;
+}
+
+.on-dark :where(.astryx-text[data-color="secondary"], .astryx-text[data-type="supporting"]) {
+  color: var(--poopita-on-band-secondary);
+}
+
+.stage {
+  --stage-pad: max(var(--spacing-6), calc((100vw - 1040px) / 2 + var(--spacing-1)));
+  position: relative;
+  display: grid;
+  margin-block-start: var(--spacing-2);
+  margin-inline: calc(50% - 50vw + var(--spacing-4));
+  padding-block-start: clamp(var(--spacing-8), 7vw, 96px);
+  padding-inline: var(--stage-pad);
+  overflow: clip;
+  border-radius: 32px;
+  background: var(--poopita-band);
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid var(--poopita-band-line);
+  border-radius: 22px;
+  pointer-events: none;
+}
+
+.stage-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: clamp(var(--spacing-6), 3vw, 56px);
+  align-items: center;
+}
+
+.stage-copy {
+  padding-block-end: clamp(var(--spacing-8), 6vw, 88px);
+}
+
+.stage-visual {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  margin-inline-end: calc(var(--spacing-6) - var(--stage-pad));
+  margin-block-end: -48px;
+}
+
+.stage-visual .calendar {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  box-shadow: 0 -24px 64px rgb(0 0 0 / 28%);
+}
+
+.stage .calendar {
+  border-color: transparent;
+  background: var(--poopita-stage-paper);
+  color: var(--color-text-primary);
+}
+
+.stage-tags {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 5px 11px;
+  border: 1px solid var(--poopita-band-line);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pill {
+  display: inline-flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  min-block-size: 48px;
+  padding-inline: var(--spacing-6);
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pill[data-tone="solid"],
+.store-soon {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.on-dark .pill[data-tone="solid"],
+.on-dark .store-soon {
+  background: var(--poopita-on-band);
+  color: var(--poopita-band);
+}
+
+.pill[data-tone="soft"] {
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  color: inherit;
+}
+
+.on-dark .pill[data-tone="soft"] {
+  box-shadow: inset 0 0 0 1px var(--poopita-band-line);
+}
+
+.pill-arrow {
+  font-weight: 400;
+  transition: translate 160ms var(--ease-settle);
+}
+
+.pill:hover .pill-arrow {
+  translate: 2px -2px;
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 3px;
+}
+
+.chapter {
+  padding-block: clamp(var(--spacing-8), 10vh, 120px);
 }
 
 .feature {
@@ -22,7 +206,11 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
   gap: clamp(var(--spacing-6), 5vw, var(--spacing-10));
   align-items: center;
-  padding-block: clamp(var(--spacing-6), 8vh, var(--spacing-10));
+}
+
+.band > .feature {
+  max-inline-size: 1000px;
+  margin-inline: auto;
 }
 
 .feature-copy {
@@ -157,7 +345,7 @@
 
 .reminder-scene {
   display: grid;
-  justify-items: center;
+  justify-items: start;
   padding-block-end: var(--spacing-6);
 }
 
@@ -237,19 +425,13 @@
 
 .band {
   margin-inline: calc(50% - 50vw);
-  padding-block: clamp(var(--spacing-10), 12vh, 160px);
   padding-inline: var(--spacing-5);
-  border-block: 1px solid var(--poopita-hairline);
   background: var(--poopita-band);
-  color: var(--poopita-on-band);
 }
 
-.band :where(.astryx-heading, .astryx-text) {
-  color: inherit;
-}
-
-.band :where(.astryx-text[data-color="secondary"]) {
-  color: var(--poopita-on-band-secondary);
+.band .rhythm {
+  border-color: var(--poopita-band-line);
+  background: var(--poopita-stage-paper);
 }
 
 .band-inner {
@@ -285,8 +467,120 @@
   padding-block: var(--spacing-6);
 }
 
-.closing {
-  padding-block: clamp(var(--spacing-10), 12vh, 160px);
+.compare {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+.compare th,
+.compare td {
+  padding: var(--spacing-4) var(--spacing-3);
+  border-block-end: 1px solid var(--poopita-hairline);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.compare thead th {
+  padding-block: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.compare tbody th {
+  font-weight: 600;
+}
+
+.compare-plain {
+  color: var(--color-text-secondary);
+  font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+  font-weight: 300;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.compare-poopita {
+  font-size: clamp(1.25rem, 2.2vw, 1.875rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.compare-poopita .legend-swatch {
+  display: inline-grid;
+  vertical-align: middle;
+  margin-inline-end: var(--spacing-3);
+}
+
+.manifesto {
+  display: grid;
+  gap: var(--spacing-6);
+  padding-block: clamp(var(--spacing-10), 14vh, 180px);
+}
+
+.manifesto-line {
+  max-inline-size: 24ch;
+  font-size: clamp(2.25rem, 5.6vw, 5rem);
+  line-height: 1.25;
+}
+
+.manifesto-line .display-manifesto {
+  display: inline;
+  line-height: inherit;
+}
+
+.manifesto-line .pill {
+  vertical-align: 0.45em;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.footer-card {
+  display: grid;
+  gap: var(--spacing-10);
+  margin-block: var(--spacing-6) var(--spacing-5);
+  padding: clamp(var(--spacing-6), 4vw, 56px);
+  border-radius: 28px;
+  background: var(--poopita-band);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3) var(--spacing-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--spacing-6);
+  align-items: end;
+}
+
+.footer-wordmark {
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  font-weight: 300;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-meta {
+  display: grid;
+  gap: var(--spacing-1);
 }
 
 @media print {
@@ -297,7 +591,64 @@
   }
 }
 
+@media (max-width: 860px) {
+  .stage-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stage-visual {
+    order: -1;
+    margin-inline-end: 0;
+    margin-block-end: 0;
+  }
+
+  .stage-visual .calendar {
+    border-radius: 20px;
+  }
+
+  .stage-copy {
+    padding-block-end: var(--spacing-8);
+  }
+}
+
 @media (max-width: 640px) {
+  .compare thead {
+    display: none;
+  }
+
+  .compare tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    column-gap: var(--spacing-3);
+    padding-block: var(--spacing-4);
+    border-block-end: 1px solid var(--poopita-hairline);
+  }
+
+  .compare th,
+  .compare td {
+    padding: 0;
+    border: 0;
+  }
+
+  .compare tbody th {
+    grid-column: 1 / -1;
+    padding-block-end: var(--spacing-2);
+  }
+
+  .stage {
+    border-radius: 24px;
+  }
+
+  .stage::before {
+    inset: 8px;
+    border-radius: 18px;
+  }
+
+  .compare-poopita {
+    display: flex;
+    align-items: center;
+  }
+
   .reminder-scene .notification {
     margin-inline-start: var(--spacing-4);
   }
@@ -309,37 +660,42 @@
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .hero-calendar .calendar {
-      view-timeline: --calendar block;
+    .stage {
+      view-timeline: --stage block;
     }
 
     .hero-calendar .calendar-grid {
       animation-name: calendar-zoom;
       animation-fill-mode: both;
       animation-timing-function: linear;
-      animation-timeline: --calendar;
-      animation-range: contain 35% exit 25%;
+      animation-timeline: --stage;
+      animation-range: exit 0% exit 55%;
     }
 
     .hero-calendar .calendar-grid .day:not([data-focus]) {
       animation-name: day-recede;
       animation-fill-mode: both;
       animation-timing-function: linear;
-      animation-timeline: --calendar;
-      animation-range: contain 35% exit 10%;
+      animation-timeline: --stage;
+      animation-range: exit 0% exit 40%;
     }
 
     .hero-calendar .calendar-head {
       animation-name: day-recede;
       animation-fill-mode: both;
       animation-timing-function: linear;
-      animation-timeline: --calendar;
-      animation-range: contain 35% contain 90%;
+      animation-timeline: --stage;
+      animation-range: exit 0% exit 25%;
     }
 
     @keyframes calendar-zoom {
+      70% {
+        opacity: 1;
+      }
+
       to {
         scale: 2.4;
+        opacity: 0;
       }
     }
 

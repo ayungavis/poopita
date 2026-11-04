@@ -25,13 +25,7 @@ export function LandingPage({ locale, messages, appStoreUrl }: LandingPageProps)
       <PrivacySection locale={locale} privacy={landing.privacy} />
       <LimitsSection limits={landing.limits} />
       <FaqSection locale={locale} faq={landing.faq} />
-      <ClosingSection
-        locale={locale}
-        closing={landing.closing}
-        store={common.store}
-        calendarLabel={landing.hero.calendarLabel}
-        appStoreUrl={appStoreUrl}
-      />
+      <ClosingSection closing={landing.closing} store={common.store} appStoreUrl={appStoreUrl} />
     </SiteShell>
   );
 }

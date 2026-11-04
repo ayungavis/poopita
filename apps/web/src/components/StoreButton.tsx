@@ -1,5 +1,5 @@
-import { Button } from "@astryxdesign/core/Button";
 import type { Messages } from "../i18n/messages/types";
+import { PillLink } from "./PillLink";
 
 interface StoreButtonProps {
   url: string | null;
@@ -8,7 +8,7 @@ interface StoreButtonProps {
 
 export function StoreButton({ url, labels }: StoreButtonProps) {
   if (url === null) {
-    return <span className="store-soon">{labels.comingSoon}</span>;
+    return <span className="pill store-soon">{labels.comingSoon}</span>;
   }
-  return <Button href={url} label={labels.download} variant="primary" size="lg" />;
+  return <PillLink href={url} label={labels.download} tone="solid" />;
 }

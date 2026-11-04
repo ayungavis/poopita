@@ -14,10 +14,10 @@ interface PrivacySectionProps {
 
 export function PrivacySection({ locale, privacy }: PrivacySectionProps) {
   return (
-    <section id="privacy" className="band reveal" aria-labelledby="privacy-title">
+    <section id="privacy" className="chapter band on-dark reveal" aria-labelledby="privacy-title">
       <VStack gap={8} className="band-inner">
         <VStack gap={3} maxWidth={720}>
-          <Heading level={2} id="privacy-title" type="display-2">
+          <Heading level={2} id="privacy-title" className="display display-section">
             {privacy.title}
           </Heading>
           <Text as="p" type="large">

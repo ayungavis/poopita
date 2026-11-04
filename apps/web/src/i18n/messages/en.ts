@@ -38,13 +38,11 @@ export const en: Messages = {
       iconAlt: "The Poopita app icon",
       calendarLabel:
         "A sample October in Poopita: most days carry a drawn stool type, three are confirmed no-poop days, four were never recorded and stay hatched, and today is still open.",
-      calendarCaption: "A sample month. Hatched days weren't recorded, so they stay unknown.",
       seeHow: "See how it works",
     },
     log: {
       title: "Log in seconds",
-      body: "Pick the Bristol type, how much, how hard it felt, and whether you saw blood. That's a complete log.",
-      optional: "When you want them: color, time on the toilet and a short note.",
+      body: "Pick the Bristol type, how much, how hard it felt, and whether you saw blood. That's a complete log. Add color, time on the toilet or a short note when you want.",
       sample: {
         time: "Tuesday 14 October, 07:42",
         fields: [
@@ -58,12 +56,19 @@ export const en: Messages = {
     days: {
       title: "Unknown is never zero",
       body: "On a day you don't go, say so with one tap. A day you didn't record stays unknown, so your history never pretends to know more than you told it.",
-      marks: [
-        { title: "Logged", body: "One dot for each time you went." },
-        { title: "No poop, confirmed", body: "You told the app you didn't go that day." },
-        { title: "None so far", body: "Not yet, and the day was never confirmed." },
-        { title: "Not recorded", body: "No log, no check-in." },
-      ],
+      comparison: {
+        plainLabel: "A simple counter",
+        poopitaLabel: "Poopita",
+        rows: [
+          { situation: "A day you forgot to log", plain: "Counts as 0", poopita: "Stays unknown" },
+          {
+            situation: "A day you didn't go",
+            plain: "Looks like forgetting",
+            poopita: "Confirmed with one tap",
+          },
+          { situation: "Today, before you go", plain: "Already 0", poopita: "None so far" },
+        ],
+      },
     },
     insights: {
       title: "See what's usual for you",
@@ -133,8 +138,7 @@ export const en: Messages = {
       more: "More answers on the support page",
     },
     closing: {
-      title: "Your diary is almost here.",
-      body: "Free, private and ready in seconds.",
+      statement: "A diary that only knows what you tell it, and keeps it to itself.",
     },
   },
   privacy: {

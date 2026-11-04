@@ -29,24 +29,20 @@ export function LogSection({ log }: { log: Landing["log"] }) {
               </div>
             ))}
           </dl>
-          <Text type="supporting">{log.optional}</Text>
         </VStack>
       </div>
     </FeatureSection>
   );
 }
 
-const legendMarks: readonly DayMark[] = [
-  { kind: "logged", types: [4] },
-  { kind: "none" },
-  { kind: "partial" },
-  { kind: "unknown" },
-];
+const comparisonMarks: readonly DayMark[] = [{ kind: "unknown" }, { kind: "none" }, { kind: "partial" }];
 
 export function DaysSection({ locale, days }: { locale: Locale; days: Landing["days"] }) {
+  const { comparison } = days;
+
   return (
-    <FeatureSection id="days" title={days.title} body={days.body} layout="stacked">
-      <VStack gap={6}>
+    <FeatureSection id="days" title={days.title} body={days.body} layout="stacked" scale="statement">
+      <VStack gap={8}>
         <MonthCalendar
           locale={locale}
           label={days.body}
@@ -54,22 +50,33 @@ export function DaysSection({ locale, days }: { locale: Locale; days: Landing["d
           showMonth={false}
           className="calendar-weeks"
         />
-        <ul className="legend">
-          {days.marks.map((item, index) => {
-            const mark = legendMarks[index] ?? { kind: "unknown" };
-            return (
-              <li key={item.title} className="legend-item">
-                <span className="legend-swatch day" data-kind={mark.kind} aria-hidden>
-                  <DayMarkGlyph mark={mark} />
-                </span>
-                <VStack gap={0.5}>
-                  <Text weight="semibold">{item.title}</Text>
-                  <Text type="supporting">{item.body}</Text>
-                </VStack>
-              </li>
-            );
-          })}
-        </ul>
+        <table className="compare">
+          <thead>
+            <tr>
+              <td aria-label={days.title} />
+              <th scope="col">{comparison.plainLabel}</th>
+              <th scope="col">{comparison.poopitaLabel}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparison.rows.map((row, index) => (
+              <tr key={row.situation}>
+                <th scope="row">{row.situation}</th>
+                <td className="compare-plain">{row.plain}</td>
+                <td className="compare-poopita">
+                  <span
+                    className="legend-swatch day"
+                    data-kind={comparisonMarks[index]?.kind ?? "unknown"}
+                    aria-hidden
+                  >
+                    <DayMarkGlyph mark={comparisonMarks[index] ?? { kind: "unknown" }} />
+                  </span>
+                  {row.poopita}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </VStack>
     </FeatureSection>
   );
@@ -79,7 +86,13 @@ export function InsightsSection({ insights }: { insights: Landing["insights"] })
   const { consistency } = insights;
 
   return (
-    <FeatureSection id="insights" title={insights.title} body={insights.body} layout="split-reverse">
+    <FeatureSection
+      id="insights"
+      title={insights.title}
+      body={insights.body}
+      layout="split-reverse"
+      tone="dark"
+    >
       <div className="insight-sheet">
         <WeekRhythm label={insights.body} />
         <VStack gap={5}>

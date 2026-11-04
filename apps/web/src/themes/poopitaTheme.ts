@@ -33,9 +33,12 @@ export const poopitaTheme = defineTheme({
     "--poopita-entry": ["#B9CDDF", "#2F4B63"],
     "--poopita-track": ["#E4EAEE", "#2A3238"],
     "--poopita-hairline": ["#DDE3E7", "#2E363C"],
-    "--poopita-band": ["#2A353C", "#1F252A"],
+    "--poopita-band": ["#2A353C", "#263642"],
     "--poopita-on-band": ["#FFFFFF", "#E9EDF0"],
     "--poopita-on-band-secondary": ["#C9D3DA", "#9AA8B1"],
+    "--poopita-band-line": ["#4A5862", "#38424A"],
+    "--poopita-on-entry": ["#183C59", "#E9EDF0"],
+    "--poopita-stage-paper": ["#FFFFFF", "#15191C"],
   },
   components: {
     button: {

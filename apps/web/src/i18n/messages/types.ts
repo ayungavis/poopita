@@ -62,19 +62,21 @@ export interface Messages {
       trust: readonly string[];
       iconAlt: string;
       calendarLabel: string;
-      calendarCaption: string;
       seeHow: string;
     };
     log: {
       title: string;
       body: string;
-      optional: string;
       sample: { time: string; fields: readonly LabeledValue[] };
     };
     days: {
       title: string;
       body: string;
-      marks: readonly Item[];
+      comparison: {
+        plainLabel: string;
+        poopitaLabel: string;
+        rows: readonly { situation: string; plain: string; poopita: string }[];
+      };
     };
     insights: {
       title: string;
@@ -98,7 +100,7 @@ export interface Messages {
     };
     limits: { title: string; items: readonly string[] };
     faq: { title: string; items: readonly Question[]; more: string };
-    closing: { title: string; body: string };
+    closing: { statement: string };
   };
   privacy: LegalDocument;
   terms: LegalDocument;

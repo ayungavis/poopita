@@ -1,8 +1,4 @@
-import { Divider } from "@astryxdesign/core/Divider";
-import { HStack } from "@astryxdesign/core/HStack";
-import { Link } from "@astryxdesign/core/Link";
 import { Text } from "@astryxdesign/core/Text";
-import { VStack } from "@astryxdesign/core/VStack";
 import { site } from "../config/site";
 import type { Locale } from "../i18n/locales";
 import type { Messages } from "../i18n/messages/types";
@@ -14,30 +10,32 @@ interface SiteFooterProps {
 }
 
 export function SiteFooter({ locale, common }: SiteFooterProps) {
+  const links = [
+    { label: common.nav.privacy, href: pathFor(locale, "privacy") },
+    { label: common.nav.terms, href: pathFor(locale, "terms") },
+    { label: common.nav.support, href: pathFor(locale, "support") },
+    { label: common.footer.contact, href: `mailto:${site.supportEmail}` },
+    { label: common.footer.openSource, href: site.sourceUrl },
+  ];
+
   return (
-    <VStack as="footer" gap={4} paddingBlock={8}>
-      <Divider />
-      <HStack gap={4} wrap="wrap">
-        <Link href={pathFor(locale, "privacy")} color="secondary">
-          {common.nav.privacy}
-        </Link>
-        <Link href={pathFor(locale, "terms")} color="secondary">
-          {common.nav.terms}
-        </Link>
-        <Link href={pathFor(locale, "support")} color="secondary">
-          {common.nav.support}
-        </Link>
-        <Link href={`mailto:${site.supportEmail}`} color="secondary">
-          {common.footer.contact}
-        </Link>
-        <Link href={site.sourceUrl} color="secondary">
-          {common.footer.openSource}
-        </Link>
-      </HStack>
-      <VStack gap={1}>
-        <Text type="supporting">{common.footer.copyright}</Text>
-        <Text type="supporting">{common.footer.trademark}</Text>
-      </VStack>
-    </VStack>
+    <footer className="footer-card on-dark">
+      <ul className="footer-links">
+        {links.map((link) => (
+          <li key={link.href}>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div className="footer-base">
+        <span className="footer-wordmark" aria-hidden>
+          Poopita
+        </span>
+        <div className="footer-meta">
+          <Text type="supporting">{common.footer.copyright}</Text>
+          <Text type="supporting">{common.footer.trademark}</Text>
+        </div>
+      </div>
+    </footer>
   );
 }

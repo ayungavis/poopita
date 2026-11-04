@@ -38,13 +38,11 @@ export const id: Messages = {
       iconAlt: "Ikon aplikasi Poopita",
       calendarLabel:
         "Contoh bulan Oktober di Poopita: sebagian besar hari berisi gambar tipe tinja, tiga hari dikonfirmasi tidak BAB, empat hari tidak pernah dicatat dan tetap diarsir, dan hari ini masih terbuka.",
-      calendarCaption: "Contoh satu bulan. Hari yang diarsir tidak dicatat, jadi tetap tidak diketahui.",
       seeHow: "Lihat cara kerjanya",
     },
     log: {
       title: "Catat dalam hitungan detik",
-      body: "Pilih tipe Bristol, jumlahnya, seberapa sulit rasanya, dan ada tidaknya darah. Itu sudah satu catatan lengkap.",
-      optional: "Jika mau: warna, lama di toilet, dan catatan singkat.",
+      body: "Pilih tipe Bristol, jumlahnya, seberapa sulit rasanya, dan ada tidaknya darah. Itu sudah satu catatan lengkap. Tambahkan warna, lama di toilet, atau catatan singkat jika mau.",
       sample: {
         time: "Selasa, 14 Oktober, 07.42",
         fields: [
@@ -58,12 +56,19 @@ export const id: Messages = {
     days: {
       title: "Tidak diketahui bukan berarti nol",
       body: "Di hari Anda tidak BAB, catat dengan satu ketukan. Hari yang tidak dicatat tetap tidak diketahui, jadi riwayat Anda tidak pernah berpura-pura tahu lebih dari yang Anda catat.",
-      marks: [
-        { title: "Tercatat", body: "Satu titik untuk setiap kali BAB." },
-        { title: "Tidak BAB, dikonfirmasi", body: "Anda mencatat tidak BAB hari itu." },
-        { title: "Belum BAB", body: "Belum BAB, dan hari itu tidak pernah dipastikan." },
-        { title: "Belum dicatat", body: "Tanpa catatan dan tanpa konfirmasi." },
-      ],
+      comparison: {
+        plainLabel: "Penghitung biasa",
+        poopitaLabel: "Poopita",
+        rows: [
+          { situation: "Hari Anda lupa mencatat", plain: "Dihitung 0", poopita: "Tetap tidak diketahui" },
+          {
+            situation: "Hari Anda tidak BAB",
+            plain: "Sama seperti lupa",
+            poopita: "Dikonfirmasi dengan satu ketukan",
+          },
+          { situation: "Hari ini, sebelum BAB", plain: "Sudah 0", poopita: "Belum BAB" },
+        ],
+      },
     },
     insights: {
       title: "Lihat apa yang biasa bagi Anda",
@@ -136,8 +141,7 @@ export const id: Messages = {
       more: "Jawaban lain di halaman bantuan",
     },
     closing: {
-      title: "Catatan Anda segera hadir.",
-      body: "Gratis, pribadi, dan siap dalam hitungan detik.",
+      statement: "Catatan yang hanya tahu apa yang Anda catat, dan menyimpannya untuk Anda sendiri.",
     },
   },
   privacy: {

@@ -224,9 +224,12 @@ export const poopitaTheme = {
     "--poopita-entry": "light-dark(#B9CDDF, #2F4B63)",
     "--poopita-track": "light-dark(#E4EAEE, #2A3238)",
     "--poopita-hairline": "light-dark(#DDE3E7, #2E363C)",
-    "--poopita-band": "light-dark(#2A353C, #1F252A)",
+    "--poopita-band": "light-dark(#2A353C, #263642)",
     "--poopita-on-band": "light-dark(#FFFFFF, #E9EDF0)",
-    "--poopita-on-band-secondary": "light-dark(#C9D3DA, #9AA8B1)"
+    "--poopita-on-band-secondary": "light-dark(#C9D3DA, #9AA8B1)",
+    "--poopita-band-line": "light-dark(#4A5862, #38424A)",
+    "--poopita-on-entry": "light-dark(#183C59, #E9EDF0)",
+    "--poopita-stage-paper": "light-dark(#FFFFFF, #15191C)"
   },
   __localTokenOwners: {
     "--astryx-theme-neutral-color-status-fill-accent": "neutral",
@@ -238,7 +241,10 @@ export const poopitaTheme = {
     "--poopita-hairline": "poopita",
     "--poopita-band": "poopita",
     "--poopita-on-band": "poopita",
-    "--poopita-on-band-secondary": "poopita"
+    "--poopita-on-band-secondary": "poopita",
+    "--poopita-band-line": "poopita",
+    "--poopita-on-entry": "poopita",
+    "--poopita-stage-paper": "poopita"
   },
   __localTokenLineage: ["neutral","poopita"],
   components: {

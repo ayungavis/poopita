@@ -119,38 +119,6 @@
   font-weight: 600;
 }
 
-.calendar-compact {
-  inline-size: 100%;
-  max-inline-size: 360px;
-  padding: var(--spacing-3);
-  border-radius: 16px;
-  box-shadow: var(--shadow-med);
-}
-
-.calendar-compact .calendar-month {
-  font-size: 1rem;
-}
-
-.calendar-compact .calendar-weekdays {
-  font-size: 0.6875rem;
-}
-
-.calendar-compact .day {
-  padding: 2px;
-}
-
-.calendar-compact .day .doodle {
-  inline-size: 70%;
-}
-
-.calendar-compact .day-number {
-  font-size: 0.625rem;
-}
-
-.calendar-compact .day-dots {
-  display: none;
-}
-
 .day-large {
   inline-size: 112px;
   padding: var(--spacing-2);
