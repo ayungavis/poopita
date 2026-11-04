@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 110,
+  "ignorePatterns": [
+    "apps/ios/**",
+    "docs/**",
+    "outputs/**",
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    ".zcode/**",
+    ".codegraph/**",
+    "*.md",
+    "skills-lock.json",
+    "bun.lock",
+    "**/dist/**",
+    "**/.astro/**",
+    "**/.turbo/**",
+    "**/.wrangler/**",
+    "apps/web/src/themes/poopita.*"
+  ]
+}

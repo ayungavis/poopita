@@ -1,0 +1,82 @@
+@import "@fontsource-variable/dm-sans";
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "../themes/poopita.css";
+@import "./calendar.css";
+@import "./landing.css";
+
+:root {
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 700ms;
+  --measure: 68ch;
+}
+
+body {
+  background: var(--color-background-body);
+  color: var(--color-text-primary);
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--spacing-4);
+  inset-block-start: calc(-1 * var(--spacing-10));
+  z-index: 10;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-element);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.skip-link:focus-visible {
+  inset-block-start: var(--spacing-4);
+}
+
+.faq-item {
+  border-block-end: 1px solid var(--poopita-hairline);
+  padding-block: var(--spacing-4);
+}
+
+.faq-item > summary {
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.faq-item > summary:focus-visible,
+.band-link:focus-visible,
+.store-soon:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-inner);
+}
+
+.app-icon {
+  block-size: auto;
+  border-radius: 22.5%;
+  box-shadow: var(--shadow-med);
+}
+
+.doodle {
+  inline-size: 48px;
+  block-size: 32px;
+  color: var(--color-text-primary);
+}
+
+.store-soon {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 48px;
+  padding-inline: var(--spacing-6);
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

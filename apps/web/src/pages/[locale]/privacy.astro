@@ -1,0 +1,25 @@
+---
+import { APP_STORE_ID } from "astro:env/server";
+import { LegalPage } from "../../components/LegalPage";
+import { messagesFor } from "../../i18n";
+import { parseLocale } from "../../i18n/locales";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { localeStaticPaths } from "../../lib/routes";
+import { seoFor } from "../../lib/seo";
+
+export const getStaticPaths = localeStaticPaths;
+
+const locale = parseLocale(Astro.params.locale);
+const messages = messagesFor(locale);
+const seo = seoFor({
+  locale,
+  page: "privacy",
+  meta: messages.privacy.meta,
+  imageAlt: messages.landing.hero.iconAlt,
+  appStoreId: APP_STORE_ID,
+});
+---
+
+<BaseLayout seo={seo}>
+  <LegalPage locale={locale} page="privacy" common={messages.common} document={messages.privacy} />
+</BaseLayout>

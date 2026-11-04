@@ -1,0 +1,164 @@
+.calendar {
+  margin: 0;
+  overflow: clip;
+  padding: clamp(var(--spacing-3), 3vw, var(--spacing-6));
+  border: 1px solid var(--poopita-hairline);
+  border-radius: 20px;
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow-high);
+}
+
+.calendar-head {
+  display: grid;
+  gap: var(--spacing-3);
+  padding-block-end: var(--spacing-3);
+}
+
+.calendar-month {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-weekdays {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.calendar-grid {
+  border-block-start: 1px solid var(--poopita-hairline);
+  border-inline-start: 1px solid var(--poopita-hairline);
+  transform-origin: var(--focus-x) var(--focus-y);
+}
+
+.calendar-grid .day {
+  border-block-end: 1px solid var(--poopita-hairline);
+  border-inline-end: 1px solid var(--poopita-hairline);
+}
+
+.day {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: center;
+  aspect-ratio: 1 / 0.92;
+  min-block-size: 0;
+  overflow: hidden;
+  padding: clamp(2px, 0.6vw, var(--spacing-2));
+  color: var(--color-text-primary);
+}
+
+.day-number {
+  justify-self: start;
+  font-size: clamp(0.6875rem, 1.1vw, 0.875rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+.day .doodle {
+  inline-size: min(48px, 80%);
+  block-size: auto;
+}
+
+.day-logged {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.day-dots {
+  color: var(--poopita-marker);
+  font-size: 0.875rem;
+  line-height: 0.5;
+  letter-spacing: 2px;
+}
+
+.day-tick,
+.day-diamond {
+  inline-size: min(26px, 55%);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.day-tick {
+  stroke: var(--color-text-primary);
+}
+
+.day-diamond {
+  stroke: var(--poopita-partial);
+}
+
+.day[data-kind="unknown"] {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--poopita-marker) 45%, transparent) 0 1.5px,
+    transparent 1.5px 7px
+  );
+}
+
+.day[data-kind="untracked"] .day-number,
+.day[data-kind="future"] .day-number {
+  opacity: 0.45;
+}
+
+.day[data-today] {
+  box-shadow: inset 0 3px 0 var(--poopita-rust);
+}
+
+.day[data-today] .day-number {
+  color: var(--poopita-rust);
+  font-weight: 600;
+}
+
+.calendar-compact {
+  inline-size: 100%;
+  max-inline-size: 360px;
+  padding: var(--spacing-3);
+  border-radius: 16px;
+  box-shadow: var(--shadow-med);
+}
+
+.calendar-compact .calendar-month {
+  font-size: 1rem;
+}
+
+.calendar-compact .calendar-weekdays {
+  font-size: 0.6875rem;
+}
+
+.calendar-compact .day {
+  padding: 2px;
+}
+
+.calendar-compact .day .doodle {
+  inline-size: 70%;
+}
+
+.calendar-compact .day-number {
+  font-size: 0.625rem;
+}
+
+.calendar-compact .day-dots {
+  display: none;
+}
+
+.day-large {
+  inline-size: 112px;
+  padding: var(--spacing-2);
+  border: 1px solid var(--poopita-hairline);
+  border-radius: 14px;
+  background-color: var(--color-background-surface);
+}
+
+.day-large .doodle {
+  inline-size: 64px;
+}

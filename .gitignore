@@ -17,3 +17,10 @@ Local.xcconfig
 # Local-only planning docs and scratch
 docs/
 tmp/
+
+# Web (apps/web)
+node_modules/
+dist/
+.astro/
+.turbo/
+.wrangler/

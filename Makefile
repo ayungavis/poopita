@@ -9,11 +9,12 @@ TEST_FLAGS ?=
 .DEFAULT_GOAL := help
 
 .PHONY: help \
-        ios-generate ios-format ios-lint ios-test ios-build ios-storage-smoke ios-startup-smoke ios-run ios-validate
+        ios-generate ios-format ios-lint ios-test ios-build ios-storage-smoke ios-startup-smoke ios-run ios-validate \
+        web-install web-dev web-format web-validate web-preview
 
 ## Descriptions come from the `##` comments below, so this list cannot go stale.
 help:
-	@echo "Poopita — iOS app (apps/ios/)"
+	@echo "Poopita — iOS app (apps/ios/) and website (apps/web/)"
 	@echo
 	@grep -E '^[a-z-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -66,3 +67,20 @@ ios-run: ios-build ios-storage-smoke ## Build, check storage, install, and launc
 
 ios-validate: ios-format ios-lint ios-test ios-build ## format → lint → test → build
 	@echo "✅ iOS OK — format, lint, test, build all green"
+
+# ------------------------------------------------------------------- Web
+
+web-install: ## Install website dependencies with Bun
+	bun install --frozen-lockfile
+
+web-dev: ## Run the website locally at http://localhost:4321
+	bun run --cwd apps/web dev
+
+web-format: ## Format website sources with oxfmt
+	bun run format
+
+web-validate: ## format check → lint → typecheck → theme check → test → build
+	bun run validate
+
+web-preview: ## Build and serve the site through the Cloudflare Worker runtime
+	bun run --cwd apps/web preview

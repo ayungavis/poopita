@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+import type { Seo } from "../lib/seo";
+
+interface Props {
+  seo: Seo;
+}
+
+const { seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang={seo.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F6F7F8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15191C" media="(prefers-color-scheme: dark)" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <link rel="canonical" href={seo.canonical} />
+    {seo.alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />)}
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Poopita" />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:url" content={seo.canonical} />
+    <meta property="og:image" content={seo.imageUrl} />
+    <meta property="og:image:alt" content={seo.imageAlt} />
+    <meta property="og:locale" content={seo.ogLocale} />
+    {seo.ogLocaleAlternates.map((locale) => <meta property="og:locale:alternate" content={locale} />)}
+    <meta name="twitter:card" content="summary" />
+    {seo.appStoreId !== undefined && <meta name="apple-itunes-app" content={`app-id=${seo.appStoreId}`} />}
+    {seo.jsonLd !== undefined && <script type="application/ld+json" set:html={seo.jsonLd} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

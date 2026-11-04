@@ -56,6 +56,26 @@ Apple-side prerequisites (team `QHL64K2LPL`):
 2. Create the app record in App Store Connect with that bundle ID.
 3. Create an **App Store Connect** provisioning profile for it named exactly `Poopita Apple Distribution`, signed by the Apple Distribution certificate in the `.p12`.
 
+## Website
+
+`apps/web` is the static site at https://poopita.ayungavis.com (landing, privacy, support, terms in English and Bahasa Indonesia). Astro renders Astryx React components to HTML at build time, so pages ship no JavaScript. It is served by a Cloudflare Worker with static assets.
+
+```bash
+make web-install    # bun install
+make web-dev        # http://localhost:4321
+make web-validate   # oxfmt check → oxlint → astro check → theme drift check → bun test → build
+```
+
+Copy lives in `apps/web/src/i18n/messages/{en,id}.ts`; the `Messages` type keeps both languages in step and `tests/messages.test.ts` checks list lengths. After editing `src/themes/poopitaTheme.ts`, run `bun run --cwd apps/web theme:build` and commit the generated files.
+
+`.github/workflows/web.yml` validates every pull request and deploys `main` to Cloudflare. GitHub → Settings → Secrets and variables → Actions:
+
+| Name | Kind | Value |
+| --- | --- | --- |
+| `CLOUDFLARE_API_TOKEN` | secret | Cloudflare → My Profile → API Tokens → "Edit Cloudflare Workers" template, limited to your account and the `ayungavis.com` zone |
+| `CLOUDFLARE_ACCOUNT_ID` | variable | Cloudflare dashboard → Workers & Pages → Account ID |
+| `APP_STORE_ID` | variable | Optional. The numeric Apple ID from App Store Connect; turns "Coming soon" into a download button and adds the Smart App Banner |
+
 ## Architecture
 
 MVVM + `@Observable`, dependencies injected through `AppContainer`.
