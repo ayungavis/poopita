@@ -38,8 +38,8 @@ struct TodayTimelineView: View {
                 .alignmentGuide(VerticalAlignment.top) { $0.height / 2 }
                 .offset(y: offset(hour.minute))
             }
-            if let since = timeline.sinceLast, let now = timeline.now {
-                sinceLastView(since, height: sinceBottom(now) - sinceTop).offset(y: sinceTop)
+            if let since = timeline.sinceLast, let now = timeline.now, fitsSinceCard(now) {
+                sinceLastView(since, height: offset(now.minute) - sinceTop).offset(y: sinceTop)
             }
             Group {
                 ForEach(Array(zip(timeline.blocks, blockTops)), id: \.0.id) { block, top in
@@ -54,9 +54,7 @@ struct TodayTimelineView: View {
                 }
             }
             .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: timeline.blocks.map(\.id))
-            if timeline.sinceLast != nil, let now = timeline.now {
-                nowLine(now).offset(y: sinceBottom(now))
-            } else if let now = timeline.now {
+            if let now = timeline.now {
                 nowLine(now).offset(y: offset(now.minute))
             }
         }
@@ -72,19 +70,15 @@ struct TodayTimelineView: View {
     }
 
     private var contentBottom: CGFloat {
-        var bottom = max(offset(timeline.endMinute), (blockTops.last ?? 0) + blockHeight)
-        if timeline.sinceLast != nil, let now = timeline.now {
-            bottom = max(bottom, sinceBottom(now))
-        }
-        return bottom
+        max(offset(timeline.endMinute), (blockTops.last ?? 0) + blockHeight)
     }
 
     private var sinceTop: CGFloat {
         blockTops.last ?? 0
     }
 
-    private func sinceBottom(_ now: TodayTimelineMarkViewData) -> CGFloat {
-        max(offset(now.minute), sinceTop + blockHeight * 2 + Spacing.xs)
+    private func fitsSinceCard(_ now: TodayTimelineMarkViewData) -> Bool {
+        offset(now.minute) - sinceTop >= blockHeight * 2 + Spacing.xs
     }
 
     private func offset(_ minute: Int) -> CGFloat {

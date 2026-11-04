@@ -243,8 +243,10 @@ final class HistoryViewModel {
         )
     }
 
-    private static func weekdays(_ calendar: Calendar) -> [String] {
-        let symbols = calendar.veryShortStandaloneWeekdaySymbols
+    static func weekdays(_ calendar: Calendar, locale: Locale = .current) -> [String] {
+        var localized = calendar
+        localized.locale = locale
+        let symbols = localized.veryShortStandaloneWeekdaySymbols
         return Array(symbols.dropFirst(calendar.firstWeekday - 1) + symbols.prefix(calendar.firstWeekday - 1))
     }
 

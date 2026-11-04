@@ -4,6 +4,15 @@ import Testing
 
 @MainActor
 struct HistoryFlowTests {
+    @Test(arguments: [
+        ("en", ["M", "T", "W", "T", "F", "S", "S"]),
+        ("id", ["S", "S", "R", "K", "J", "S", "M"]),
+    ])
+    func weekdayHeaderFollowsTheAppLanguageFromMonday(language: String, expected: [String]) {
+        let calendar = TodayViewModel.calendar(.gmt)
+        #expect(HistoryViewModel.weekdays(calendar, locale: Locale(identifier: language)) == expected)
+    }
+
     @Test func monthCalendarSeparatesAllDayStatesAndKeepsMultipleEntries() throws {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
         let today = try date("2026-10-20T12:00:00Z")

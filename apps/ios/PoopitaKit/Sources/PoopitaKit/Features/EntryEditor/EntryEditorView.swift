@@ -5,7 +5,6 @@ struct EntryEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: EntryEditorViewModel
-    @State private var confirmDiscard = false
     @State private var confirmDelete = false
     @AccessibilityFocusState private var summaryFocused: Bool
     let saved: () -> Void
@@ -21,7 +20,7 @@ struct EntryEditorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            EntryEditorHeaderView(viewModel: viewModel, close: close)
+            EntryEditorHeaderView(viewModel: viewModel) { dismiss() }
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: Spacing.xl) {
@@ -31,6 +30,16 @@ struct EntryEditorView: View {
                                 Text("entry.delete", bundle: .module)
                                     .font(AppFont.body.weight(.medium)).foregroundStyle(AppColor.destructive)
                                     .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
+                            }
+                            .confirmationDialog(Text("entry.deleteQuestion", bundle: .module), isPresented: $confirmDelete) {
+                                Button(role: .destructive) {
+                                    if delete() {
+                                        dismiss()
+                                    }
+                                } label: {
+                                    Text("entry.delete", bundle: .module)
+                                }
+                                Button(role: .cancel) {} label: { Text("entry.cancel", bundle: .module) }
                             }
                         }
                         if let deletionError {
@@ -56,20 +65,6 @@ struct EntryEditorView: View {
         }
         .background(AppColor.background)
         .sensoryFeedback(.error, trigger: viewModel.missingFields) { _, missing in !missing.isEmpty }
-        .confirmationDialog(Text("entry.discardQuestion", bundle: .module), isPresented: $confirmDiscard) {
-            Button(role: .destructive) { dismiss() } label: { Text("entry.discard", bundle: .module) }
-            Button(role: .cancel) {} label: { Text("entry.keepEditing", bundle: .module) }
-        }
-        .confirmationDialog(Text("entry.deleteQuestion", bundle: .module), isPresented: $confirmDelete) {
-            Button(role: .destructive) {
-                if delete() {
-                    dismiss()
-                }
-            } label: {
-                Text("entry.delete", bundle: .module)
-            }
-            Button(role: .cancel) {} label: { Text("entry.cancel", bundle: .module) }
-        }
         .tint(AppColor.accent)
         .privacySensitive()
     }
@@ -95,13 +90,5 @@ struct EntryEditorView: View {
         .padding(.top, Spacing.md)
         .background(AppColor.background)
         .overlay(alignment: .top) { AppColor.hairline.frame(height: Spacing.borderWidth) }
-    }
-
-    private func close() {
-        if viewModel.hasChanges {
-            confirmDiscard = true
-        } else {
-            dismiss()
-        }
     }
 }

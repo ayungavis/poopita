@@ -82,6 +82,19 @@ struct TodayTimelineTests {
         #expect(TodayViewModel.sinceLastLog(last, now: Self.now, calendar: TodayViewModel.calendar(.gmt)) == expected)
     }
 
+    @Test func hourLabelsNextToTheNowMarkStayBlankSoTheyNeverOverlap() throws {
+        let (entries, checkIns) = try Self.week()
+        let timeline = try TodayViewModel.viewData(
+            entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt
+        ).timeline
+        let labels = Dictionary(uniqueKeysWithValues: timeline.hours.map { ($0.minute, $0.label) })
+
+        #expect(timeline.now?.minute == 581)
+        #expect(labels[600] == "")
+        #expect(labels[540]?.isEmpty == false)
+        #expect(timeline.hours.filter(\.label.isEmpty).map(\.minute) == [600])
+    }
+
     @Test func timelinePlacesLogsAtTheirTimeAndMeasuresFromTheLastOne() throws {
         let (entries, checkIns) = try Self.week()
         let data = try TodayViewModel.viewData(

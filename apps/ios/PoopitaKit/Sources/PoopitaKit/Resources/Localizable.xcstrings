@@ -1567,7 +1567,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipe"
+            "value" : "Jenis"
           }
         }
       }
@@ -2415,7 +2415,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipe 1–2 pada %@. Serat dan air yang lebih banyak sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
+            "value" : "Jenis 1–2 pada %@. Serat dan air yang lebih banyak sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
           }
         }
       }
@@ -2463,7 +2463,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipe 6–7 pada %@. Minum lebih banyak air sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
+            "value" : "Jenis 6–7 pada %@. Minum lebih banyak air sering membantu. Jika berlanjut lebih dari 3 minggu, sampaikan ke dokter Anda."
           }
         }
       }
@@ -4143,7 +4143,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ini berlaku setelah notifikasi diizinkan. Catatan apa pun, hari tanpa BAB, atau konfirmasi “belum sejauh ini” melewati pengingat hari itu."
+            "value" : "Ini berlaku setelah notifikasi diizinkan. Catatan apa pun, hari tanpa BAB, atau konfirmasi “Belum BAB” melewati pengingat hari itu."
           }
         }
       }

@@ -54,7 +54,7 @@ export const id: Messages = {
       sample: {
         time: "Selasa, 14 Oktober, 07.42",
         fields: [
-          { label: "Tipe", value: "4 · halus dan lunak" },
+          { label: "Jenis", value: "4 · halus dan lunak" },
           { label: "Jumlah", value: "Sedang" },
           { label: "Usaha", value: "Mudah" },
           { label: "Darah", value: "Tidak ada darah" },

@@ -3,8 +3,9 @@ import SwiftUI
 
 struct EntryEditorHeaderView: View {
     let viewModel: EntryEditorViewModel
-    let close: () -> Void
+    let dismiss: () -> Void
     @State private var picking: EntryWhenPickerView.Field?
+    @State private var confirmDiscard = false
 
     var body: some View {
         let labels = viewModel.whenLabels
@@ -22,6 +23,10 @@ struct EntryEditorHeaderView: View {
                         .background(AppColor.track, in: Circle())
                 }
                 .accessibilityLabel(Text("entry.close", bundle: .module))
+                .confirmationDialog(Text("entry.discardQuestion", bundle: .module), isPresented: $confirmDiscard) {
+                    Button(role: .destructive, action: dismiss) { Text("entry.discard", bundle: .module) }
+                    Button(role: .cancel) {} label: { Text("entry.keepEditing", bundle: .module) }
+                }
             }
             HStack(spacing: Spacing.sm) {
                 field(.date, icon: AppIcon.today, value: labels.date)
@@ -32,6 +37,14 @@ struct EntryEditorHeaderView: View {
         .padding(.top, Spacing.md)
         .padding(.bottom, Spacing.sm)
         .sheet(item: $picking) { EntryWhenPickerView(viewModel: viewModel, field: $0) }
+    }
+
+    private func close() {
+        if viewModel.hasChanges {
+            confirmDiscard = true
+        } else {
+            dismiss()
+        }
     }
 
     private func field(_ field: EntryWhenPickerView.Field, icon: Image, value: String) -> some View {

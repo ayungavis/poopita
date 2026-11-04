@@ -59,16 +59,20 @@ extension TodayViewModel {
         }
     }
 
+    static let nowLabelClearance = 20
+
     static func timeline(
         dayEntries: [DiaryEntry], isToday: Bool, now: Date, activeDate: Date, calendar: Calendar
     ) throws -> TodayTimelineViewData {
         let nowParts = calendar.dateComponents([.hour, .minute], from: now)
+        let nowMinute = (nowParts.hour ?? 0) * 60 + (nowParts.minute ?? 0)
         var hourStyle = Date.FormatStyle.dateTime.hour().minute()
         hourStyle.timeZone = calendar.timeZone
 
         let hours = (0 ..< 24).map { hour in
             let date = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: activeDate) ?? activeDate
-            return TodayTimelineHourViewData(minute: hour * 60, label: date.formatted(hourStyle))
+            let isUnderNow = isToday && abs(hour * 60 - nowMinute) < nowLabelClearance
+            return TodayTimelineHourViewData(minute: hour * 60, label: isUnderNow ? "" : date.formatted(hourStyle))
         }
         let blocks = try dayEntries.map { entry in
             try TodayTimelineBlockViewData(
@@ -76,9 +80,7 @@ extension TodayViewModel {
             )
         }
         let nowMark = isToday
-            ? TodayTimelineMarkViewData(
-                minute: (nowParts.hour ?? 0) * 60 + (nowParts.minute ?? 0), label: now.formatted(hourStyle)
-            )
+            ? TodayTimelineMarkViewData(minute: nowMinute, label: now.formatted(hourStyle))
             : nil
         let sinceLast: TodayTimelineMarkViewData? = if isToday, let entry = dayEntries.last, let block = blocks.last {
             sinceLastMark(entry: entry, block: block, now: now)
