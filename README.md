@@ -1,10 +1,44 @@
 # Poopita
 
-iOS app scaffold (`com.ayungavis.Poopita`), SwiftUI, iOS 27+, Swift 6. The local Swift package supports iOS 26+.
+A private poop and bowel diary for iPhone. Log each poop in seconds, see what is usual for you, and notice when it changes. Everything stays on your device.
 
-Encrypted backup is not implemented yet.
+[Website](https://poopita.ayungavis.com) · [Privacy policy](https://poopita.ayungavis.com/privacy/) · [Support](https://poopita.ayungavis.com/support/)
 
-## Setup
+**Status:** in development, coming soon to the App Store. Available in English and Bahasa Indonesia.
+
+## Features
+
+- **Log in seconds.** Bristol type, amount, effort and blood. Color, time on the toilet and a note are optional.
+- **Unknown is never zero.** Confirm a no-poop day with one tap; a day you did not record stays unknown instead of counting as zero.
+- **See what is usual for you.** Frequency, consistency and comfort by week, month or year, and what changed from your usual. No scores, no streaks.
+- **One quiet nudge.** An optional daily check-in, only on days you have not logged. The notification just says "Quick check-in".
+- **Locked when you want.** Face ID, Touch ID or passcode, and hidden in the app switcher.
+- **Share with your doctor.** Export a PDF or CSV, created on your iPhone and shared only where you choose.
+
+## Privacy
+
+Your diary is stored on your iPhone. There is no account, no server, no sync, no ads and no tracking. The only thing the app may send is an anonymous crash report with no diary content. Details are in the [privacy policy](https://poopita.ayungavis.com/privacy/).
+
+## Repository layout
+
+```
+apps/
+  ios/
+    project.yml        XcodeGen spec, the source of truth for the Xcode project
+    Poopita/           App target: entry point, assets, xcconfig files
+    PoopitaKit/        Swift package with the app code, design system and tests
+  web/                 Astro site for poopita.ayungavis.com
+```
+
+## Requirements
+
+- macOS with Xcode and the iOS 27 SDK (the app targets iOS 27; PoopitaKit builds for iOS 26+)
+- [Homebrew](https://brew.sh): `xcodegen`, `swiftlint`, `swiftformat`
+- [Bun](https://bun.sh) for the website
+
+## Getting started
+
+### iOS app
 
 ```bash
 brew install xcodegen swiftlint swiftformat
@@ -12,15 +46,52 @@ make ios-generate
 open apps/ios/Poopita.xcodeproj
 ```
 
-## Everyday commands
-
 ```bash
-make ios-test       # unit tests, no simulator
-make ios-run        # build + launch on the booted simulator
-make ios-validate   # format → lint → test → build; must be green before a PR
+make ios-test       # unit tests, no simulator needed
+make ios-run        # build, install and launch on the booted simulator
+make ios-validate   # format → lint → test → build
 ```
 
-## Configuration
+The Xcode project is generated from `apps/ios/project.yml` and is not committed. Per-machine overrides, such as your signing team, go in `apps/ios/Poopita/Config/Local.xcconfig`, which is gitignored.
+
+### Website
+
+```bash
+make web-install    # bun install
+make web-dev        # http://localhost:4321
+make web-validate   # format check → lint → typecheck → theme check → test → build
+```
+
+Copy lives in `apps/web/src/i18n/messages/{en,id}.ts`. After editing `apps/web/src/themes/poopitaTheme.ts`, run `bun run --cwd apps/web theme:build` and commit the generated files.
+
+Run `make` on its own to list every command.
+
+## Architecture
+
+- **iOS:** SwiftUI with MVVM and `@Observable`. Views read view data from a view model, view models talk to repositories, and repositories own the domain rules. Dependencies are injected through `AppContainer`. Tests use Swift Testing.
+- **Website:** Astro renders Astryx React components to static HTML. The only client JavaScript is a small header script and a theme script. It is served by a Cloudflare Worker with static assets.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a pull request:
+
+1. Run `make ios-validate` for app changes or `make web-validate` for website changes, and make sure it is green.
+2. Add or update tests for new logic.
+3. Keep facts on the website in line with the app and the privacy policy.
+
+Please do not include health details or personal data in issues. For security reports, email [wahyu@ayungavis.com](mailto:wahyu@ayungavis.com) instead of opening a public issue.
+
+## Roadmap
+
+- App Store release
+- Encrypted backup (not implemented yet)
+
+## Maintainers: CI and releases
+
+<details>
+<summary>Configuration, TestFlight and website deployment</summary>
+
+### App configuration
 
 Values flow `Config/*.xcconfig` → `Info.plist` → `Bundle.main`:
 
@@ -30,11 +101,9 @@ Values flow `Config/*.xcconfig` → `Info.plist` → `Bundle.main`:
 | `SENTRY_DSN` | unset (Sentry off) | passed to `xcodebuild` by CI |
 | `SENTRY_ENVIRONMENT` | `development` | `production` |
 
-Per-machine overrides (signing team, a device-reachable API URL) go in `apps/ios/Poopita/Config/Local.xcconfig`, which is gitignored.
+### TestFlight
 
-## TestFlight
-
-`.github/workflows/testflight.yml` archives, exports, and uploads to TestFlight on every push to `main` touching `apps/ios/**` (or a manual run). The build number is the workflow's run number; bump `MARKETING_VERSION` in `apps/ios/project.yml` per release.
+`.github/workflows/testflight.yml` archives, exports and uploads to TestFlight on every push to `main` that touches `apps/ios/**`, or on a manual run. The build number is the workflow's run number; bump `MARKETING_VERSION` in `apps/ios/project.yml` for each release.
 
 GitHub → Settings → Secrets and variables → Actions:
 
@@ -48,27 +117,17 @@ GitHub → Settings → Secrets and variables → Actions:
 | `API_BASE_URL` | secret | Production API base URL |
 | `SENTRY_DSN` | secret | Sentry DSN for the iOS project |
 
-Variables go in the **Variables** tab; the workflow fails fast naming any missing value.
+The workflow fails fast and names any missing value.
 
 Apple-side prerequisites (team `QHL64K2LPL`):
 
 1. Register the explicit bundle ID `com.ayungavis.Poopita` (Certificates, Identifiers & Profiles).
 2. Create the app record in App Store Connect with that bundle ID.
-3. Create an **App Store Connect** provisioning profile for it named exactly `Poopita Apple Distribution`, signed by the Apple Distribution certificate in the `.p12`.
+3. Create an **App Store Connect** provisioning profile named exactly `Poopita Apple Distribution`, signed by the Apple Distribution certificate in the `.p12`.
 
-## Website
+### Website deployment
 
-`apps/web` is the static site at https://poopita.ayungavis.com (landing, privacy, support, terms in English and Bahasa Indonesia). Astro renders Astryx React components to HTML at build time, so pages ship no JavaScript. It is served by a Cloudflare Worker with static assets.
-
-```bash
-make web-install    # bun install
-make web-dev        # http://localhost:4321
-make web-validate   # oxfmt check → oxlint → astro check → theme drift check → bun test → build
-```
-
-Copy lives in `apps/web/src/i18n/messages/{en,id}.ts`; the `Messages` type keeps both languages in step and `tests/messages.test.ts` checks list lengths. After editing `src/themes/poopitaTheme.ts`, run `bun run --cwd apps/web theme:build` and commit the generated files.
-
-`.github/workflows/web.yml` validates every pull request and deploys `main` to Cloudflare. GitHub → Settings → Secrets and variables → Actions:
+`.github/workflows/web.yml` validates every pull request and deploys `main` to Cloudflare.
 
 | Name | Kind | Value |
 | --- | --- | --- |
@@ -76,9 +135,7 @@ Copy lives in `apps/web/src/i18n/messages/{en,id}.ts`; the `Messages` type keeps
 | `CLOUDFLARE_ACCOUNT_ID` | variable | Cloudflare dashboard → Workers & Pages → Account ID |
 | `APP_STORE_ID` | variable | Optional. The numeric Apple ID from App Store Connect; turns "Coming soon" into a download button and adds the Smart App Banner |
 
-## Architecture
-
-MVVM + `@Observable`, dependencies injected through `AppContainer`.
+</details>
 
 ## License
 
