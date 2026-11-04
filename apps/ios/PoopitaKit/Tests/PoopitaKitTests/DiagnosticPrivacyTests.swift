@@ -28,7 +28,7 @@ struct DiagnosticPrivacyTests {
 
     #if os(macOS)
         @MainActor
-        @Test func sdkEnvelopeContainsNoSensitiveTextAfterScopeAndSDKProcessing() throws {
+        @Test func sdkEnvelopeContainsNoSensitiveTextAfterScopeAndSDKProcessing() async throws {
             let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString + " diagnostics")
             let server = StubServer()
             defer {
@@ -57,12 +57,32 @@ struct DiagnosticPrivacyTests {
             event.exceptions = [Exception(value: secret, type: secret)]
             let identifier = SentrySDK.capture(event: event)
             #expect(identifier != SentryId.empty)
-            SentrySDK.flush(timeout: 5)
-            let request = try #require(server.sent(to: "/api/1/envelope/").first)
+            let request = try #require(await Self.firstRequest(to: "/api/1/envelope/", from: server))
             let body = try Self.envelopeData(request.body)
             let payload = try #require(String(data: body, encoding: .utf8))
             #expect(payload.contains("Technical failure"))
             #expect(!payload.contains(secret))
+        }
+
+        private static func firstRequest(
+            to path: String,
+            from server: StubServer,
+            within timeout: Duration = .seconds(10)
+        ) async -> RecordedRequest? {
+            let clock = ContinuousClock()
+            let deadline = clock.now.advanced(by: timeout)
+            while clock.now < deadline {
+                SentrySDK.flush(timeout: 1)
+                if let request = server.sent(to: path).first {
+                    return request
+                }
+                do {
+                    try await clock.sleep(for: .milliseconds(100))
+                } catch {
+                    return nil
+                }
+            }
+            return server.sent(to: path).first
         }
 
         private static func envelopeData(_ data: Data) throws -> Data {
