@@ -1,25 +1,25 @@
 ---
 import { APP_STORE_ID } from "astro:env/server";
-import { LegalPage } from "../../components/LegalPage";
+import { LandingPage } from "../../components/LandingPage";
+import { appStoreUrl } from "../../config/site";
 import { messagesFor } from "../../i18n";
-import { parseLocale } from "../../i18n/locales";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { localeStaticPaths } from "../../lib/routes";
+import { localeFromParam, localeStaticPaths } from "../../lib/routes";
 import { seoFor } from "../../lib/seo";
 
 export const getStaticPaths = localeStaticPaths;
 
-const locale = parseLocale(Astro.params.locale);
+const locale = localeFromParam(Astro.params.locale);
 const messages = messagesFor(locale);
 const seo = seoFor({
   locale,
-  page: "terms",
-  meta: messages.terms.meta,
+  page: "home",
+  meta: messages.landing.meta,
   imageAlt: messages.landing.hero.iconAlt,
   appStoreId: APP_STORE_ID,
 });
 ---
 
 <BaseLayout seo={seo}>
-  <LegalPage locale={locale} page="terms" common={messages.common} document={messages.terms} />
+  <LandingPage locale={locale} messages={messages} appStoreUrl={appStoreUrl(APP_STORE_ID)} />
 </BaseLayout>

@@ -1,5 +1,5 @@
 import { site } from "../config/site";
-import { defaultLocale, type Locale, locales } from "../i18n/locales";
+import { defaultLocale, type Locale, locales, parseLocale } from "../i18n/locales";
 
 export const pageIds = ["home", "privacy", "support", "terms"] as const;
 
@@ -18,7 +18,8 @@ export interface Alternate {
 }
 
 export function pathFor(locale: Locale, page: PageId): string {
-  return `/${locale}/${pageSlugs[page]}`;
+  const prefix = locale === defaultLocale ? "/" : `/${locale}/`;
+  return `${prefix}${pageSlugs[page]}`;
 }
 
 export function absoluteUrl(path: string): string {
@@ -33,5 +34,9 @@ export function alternatesFor(page: PageId): Alternate[] {
 }
 
 export function localeStaticPaths() {
-  return locales.map((locale) => ({ params: { locale } }));
+  return locales.map((locale) => ({ params: { locale: locale === defaultLocale ? undefined : locale } }));
+}
+
+export function localeFromParam(value: string | undefined): Locale {
+  return value === undefined ? defaultLocale : parseLocale(value);
 }

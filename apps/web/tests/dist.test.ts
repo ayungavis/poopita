@@ -24,9 +24,6 @@ function attributeValues(html: string, pattern: RegExp): string[] {
 
 function resolvesInDist(href: string): boolean {
   const path = href.split("#")[0] ?? "";
-  if (path === "/") {
-    return true;
-  }
   const target = join(distDir, path);
   return existsSync(path.endsWith("/") ? join(target, "index.html") : target);
 }
@@ -41,14 +38,14 @@ describe("built site", () => {
   test("builds every page in both languages plus a 404", () => {
     expect(pages.map((page) => page.name).toSorted()).toEqual([
       "404.html",
-      "en/index.html",
-      "en/privacy/index.html",
-      "en/support/index.html",
-      "en/terms/index.html",
       "id/index.html",
       "id/privacy/index.html",
       "id/support/index.html",
       "id/terms/index.html",
+      "index.html",
+      "privacy/index.html",
+      "support/index.html",
+      "terms/index.html",
     ]);
   });
 
@@ -61,7 +58,7 @@ describe("built site", () => {
   test.each(localizedPages)(
     "$name declares its language, title, description and canonical URL",
     ({ name, html }) => {
-      const locale = name.split("/")[0];
+      const locale = name.startsWith("id/") ? "id" : "en";
       expect(html).toContain(`<html lang="${locale}">`);
       expect(html).toMatch(/<title>[^<]+<\/title>/);
       expect(html).toMatch(/<meta name="description" content="[^"]+">/);
@@ -85,6 +82,10 @@ describe("built site", () => {
   test.each(pages)("$name gives every image an alt attribute", ({ html }) => {
     const images = html.match(/<img\b[^>]*>/g) ?? [];
     expect(images.filter((image) => !/\salt="/.test(image))).toEqual([]);
+  });
+
+  test("redirects old /en/ links to the unprefixed English pages", () => {
+    expect(readFileSync(join(distDir, "_redirects"), "utf8")).toContain("/en/* /:splat 301");
   });
 
   test("lists every localized page in the sitemap", () => {

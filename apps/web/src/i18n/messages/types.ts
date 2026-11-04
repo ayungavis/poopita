@@ -45,6 +45,7 @@ export interface Messages {
     switchLanguage: string;
     homeLabel: string;
     nav: { privacy: string; support: string; terms: string };
+    document: { inShort: string; onThisPage: string };
     store: { download: string; comingSoon: string };
     notFound: { title: string; body: string; home: string };
     footer: {

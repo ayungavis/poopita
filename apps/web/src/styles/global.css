@@ -4,6 +4,7 @@
 @import "../themes/poopita.css";
 @import "./calendar.css";
 @import "./landing.css";
+@import "./document.css";
 
 :root {
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);

@@ -9,6 +9,7 @@ export const en: Messages = {
     switchLanguage: "Bahasa Indonesia",
     homeLabel: "Poopita home",
     nav: { privacy: "Privacy", support: "Support", terms: "Terms" },
+    document: { inShort: "In short", onThisPage: "On this page" },
     store: {
       download: "Download on the App Store",
       comingSoon: "Coming soon to the App Store",
