@@ -58,6 +58,16 @@ struct SettingsFlowTests {
         #expect(try repository.checkIns().count == 1)
     }
 
+    @Test(arguments: [
+        ("en", "https://poopita.ayungavis.com/privacy/", "https://poopita.ayungavis.com/support/"),
+        ("id", "https://poopita.ayungavis.com/id/privacy/", "https://poopita.ayungavis.com/id/support/"),
+    ])
+    func linksOpenThePolicyAndSupportPagesInTheAppLanguage(code: String, privacy: String, support: String) throws {
+        let links = try #require(SettingsViewModel.links(languageCode: code))
+        #expect(links.privacyPolicy.absoluteString == privacy)
+        #expect(links.support.absoluteString == support)
+    }
+
     private func makeEntry(day: Date, zone: TimeZone) throws -> DiaryEntry {
         let occurrence = try OccurrenceTime(instant: day, timeZone: zone)
         return DiaryEntry(id: UUID(), occurrence: occurrence, stoolType: 4, amount: nil, effort: nil, note: "")

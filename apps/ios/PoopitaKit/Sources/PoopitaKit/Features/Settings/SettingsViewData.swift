@@ -6,6 +6,11 @@ struct SettingsViewData: Equatable, Sendable {
     let appearance: SettingsAppearanceViewData
 }
 
+struct SettingsLinksViewData: Equatable, Sendable {
+    let privacyPolicy: URL
+    let support: URL
+}
+
 struct SettingsAppearanceViewData: Equatable, Sendable {
     let themes: [SettingsChoiceViewData]
     let selectedThemeID: String

@@ -7,6 +7,7 @@ final class SettingsViewModel {
     private(set) var state: SettingsViewData
     private(set) var errorMessage: String?
     let footer: String
+    let links: SettingsLinksViewData?
     private let repository: any DiaryRepository
     private let undoModel: UndoModel
     private let appearance: AppearanceModel
@@ -30,6 +31,7 @@ final class SettingsViewModel {
         self.languageService = languageService
         self.now = now
         footer = Self.footer(version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String)
+        links = Self.links(languageCode: languageService.activeCode)
 
         state = Self.viewData(
             isAppLockEnabled: appLock.isEnabled,
@@ -182,6 +184,14 @@ extension SettingsViewModel {
     static func confirms(_ typed: String, word: String) -> Bool {
         let answer = typed.trimmingCharacters(in: .whitespacesAndNewlines)
         return answer.caseInsensitiveCompare(word) == .orderedSame
+    }
+
+    static func links(languageCode: String) -> SettingsLinksViewData? {
+        let prefix = languageCode == "id" ? "/id" : ""
+        guard let privacy = URL(string: "https://poopita.ayungavis.com\(prefix)/privacy/"),
+              let support = URL(string: "https://poopita.ayungavis.com\(prefix)/support/")
+        else { return nil }
+        return SettingsLinksViewData(privacyPolicy: privacy, support: support)
     }
 
     static func footer(version: String?) -> String {

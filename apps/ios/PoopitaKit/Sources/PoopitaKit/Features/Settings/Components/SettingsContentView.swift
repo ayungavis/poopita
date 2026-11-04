@@ -96,7 +96,30 @@ struct SettingsContentView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            if let links = viewModel.links {
+                CardDividerView()
+                linkRow("settings.help.privacy", url: links.privacyPolicy)
+                CardDividerView()
+                linkRow("settings.help.support", url: links.support)
+            }
         }
+    }
+
+    private func linkRow(_ title: LocalizedStringKey, url: URL) -> some View {
+        Link(destination: url) {
+            HStack(spacing: Spacing.sm) {
+                Text(title, bundle: .module)
+                    .foregroundStyle(AppColor.textPrimary)
+                Spacer(minLength: Spacing.md)
+                Image(systemName: "arrow.up.right")
+                    .font(AppFont.caption.weight(.semibold))
+                    .foregroundStyle(AppColor.textSecondary)
+                    .accessibilityHidden(true)
+            }
+            .cardRow()
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private var footer: some View {

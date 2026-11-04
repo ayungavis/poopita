@@ -30,6 +30,8 @@ struct TodayTimelineView: View {
                     Text(verbatim: hour.label)
                         .font(AppFont.caption)
                         .foregroundStyle(AppColor.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                         .frame(width: labelWidth, alignment: .leading)
                     Rectangle().fill(AppColor.hairline).frame(height: Spacing.borderWidth)
                 }
@@ -116,6 +118,8 @@ struct TodayTimelineView: View {
             Text(verbatim: now.label)
                 .font(AppFont.caption.weight(.semibold))
                 .foregroundStyle(AppColor.destructive)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .frame(width: labelWidth - Spacing.sm, alignment: .leading)
             Circle().fill(AppColor.destructive).frame(
                 width: Spacing.xs + Spacing.borderWidth,

@@ -4692,86 +4692,6 @@
         }
       }
     },
-    "settings.backup.explainer1" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign into your backup account and use your separately stored recovery key to restore your diary."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Masuk ke akun cadangan Anda dan gunakan kunci pemulihan yang disimpan terpisah untuk memulihkan catatan."
-          }
-        }
-      }
-    },
-    "settings.backup.explainer2" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep the key somewhere safe. Losing both your phone and the key makes encrypted history unrecoverable."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simpan kunci di tempat yang aman. Kehilangan ponsel dan kunci membuat riwayat terenkripsi tidak dapat dipulihkan."
-          }
-        }
-      }
-    },
-    "settings.backup.howItWorks" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How recovery will work"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cara pemulihan bekerja"
-          }
-        }
-      }
-    },
-    "settings.backup.notSetUp" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not set up"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum diatur"
-          }
-        }
-      }
-    },
-    "settings.backup.title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Private backup"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cadangan pribadi"
-          }
-        }
-      }
-    },
     "settings.data.deleteAll" : {
       "localizations" : {
         "en" : {
@@ -5287,6 +5207,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Panduan skala Bristol"
+          }
+        }
+      }
+    },
+    "settings.help.privacy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy policy"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kebijakan privasi"
+          }
+        }
+      }
+    },
+    "settings.help.support" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bantuan"
           }
         }
       }
