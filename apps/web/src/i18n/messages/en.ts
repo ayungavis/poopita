@@ -25,7 +25,7 @@ export const en: Messages = {
     footer: {
       tagline: "Your diary never leaves your iPhone.",
       source: "Source code",
-      madeBy: `Made in Indonesia by ${site.owner}`,
+      madeBy: "Made in Indonesia by",
       writeTo: "Questions, bugs or ideas",
       openSource: `Open source under ${site.licenseName}`,
       trademark: "Apple, the Apple logo, iPhone and App Store are trademarks of Apple Inc.",

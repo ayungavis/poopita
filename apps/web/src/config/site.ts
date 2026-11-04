@@ -2,6 +2,7 @@ export const site = {
   name: "Poopita",
   origin: "https://poopita.ayungavis.com",
   owner: "Wahyu Adi Kurniawan",
+  ownerUrl: "https://ayungavis.com",
   supportEmail: "wahyu@ayungavis.com",
   sourceUrl: "https://github.com/ayungavis/poopita",
   licenseName: "Apache-2.0",

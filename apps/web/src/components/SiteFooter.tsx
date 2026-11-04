@@ -37,7 +37,10 @@ export function SiteFooter({ locale, common }: SiteFooterProps) {
             {site.supportEmail}
           </a>
           <Text as="p" type="supporting">
-            {footer.madeBy}
+            {footer.madeBy}{" "}
+            <a className="footer-owner" href={site.ownerUrl}>
+              {site.owner}
+            </a>
           </Text>
         </div>
         <ul className="footer-nav">

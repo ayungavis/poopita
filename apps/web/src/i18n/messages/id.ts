@@ -26,7 +26,7 @@ export const id: Messages = {
     footer: {
       tagline: "Catatan Anda tidak pernah keluar dari iPhone Anda.",
       source: "Kode sumber",
-      madeBy: `Dibuat di Indonesia oleh ${site.owner}`,
+      madeBy: "Dibuat di Indonesia oleh",
       writeTo: "Pertanyaan, bug, atau ide",
       openSource: `Sumber terbuka dengan lisensi ${site.licenseName}`,
       trademark: "Apple, logo Apple, iPhone, dan App Store adalah merek dagang Apple Inc.",
