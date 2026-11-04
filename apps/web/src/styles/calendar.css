@@ -1,4 +1,5 @@
 .calendar {
+  --calendar-paper: var(--color-background-surface);
   margin: 0;
   overflow: clip;
   padding: clamp(var(--spacing-3), 3vw, var(--spacing-6));
@@ -98,11 +99,14 @@
 }
 
 .day[data-kind="unknown"] {
-  background-image: repeating-linear-gradient(
-    135deg,
-    color-mix(in oklch, var(--poopita-marker) 45%, transparent) 0 1.5px,
-    transparent 1.5px 7px
-  );
+  background-image: repeating-linear-gradient(135deg, var(--poopita-stripe) 0 1.5px, transparent 1.5px 7px);
+}
+
+.day[data-kind="unknown"] .day-number {
+  padding-inline: 4px;
+  border-radius: 4px;
+  background: var(--calendar-paper);
+  color: var(--color-text-primary);
 }
 
 .day[data-kind="untracked"] .day-number,

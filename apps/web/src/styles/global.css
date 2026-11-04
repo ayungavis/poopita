@@ -12,6 +12,13 @@
   interpolate-size: allow-keywords;
 }
 
+[data-astryx-theme] {
+  --poopita-stripe: light-dark(
+    color-mix(in oklch, var(--poopita-marker) 62%, transparent),
+    color-mix(in oklch, var(--poopita-marker) 75%, transparent)
+  );
+}
+
 :root {
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-reveal: 700ms;
@@ -163,5 +170,18 @@ body {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .site-header {
+    position: static;
   }
 }

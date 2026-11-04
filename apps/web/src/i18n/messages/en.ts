@@ -23,7 +23,7 @@ export const en: Messages = {
       note: "Striped days weren't recorded, so Poopita shows them as unknown, never as zero. This page is one of those.",
     },
     footer: {
-      tagline: "Your poop, your business.",
+      tagline: "Your diary never leaves your iPhone.",
       source: "Source code",
       madeBy: `Made in Indonesia by ${site.owner}`,
       writeTo: "Questions, bugs or ideas",

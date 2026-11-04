@@ -24,7 +24,7 @@ export const id: Messages = {
       note: "Hari bergaris tidak dicatat, jadi Poopita menampilkannya sebagai tidak diketahui, bukan nol. Halaman ini salah satunya.",
     },
     footer: {
-      tagline: "BAB Anda, urusan Anda.",
+      tagline: "Catatan Anda tidak pernah keluar dari iPhone Anda.",
       source: "Kode sumber",
       madeBy: `Dibuat di Indonesia oleh ${site.owner}`,
       writeTo: "Pertanyaan, bug, atau ide",

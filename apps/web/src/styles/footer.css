@@ -85,7 +85,7 @@
 }
 
 .footer-tagline {
-  grid-column: span 2;
+  grid-column: span 3;
   color: var(--poopita-on-band);
   display: flex;
   align-items: center;
@@ -97,7 +97,7 @@
 
 .footer-contact {
   display: grid;
-  grid-column: span 2;
+  grid-column: span 1;
   gap: var(--spacing-2);
   align-content: start;
   border-inline-start: 1px solid var(--footer-line);

@@ -125,6 +125,7 @@
 }
 
 .stage .calendar {
+  --calendar-paper: var(--poopita-stage-paper);
   border-color: transparent;
   background: var(--poopita-stage-paper);
   color: var(--color-text-primary);
@@ -334,11 +335,7 @@ a.pill:active {
 }
 
 .rhythm-cell[data-tone="unknown"] {
-  background-image: repeating-linear-gradient(
-    135deg,
-    color-mix(in oklch, var(--poopita-marker) 55%, transparent) 0 1.5px,
-    transparent 1.5px 6px
-  );
+  background-image: repeating-linear-gradient(135deg, var(--poopita-stripe) 0 1.5px, transparent 1.5px 6px);
 }
 
 .insight-sheet {
@@ -545,14 +542,6 @@ a.pill:active {
   letter-spacing: 0;
 }
 
-@media print {
-  .reveal,
-  .hero-calendar .calendar-grid,
-  .hero-calendar .calendar-grid .day {
-    animation: none;
-  }
-}
-
 @media (max-width: 860px) {
   .stage-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -654,11 +643,11 @@ a.pill:active {
     }
 
     .hero-calendar .calendar-head {
-      animation-name: day-recede;
+      animation-name: head-out;
       animation-fill-mode: both;
       animation-timing-function: linear;
       animation-timeline: --stage;
-      animation-range: exit 0% exit 25%;
+      animation-range: exit 0% exit 8%;
     }
 
     @keyframes calendar-zoom {
@@ -678,6 +667,12 @@ a.pill:active {
       }
     }
 
+    @keyframes head-out {
+      to {
+        opacity: 0;
+      }
+    }
+
     .reveal {
       animation-name: reveal;
       animation-fill-mode: both;
@@ -689,7 +684,60 @@ a.pill:active {
     @keyframes reveal {
       from {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(20px);
+      }
+    }
+
+    #log .day-large,
+    #days .calendar-weeks,
+    #insights .insight-sheet {
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-timeline: view();
+    }
+
+    #log .day-large {
+      transform-origin: 100% 100%;
+      animation-name: day-arrive;
+      animation-range: entry 0% cover 45%;
+    }
+
+    @keyframes day-arrive {
+      from {
+        opacity: 0;
+        scale: 2.2;
+        translate: -10% -50%;
+      }
+
+      30% {
+        opacity: 1;
+      }
+    }
+
+    #days .calendar-weeks {
+      animation-name: rows-wipe;
+      animation-range: entry 20% cover 45%;
+    }
+
+    @keyframes rows-wipe {
+      from {
+        clip-path: inset(0 0 100% 0 round 20px);
+      }
+
+      to {
+        clip-path: inset(0 0 0 0 round 20px);
+      }
+    }
+
+    #insights .insight-sheet {
+      animation-name: settle-in;
+      animation-range: entry 10% cover 40%;
+    }
+
+    @keyframes settle-in {
+      from {
+        opacity: 0;
+        scale: 0.94;
       }
     }
 
