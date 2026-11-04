@@ -23,7 +23,10 @@ export const en: Messages = {
       note: "Striped days weren't recorded, so Poopita shows them as unknown, never as zero. This page is one of those.",
     },
     footer: {
-      contact: "Contact",
+      tagline: "Your poop, your business.",
+      source: "Source code",
+      madeBy: `Made in Indonesia by ${site.owner}`,
+      writeTo: "Questions, bugs or ideas",
       openSource: `Open source under ${site.licenseName}`,
       trademark: "Apple, the Apple logo, iPhone and App Store are trademarks of Apple Inc.",
       copyright: `© 2026 ${site.owner}`,

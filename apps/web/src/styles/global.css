@@ -6,6 +6,7 @@
 @import "./landing.css";
 @import "./document.css";
 @import "./theme-toggle.css";
+@import "./footer.css";
 
 :root {
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);

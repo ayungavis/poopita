@@ -24,7 +24,10 @@ export const id: Messages = {
       note: "Hari bergaris tidak dicatat, jadi Poopita menampilkannya sebagai tidak diketahui, bukan nol. Halaman ini salah satunya.",
     },
     footer: {
-      contact: "Kontak",
+      tagline: "BAB Anda, urusan Anda.",
+      source: "Kode sumber",
+      madeBy: `Dibuat di Indonesia oleh ${site.owner}`,
+      writeTo: "Pertanyaan, bug, atau ide",
       openSource: `Sumber terbuka dengan lisensi ${site.licenseName}`,
       trademark: "Apple, logo Apple, iPhone, dan App Store adalah merek dagang Apple Inc.",
       copyright: `© 2026 ${site.owner}`,

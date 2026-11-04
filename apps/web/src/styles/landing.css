@@ -536,53 +536,6 @@
   letter-spacing: 0;
 }
 
-.footer-card {
-  display: grid;
-  gap: var(--spacing-10);
-  margin-block: var(--spacing-6) var(--spacing-5);
-  padding: clamp(var(--spacing-6), 4vw, 56px);
-  border-radius: 28px;
-  background: var(--poopita-band);
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-3) var(--spacing-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.footer-links a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.footer-base {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--spacing-6);
-  align-items: end;
-}
-
-.footer-wordmark {
-  font-size: clamp(3.5rem, 11vw, 9rem);
-  font-weight: 300;
-  letter-spacing: -0.06em;
-  line-height: 0.8;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-.footer-meta {
-  display: grid;
-  gap: var(--spacing-1);
-}
-
 @media print {
   .reveal,
   .hero-calendar .calendar-grid,

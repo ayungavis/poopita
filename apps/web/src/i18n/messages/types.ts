@@ -50,7 +50,10 @@ export interface Messages {
     store: { download: string; comingSoon: string };
     notFound: { title: string; body: string; home: string; calendarLabel: string; note: string };
     footer: {
-      contact: string;
+      tagline: string;
+      source: string;
+      madeBy: string;
+      writeTo: string;
       openSource: string;
       trademark: string;
       copyright: string;
