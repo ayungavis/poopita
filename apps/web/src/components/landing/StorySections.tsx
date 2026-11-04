@@ -62,7 +62,9 @@ export function DaysSection({ locale, days }: { locale: Locale; days: Landing["d
             {comparison.rows.map((row, index) => (
               <tr key={row.situation}>
                 <th scope="row">{row.situation}</th>
-                <td className="compare-plain">{row.plain}</td>
+                <td className="compare-plain">
+                  <s className="strike">{row.plain}</s>
+                </td>
                 <td className="compare-poopita">
                   <span
                     className="legend-swatch day"

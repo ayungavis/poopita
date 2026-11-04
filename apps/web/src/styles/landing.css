@@ -160,6 +160,11 @@
   border-radius: 9999px;
   font-weight: 600;
   text-decoration: none;
+  transition: scale 150ms var(--ease-settle);
+}
+
+a.pill:active {
+  scale: 0.97;
 }
 
 .pill[data-tone="solid"],
@@ -497,8 +502,12 @@
   color: var(--color-text-secondary);
   font-size: clamp(1.125rem, 1.8vw, 1.5rem);
   font-weight: 300;
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
+}
+
+.strike {
+  background: linear-gradient(currentcolor, currentcolor) no-repeat 0 55% / 100% 1px;
+  text-decoration: none;
+  box-decoration-break: clone;
 }
 
 .compare-poopita {
@@ -612,6 +621,17 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .hero-calendar .day > :not(.day-number) {
+    animation: mark-in 360ms var(--ease-settle) calc(var(--i, 0) * 18ms) both;
+  }
+
+  @keyframes mark-in {
+    from {
+      opacity: 0;
+      translate: 0 4px;
+    }
+  }
+
   @supports (animation-timeline: view()) {
     .stage {
       view-timeline: --stage block;
@@ -670,6 +690,39 @@
       from {
         opacity: 0;
         transform: translateY(40px);
+      }
+    }
+
+    .compare tbody tr {
+      view-timeline: --row block;
+    }
+
+    .strike {
+      animation-name: strike-draw;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-timeline: --row;
+      animation-range: entry 100% cover 45%;
+    }
+
+    @keyframes strike-draw {
+      from {
+        background-size: 0% 1px;
+      }
+    }
+
+    .reminder-scene .notification {
+      animation-name: drop-in;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-timeline: view();
+      animation-range: cover 12% cover 38%;
+    }
+
+    @keyframes drop-in {
+      from {
+        opacity: 0;
+        translate: 0 -24px;
       }
     }
   }

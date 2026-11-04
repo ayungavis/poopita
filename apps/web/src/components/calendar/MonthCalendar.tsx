@@ -54,7 +54,7 @@ export function MonthCalendar({ locale, label, weeks, showMonth = true, classNam
         </span>
       </div>
       <div className="calendar-grid" style={focusOrigin} aria-hidden>
-        {shownCells.map((cell) =>
+        {shownCells.map((cell, index) =>
           cell.day === null ? (
             <span key={cell.key} className="day" data-kind="blank" />
           ) : (
@@ -64,6 +64,7 @@ export function MonthCalendar({ locale, label, weeks, showMonth = true, classNam
               data-kind={cell.mark.kind}
               data-today={cell.day === today ? "" : undefined}
               data-focus={cell.day === focusDay ? "" : undefined}
+              style={{ "--i": index } as CSSProperties}
             >
               <span className="day-number">{cell.day}</span>
               <DayMarkGlyph mark={cell.mark} />

@@ -9,6 +9,10 @@
 @import "./footer.css";
 
 :root {
+  interpolate-size: allow-keywords;
+}
+
+:root {
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-reveal: 700ms;
   --measure: 68ch;
@@ -114,6 +118,18 @@ body {
 
 .faq-item[open] > summary::after {
   content: "–";
+}
+
+.faq-item::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 220ms var(--ease-settle),
+    content-visibility 220ms allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
 }
 
 .faq-item > summary:focus-visible,
