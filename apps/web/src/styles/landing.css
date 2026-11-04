@@ -563,6 +563,22 @@ a.pill:active {
 }
 
 @media (max-width: 640px) {
+  .manifesto-line {
+    display: grid;
+    gap: var(--spacing-6);
+    justify-items: start;
+  }
+
+  .manifesto-line .display-manifesto {
+    display: block;
+  }
+
+  .manifesto-line .pill {
+    vertical-align: baseline;
+  }
+}
+
+@media (max-width: 640px) {
   .compare thead {
     display: none;
   }
