@@ -20,7 +20,7 @@ export function WhySection({ why }: { why: Messages["landing"]["why"] }) {
           </li>
         ))}
       </ol>
-      <Text as="p" type="supporting" textWrap="pretty" className="why-note">
+      <Text as="p" type="supporting" textWrap="balance" className="why-note">
         {why.note}
       </Text>
     </section>

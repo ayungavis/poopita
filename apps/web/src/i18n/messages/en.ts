@@ -116,7 +116,7 @@ export const en: Messages = {
       items: [
         {
           title: "Know your usual",
-          body: "Everyone's normal is different. A few weeks of notes shows what yours looks like.",
+          body: "Everyone's normal is different. A few weeks of notes show what yours looks like.",
         },
         {
           title: "Notice changes",
@@ -127,7 +127,7 @@ export const en: Messages = {
           body: "When a doctor asks how often, and since when, you have the answer, plus a PDF to show.",
         },
       ],
-      note: "Poopita doesn't diagnose. See a doctor about blood, black, red or pale stool, or a change that doesn't go away.",
+      note: "See a doctor about blood, black, red or pale stool, or a change that doesn't go away.",
     },
     limits: {
       title: "Honest limits",

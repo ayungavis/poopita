@@ -18,6 +18,10 @@
   gap: var(--spacing-8);
 }
 
+.why.chapter {
+  padding-block-end: clamp(var(--spacing-6), 6vh, 72px);
+}
+
 .why-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
@@ -25,24 +29,14 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: why;
 }
 
 .why-list li {
   display: grid;
   gap: var(--spacing-2);
   align-content: start;
-  padding-block-start: var(--spacing-4);
-  border-block-start: 1px solid var(--color-border);
-  counter-increment: why;
-}
-
-.why-list li::before {
-  content: "0" counter(why);
-  color: var(--color-text-secondary);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
+  padding-inline-start: var(--spacing-4);
+  border-inline-start: 2px solid var(--poopita-marker);
 }
 
 .why-list .why-item-title {

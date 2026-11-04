@@ -116,7 +116,7 @@ export const id: Messages = {
       title: "Kenapa perlu mencatat BAB?",
       items: [
         {
-          title: "Kenali normal Anda",
+          title: "Kenali pola normal Anda",
           body: "Normal setiap orang berbeda. Catatan beberapa minggu menunjukkan seperti apa normal Anda.",
         },
         {
@@ -125,10 +125,10 @@ export const id: Messages = {
         },
         {
           title: "Bawa fakta, bukan tebakan",
-          body: "Saat dokter bertanya seberapa sering dan sejak kapan, Anda punya jawabannya, juga PDF untuk ditunjukkan.",
+          body: "Saat dokter bertanya seberapa sering dan sejak kapan, Anda punya jawabannya, lengkap dengan PDF untuk ditunjukkan.",
         },
       ],
-      note: "Poopita tidak mendiagnosis. Temui dokter jika ada darah, tinja hitam, merah, atau pucat, atau perubahan yang tidak kunjung hilang.",
+      note: "Temui dokter jika tinja berdarah atau berwarna hitam, merah, atau pucat, atau jika ada perubahan yang tidak kunjung membaik.",
     },
     limits: {
       title: "Batasan yang jujur",
