@@ -43,6 +43,8 @@ public enum SentryPrivacy {
         let result = Event(level: source.level)
         result.eventId = source.eventId
         result.timestamp = source.timestamp
+        result.releaseName = source.releaseName
+        result.dist = source.dist
         result.platform = "cocoa"
         result.tags = source.tags?.filter { key, value in
             key == "code" && Log.diagnosticCodes.contains(value)

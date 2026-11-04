@@ -26,6 +26,15 @@ struct DiagnosticPrivacyTests {
         #expect(callback(event)?.extra == nil)
     }
 
+    @Test func keepsTheAppVersionThePrivacyPolicyPromises() {
+        let source = Event(level: .error)
+        source.releaseName = "com.ayungavis.Poopita@1.0+1"
+        source.dist = "1"
+        let sanitized = SentryPrivacy.event(source)
+        #expect(sanitized.releaseName == "com.ayungavis.Poopita@1.0+1")
+        #expect(sanitized.dist == "1")
+    }
+
     #if os(macOS)
         @MainActor
         @Test func sdkEnvelopeContainsNoSensitiveTextAfterScopeAndSDKProcessing() async throws {
