@@ -1,0 +1,117 @@
+:root[data-theme="light"] [data-astryx-theme] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] [data-astryx-theme] {
+  color-scheme: dark;
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.theme-toggle[hidden] {
+  display: none;
+}
+
+.theme-toggle:hover {
+  background: color-mix(in oklch, var(--color-text-primary) 6%, transparent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}
+
+.theme-icon {
+  inline-size: 18px;
+  block-size: 18px;
+  overflow: visible;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.theme-icon > * {
+  transform-origin: 12px 12px;
+  transition:
+    opacity 240ms var(--ease-settle),
+    scale 360ms var(--ease-settle),
+    rotate 360ms var(--ease-settle);
+}
+
+.theme-moon {
+  opacity: 0;
+  scale: 0.5;
+  rotate: -45deg;
+}
+
+.app-icon-pair {
+  display: inline-flex;
+}
+
+.app-icon[data-tone="dark"] {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-sun-core,
+:root[data-theme="dark"] .theme-sun-rays {
+  opacity: 0;
+  scale: 0.5;
+  rotate: 45deg;
+}
+
+:root[data-theme="dark"] .theme-moon {
+  opacity: 1;
+  scale: 1;
+  rotate: 0deg;
+}
+
+:root[data-theme="dark"] .app-icon[data-tone="light"] {
+  display: none;
+}
+
+:root[data-theme="dark"] .app-icon[data-tone="dark"] {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-sun-core,
+  :root:not([data-theme="light"]) .theme-sun-rays {
+    opacity: 0;
+    scale: 0.5;
+    rotate: 45deg;
+  }
+
+  :root:not([data-theme="light"]) .theme-moon {
+    opacity: 1;
+    scale: 1;
+    rotate: 0deg;
+  }
+
+  :root:not([data-theme="light"]) .app-icon[data-tone="light"] {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .app-icon[data-tone="dark"] {
+    display: block;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: var(--ease-settle);
+}

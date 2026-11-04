@@ -8,6 +8,7 @@ export default defineConfig({
   output: "static",
   trailingSlash: "always",
   build: { format: "directory", inlineStylesheets: "never" },
+  vite: { build: { assetsInlineLimit: 0 } },
   integrations: [
     react(),
     sitemap({

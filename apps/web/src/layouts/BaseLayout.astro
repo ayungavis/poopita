@@ -13,6 +13,7 @@ const { seo } = Astro.props;
 <html lang={seo.htmlLang}>
   <head>
     <meta charset="utf-8" />
+    <script is:inline src="/theme.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#F6F7F8" media="(prefers-color-scheme: light)" />
@@ -38,5 +39,12 @@ const { seo } = Astro.props;
   </head>
   <body>
     <slot />
+    <script>
+      import { hideHeaderOnScroll } from "../scripts/hideHeaderOnScroll";
+      import { setUpThemeToggle } from "../scripts/themeToggle";
+
+      hideHeaderOnScroll();
+      setUpThemeToggle();
+    </script>
   </body>
 </html>

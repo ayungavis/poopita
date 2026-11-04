@@ -10,6 +10,7 @@ export const id: Messages = {
     homeLabel: "Beranda Poopita",
     nav: { privacy: "Privasi", support: "Bantuan", terms: "Ketentuan" },
     document: { inShort: "Singkatnya", onThisPage: "Di halaman ini" },
+    darkTheme: "Tema gelap",
     store: {
       download: "Unduh di App Store",
       comingSoon: "Segera hadir di App Store",

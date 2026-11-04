@@ -45,7 +45,7 @@
 
 .doc-aside {
   position: sticky;
-  inset-block-start: var(--spacing-6);
+  inset-block-start: 88px;
 }
 
 .doc-toc {

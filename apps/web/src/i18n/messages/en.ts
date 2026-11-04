@@ -10,6 +10,7 @@ export const en: Messages = {
     homeLabel: "Poopita home",
     nav: { privacy: "Privacy", support: "Support", terms: "Terms" },
     document: { inShort: "In short", onThisPage: "On this page" },
+    darkTheme: "Dark theme",
     store: {
       download: "Download on the App Store",
       comingSoon: "Coming soon to the App Store",

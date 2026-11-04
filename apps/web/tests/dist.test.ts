@@ -49,9 +49,16 @@ describe("built site", () => {
     ]);
   });
 
-  test.each(pages)("$name ships no executable JavaScript", ({ html }) => {
-    const scriptTypes = attributeValues(html, /<script\b([^>]*)>/g);
-    expect(scriptTypes.every((attributes) => attributes.includes('type="application/ld+json"'))).toBe(true);
+  test.each(pages)("$name runs only the theme and header scripts, both from files", ({ html }) => {
+    const executable = attributeValues(html, /<script\b([^>]*)>/g).filter(
+      (attributes) => !attributes.includes('type="application/ld+json"'),
+    );
+    expect(executable).toHaveLength(2);
+    expect(executable[0]).toBe(' src="/theme.js"');
+    expect(executable[1]).toMatch(/^ type="module" src="\/_astro\/[^"]+\.js"$/);
+    expect(html.indexOf('src="/theme.js"')).toBeLessThan(html.indexOf("</head>"));
+    expect(existsSync(join(distDir, "theme.js"))).toBe(true);
+    expect(html).not.toMatch(/<script(?: type="module")?>/);
     expect(html).not.toMatch(/\son[a-z]+="/);
   });
 
@@ -86,6 +93,10 @@ describe("built site", () => {
 
   test("redirects old /en/ links to the unprefixed English pages", () => {
     expect(readFileSync(join(distDir, "_redirects"), "utf8")).toContain("/en/* /:splat 301");
+  });
+
+  test("lets the page load scripts from its own origin only", () => {
+    expect(readFileSync(join(distDir, "_headers"), "utf8")).toContain("script-src 'self';");
   });
 
   test("lists every localized page in the sitemap", () => {
