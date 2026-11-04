@@ -111,6 +111,24 @@ export const en: Messages = {
       policyLink: "Read the privacy policy",
       sourceLink: "Check the source code",
     },
+    why: {
+      title: "Why keep a poop diary?",
+      items: [
+        {
+          title: "Know your usual",
+          body: "Everyone's normal is different. A few weeks of notes shows what yours looks like.",
+        },
+        {
+          title: "Notice changes",
+          body: "Changes after new food, medication, travel or stress are easier to spot when they're written down.",
+        },
+        {
+          title: "Bring facts, not guesses",
+          body: "When a doctor asks how often, and since when, you have the answer, plus a PDF to show.",
+        },
+      ],
+      note: "Poopita doesn't diagnose. See a doctor about blood, black, red or pale stool, or a change that doesn't go away.",
+    },
     limits: {
       title: "Honest limits",
       items: [

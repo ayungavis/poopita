@@ -13,6 +13,49 @@
   font-weight: 400;
 }
 
+.why {
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+.why-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--spacing-6) var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: why;
+}
+
+.why-list li {
+  display: grid;
+  gap: var(--spacing-2);
+  align-content: start;
+  padding-block-start: var(--spacing-4);
+  border-block-start: 1px solid var(--color-border);
+  counter-increment: why;
+}
+
+.why-list li::before {
+  content: "0" counter(why);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.why-list .why-item-title {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.why-note {
+  max-inline-size: 40rem;
+}
+
 .limits {
   display: grid;
   gap: var(--spacing-8);

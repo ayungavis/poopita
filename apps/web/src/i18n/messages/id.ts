@@ -112,6 +112,24 @@ export const id: Messages = {
       policyLink: "Baca kebijakan privasi",
       sourceLink: "Periksa kode sumbernya",
     },
+    why: {
+      title: "Kenapa perlu mencatat BAB?",
+      items: [
+        {
+          title: "Kenali normal Anda",
+          body: "Normal setiap orang berbeda. Catatan beberapa minggu menunjukkan seperti apa normal Anda.",
+        },
+        {
+          title: "Sadari perubahan",
+          body: "Perubahan setelah makanan baru, obat, perjalanan, atau stres lebih mudah terlihat jika dicatat.",
+        },
+        {
+          title: "Bawa fakta, bukan tebakan",
+          body: "Saat dokter bertanya seberapa sering dan sejak kapan, Anda punya jawabannya, juga PDF untuk ditunjukkan.",
+        },
+      ],
+      note: "Poopita tidak mendiagnosis. Temui dokter jika ada darah, tinja hitam, merah, atau pucat, atau perubahan yang tidak kunjung hilang.",
+    },
     limits: {
       title: "Batasan yang jujur",
       items: [

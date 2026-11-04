@@ -4,6 +4,7 @@ import { ClosingSection, FaqSection, LimitsSection } from "./landing/ClosingSect
 import { Hero } from "./landing/Hero";
 import { PrivacySection } from "./landing/PrivacySection";
 import { DaysSection, InsightsSection, LogSection, RemindersSection } from "./landing/StorySections";
+import { WhySection } from "./landing/WhySection";
 import { SiteShell } from "./SiteShell";
 
 interface LandingPageProps {
@@ -19,6 +20,7 @@ export function LandingPage({ locale, messages, appStoreUrl }: LandingPageProps)
     <SiteShell locale={locale} page="home" common={common}>
       <Hero locale={locale} hero={landing.hero} store={common.store} appStoreUrl={appStoreUrl} />
       <LogSection log={landing.log} />
+      <WhySection why={landing.why} />
       <DaysSection locale={locale} days={landing.days} />
       <InsightsSection insights={landing.insights} />
       <RemindersSection reminders={landing.reminders} />

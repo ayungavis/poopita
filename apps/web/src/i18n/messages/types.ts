@@ -103,6 +103,7 @@ export interface Messages {
       policyLink: string;
       sourceLink: string;
     };
+    why: { title: string; items: readonly Item[]; note: string };
     limits: { title: string; items: readonly string[] };
     faq: { title: string; items: readonly Question[]; more: string };
     closing: { statement: string };
