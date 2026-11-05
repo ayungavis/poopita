@@ -71,4 +71,14 @@ struct PaletteContrastTests {
             #expect(ratio >= 3, "\(marker) on background (\(appearance)) is \(ratio)")
         }
     }
+
+    @Test func switchOnTrackSeparatesFromThumbAndSurface() throws {
+        for appearance in Appearance.allCases {
+            let track = try luminance("switchOn", appearance)
+            let thumbRatio = (1 + 0.05) / (track + 0.05)
+            #expect(thumbRatio >= 3, "white thumb on switchOn (\(appearance)) is \(thumbRatio)")
+            let surfaceRatio = try contrast("switchOn", on: "surface", appearance)
+            #expect(surfaceRatio >= 3, "switchOn on surface (\(appearance)) is \(surfaceRatio)")
+        }
+    }
 }

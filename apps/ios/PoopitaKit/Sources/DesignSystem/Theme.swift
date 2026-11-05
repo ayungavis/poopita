@@ -11,6 +11,7 @@ public enum AppColor {
     public static let onInk = Color("onInk", bundle: .module)
     public static let hairline = Color("hairline", bundle: .module)
     public static let track = Color("track", bundle: .module)
+    public static let switchOn = Color("switchOn", bundle: .module)
     public static let entry = Color("entry", bundle: .module)
     public static let marker = Color("marker", bundle: .module)
     public static let partial = Color("partial", bundle: .module)

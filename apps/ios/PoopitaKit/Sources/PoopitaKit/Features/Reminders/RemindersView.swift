@@ -50,7 +50,7 @@ struct RemindersView: View {
             Toggle(isOn: Binding(get: { data.isEnabled }, set: { viewModel.setEnabled($0) })) {
                 Text("reminders.remindMe", bundle: .module)
             }
-            .tint(AppColor.ink)
+            .tint(AppColor.switchOn)
             .cardRow()
             CardDividerView()
             DatePicker(
@@ -85,19 +85,19 @@ struct RemindersView: View {
             Toggle(isOn: Binding(get: { data.skipsLoggedDays }, set: { viewModel.setSkipsLoggedDays($0) })) {
                 Text("reminders.skip", bundle: .module)
             }
-            .tint(AppColor.ink)
+            .tint(AppColor.switchOn)
             .cardRow()
             CardDividerView()
             Toggle(isOn: Binding(get: { data.sendsWeeklySummary }, set: { viewModel.setSendsWeeklySummary($0) })) {
                 Text("reminders.weeklySummary", bundle: .module)
             }
-            .tint(AppColor.ink)
+            .tint(AppColor.switchOn)
             .cardRow()
             CardDividerView()
             Toggle(isOn: Binding(get: { data.alertsAfterGap }, set: { viewModel.setAlertsAfterGap($0) })) {
                 Text("reminders.gap", bundle: .module)
             }
-            .tint(AppColor.ink)
+            .tint(AppColor.switchOn)
             .cardRow()
         }
     }
