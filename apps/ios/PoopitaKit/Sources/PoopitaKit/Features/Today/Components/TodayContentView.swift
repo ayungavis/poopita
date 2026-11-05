@@ -27,6 +27,9 @@ struct TodayContentView: View {
                 }
             }
             .onAppear(perform: recenter)
+            .onChange(of: scroll.hidesHeader(ofHeight: headerHeight), initial: true) { _, isHidden in
+                isHeaderHidden = isHidden
+            }
             .onChange(of: viewModel.errorMessage) { _, message in
                 if let message {
                     AccessibilityNotification.Announcement(message).post()
@@ -77,16 +80,12 @@ struct TodayContentView: View {
                 contentHeight: geometry.contentSize.height
             )
         } action: { _, geometry in
+            guard scenePhase == .active else { return }
             updateScroll {
                 $0.offset = geometry.offset
                 $0.height = geometry.height
             }
             centerOnFocus()
-        }
-        .onScrollGeometryChange(for: Bool.self) { geometry in
-            geometry.contentOffset.y + geometry.contentInsets.top > headerHeight
-        } action: { _, isHidden in
-            isHeaderHidden = isHidden
         }
     }
 

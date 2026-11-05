@@ -29,6 +29,10 @@ struct TodayScrollState: Equatable {
         restart()
     }
 
+    func hidesHeader(ofHeight headerHeight: CGFloat) -> Bool {
+        offset > headerHeight
+    }
+
     mutating func restart() {
         requestedY = nil
         offsetAtRequest = nil

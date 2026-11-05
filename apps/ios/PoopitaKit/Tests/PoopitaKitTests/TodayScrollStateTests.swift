@@ -48,4 +48,12 @@ struct TodayScrollStateTests {
         state.focusY = 1000
         #expect(state.nextTarget() == 700)
     }
+
+    @Test func theHeaderCountsAsScrolledAwayOnlyOnceTheOffsetPassesIt() {
+        let state = TodayScrollState(offset: 120)
+
+        #expect(state.hidesHeader(ofHeight: 80))
+        #expect(!state.hidesHeader(ofHeight: 120))
+        #expect(!state.hidesHeader(ofHeight: 160))
+    }
 }
