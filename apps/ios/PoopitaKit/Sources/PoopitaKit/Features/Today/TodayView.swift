@@ -4,6 +4,7 @@ import SwiftUI
 struct TodayView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var viewModel: TodayViewModel
+    @State private var isHeaderHidden = false
     private let openSettings: () -> Void
 
     init(viewModel: TodayViewModel, openSettings: @escaping () -> Void) {
@@ -23,30 +24,20 @@ struct TodayView: View {
                 }
                 .padding(Spacing.lg)
             case let .loaded(data):
-                TodayContentView(viewModel: viewModel, data: data)
+                TodayContentView(viewModel: viewModel, data: data, isHeaderHidden: $isHeaderHidden)
             }
         }
         .background(AppColor.background)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            TodayTopBarView(data: loadedData, isCompact: isHeaderHidden, openSettings: openSettings)
+        }
+        .privacySensitive()
         #if os(iOS)
-            .toolbarBackground(AppColor.background, for: .navigationBar)
-            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+            .toolbarVisibility(.hidden, for: .navigationBar)
         #endif
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: openSettings) {
-                        AppIcon.settings
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Spacing.icon, height: Spacing.icon)
-                            .foregroundStyle(AppColor.textPrimary)
-                    }
-                    .accessibilityLabel(Text("settings.title", bundle: .module))
-                }
-            }
             .font(AppFont.body)
             .foregroundStyle(AppColor.textPrimary)
             .tint(AppColor.accent)
-            .privacySensitive()
             .task {
                 viewModel.load()
             }
@@ -58,5 +49,13 @@ struct TodayView: View {
                     viewModel.load()
                 }
             }
+    }
+
+    private var loadedData: TodayViewData? {
+        if case let .loaded(data) = viewModel.state {
+            data
+        } else {
+            nil
+        }
     }
 }

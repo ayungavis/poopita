@@ -5,7 +5,7 @@ struct TodayContentView: View {
     let viewModel: TodayViewModel
     let data: TodayViewData
     @State private var headerHeight: CGFloat = 0
-    @State private var isHeaderHidden = false
+    @Binding var isHeaderHidden: Bool
     @State private var position = ScrollPosition()
     @State private var scroll = TodayScrollState()
 
@@ -27,12 +27,6 @@ struct TodayContentView: View {
                 }
             }
             .onAppear(perform: recenter)
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    TodayToolbarTitleView(monthLabel: data.monthLabel, title: data.title, isCompact: isHeaderHidden)
-                }
-                .sharedBackgroundVisibility(.hidden)
-            }
             .onChange(of: viewModel.errorMessage) { _, message in
                 if let message {
                     AccessibilityNotification.Announcement(message).post()

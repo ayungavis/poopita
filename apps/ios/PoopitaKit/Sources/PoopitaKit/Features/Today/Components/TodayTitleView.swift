@@ -1,7 +1,7 @@
 import DesignSystem
 import SwiftUI
 
-struct TodayToolbarTitleView: View {
+struct TodayTitleView: View {
     let monthLabel: String
     let title: String
     let isCompact: Bool
