@@ -98,7 +98,7 @@ export const id: Messages = {
       items: [
         {
           title: "Tetap di iPhone ini",
-          body: "Catatan Anda disimpan di iPhone. Tidak ada server, tidak ada sinkronisasi, dan tidak ada yang diunggah.",
+          body: "Catatan Anda disimpan di iPhone. Tidak ada server dan tidak ada akun. Cadangan iCloud bersifat opsional dan dienkripsi sebelum keluar dari ponsel.",
         },
         { title: "Tanpa akun", body: "Tidak perlu mendaftar, tanpa email, tanpa kata sandi." },
         {
@@ -135,7 +135,7 @@ export const id: Messages = {
       title: "Batasan yang jujur",
       items: [
         "Poopita adalah catatan pribadi, bukan alat medis. Aplikasi ini tidak mendiagnosis atau mengobati apa pun. Jika ada yang mengkhawatirkan, bicarakan dengan dokter.",
-        "Cadangan adalah berkas yang Anda simpan sendiri; belum ada cadangan otomatis. Menghapus aplikasi berarti menghapus catatan, kecuali Anda sudah membuat cadangan atau punya cadangan iPhone.",
+        "Cadangan hanya dibuat jika Anda menyalakannya atau menyimpannya sendiri. Menghapus aplikasi berarti menghapus catatan, kecuali Anda punya cadangan Poopita atau cadangan iPhone, dan kunci pemulihan yang hilang tidak bisa diganti.",
       ],
     },
     faq: {
@@ -148,7 +148,7 @@ export const id: Messages = {
         {
           question: "Apakah pribadi?",
           answer: [
-            "Catatan Anda tidak pernah keluar dari iPhone. Satu-satunya yang pernah dikirim aplikasi adalah laporan crash anonim, tanpa isi catatan.",
+            "Catatan Anda tetap di iPhone. Aplikasi hanya mengirim laporan crash anonim, tanpa isi catatan. Jika Anda menyalakan cadangan iCloud, salinan terenkripsi disimpan di iCloud Drive Anda sendiri, dan hanya kunci pemulihan Anda yang bisa membukanya.",
           ],
         },
         { question: "Apakah perlu akun?", answer: ["Tidak. Buka aplikasinya dan mulai mencatat."] },
@@ -161,7 +161,7 @@ export const id: Messages = {
         {
           question: "Bagaimana jika ponsel saya hilang?",
           answer: [
-            "Pulihkan dari cadangan Poopita dengan kunci pemulihan Anda. Tanpa cadangan Poopita atau cadangan iPhone, catatan ikut hilang. Kami tidak pernah punya salinannya.",
+            "Pulihkan dari cadangan iCloud atau berkas dengan kunci pemulihan Anda. Tanpa cadangan Poopita atau cadangan iPhone, catatan ikut hilang. Kami tidak pernah punya salinannya.",
           ],
         },
       ],
@@ -196,9 +196,9 @@ export const id: Messages = {
         id: "on-your-device",
         heading: "Yang tetap di perangkat Anda",
         paragraphs: [
-          "Semua yang Anda masukkan ke Poopita tetap di iPhone Anda: catatan, konfirmasi tidak BAB, catatan singkat, pengingat, serta pengaturan kunci dan tampilan. Data itu tidak dikirim ke kami, ke iCloud, atau ke siapa pun, dan kami tidak dapat melihat, memulihkan, atau menghapusnya untuk Anda.",
+          "Semua yang Anda masukkan ke Poopita tetap di iPhone Anda: catatan, konfirmasi tidak BAB, catatan singkat, pengingat, serta pengaturan kunci dan tampilan. Data itu tidak dikirim ke kami atau ke siapa pun, dan kami tidak dapat melihat, memulihkan, atau menghapusnya untuk Anda.",
           "Ekspor (file CSV dan PDF untuk dokter) dibuat di iPhone Anda dan hanya dikirim ke tempat yang Anda pilih.",
-          "Cadangan dienkripsi di iPhone Anda dengan kunci pemulihan yang hanya Anda pegang. Anda yang memilih tempat menyimpan berkas cadangan, dan kami tidak pernah menerimanya. Tanpa kunci itu, tidak ada yang bisa membukanya, termasuk kami.",
+          "Cadangan dienkripsi di iPhone Anda dengan kunci pemulihan yang hanya Anda pegang. Jika Anda menyalakan cadangan iCloud, berkas terenkripsi disimpan di iCloud Drive Anda sendiri; jika tidak, Anda yang memilih tempatnya. Kami tidak pernah menerimanya, dan tanpa kunci itu tidak ada yang bisa membukanya, termasuk kami dan Apple.",
         ],
       },
       {

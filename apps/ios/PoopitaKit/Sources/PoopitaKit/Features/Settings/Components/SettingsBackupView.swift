@@ -8,6 +8,19 @@ struct SettingsBackupView: View {
     var body: some View {
         let data = backup.state
         CardSectionView("settings.backup.title", footnote: "settings.backup.footer") {
+            Toggle(isOn: Binding(get: { data.isAutomatic }, set: { isOn in Task { await backup.setAutomatic(isOn) } })) {
+                VStack(alignment: .leading, spacing: Spacing.xs / 2) {
+                    Text("settings.backup.automatic", bundle: .module)
+                    Text(verbatim: data.automaticDetail)
+                        .font(AppFont.caption)
+                        .foregroundStyle(AppColor.textSecondary)
+                }
+                .padding(.vertical, Spacing.sm)
+            }
+            .tint(AppColor.switchOn)
+            .disabled(backup.isWorking)
+            .cardRow()
+            CardDividerView()
             row("settings.backup.create", detail: data.status, systemImage: "lock.doc") { Task { await backup.createBackup() } }
                 .fileExporter(
                     isPresented: Binding(get: { backup.exportFile != nil }, set: {
@@ -26,7 +39,7 @@ struct SettingsBackupView: View {
                 }
             CardDividerView()
             row("settings.backup.restore", detail: nil, systemImage: "arrow.counterclockwise") { isImporting = true }
-                .restoreBackupFlow(backup, isImporting: $isImporting) {}
+                .restoreBackupFlow(backup, isRequested: $isImporting) {}
             if data.hasRecoveryKey {
                 CardDividerView()
                 row("settings.backup.key", detail: nil, systemImage: "key") { Task { await backup.showKey() } }

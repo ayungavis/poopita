@@ -97,7 +97,7 @@ export const en: Messages = {
       items: [
         {
           title: "Stays on this iPhone",
-          body: "Your diary is stored on your iPhone. There is no server and no sync, and nothing is uploaded.",
+          body: "Your diary is stored on your iPhone. There is no server and no account. iCloud backup is optional and encrypted before it leaves the phone.",
         },
         { title: "No account", body: "Nothing to sign up for, no email, no password." },
         {
@@ -134,7 +134,7 @@ export const en: Messages = {
       title: "Honest limits",
       items: [
         "Poopita is a diary, not a medical device. It doesn't diagnose or treat anything. If something worries you, talk to a doctor.",
-        "Backups are files you save yourself; there is no automatic backup yet. Deleting the app deletes the diary unless you made a backup or have an iPhone backup.",
+        "Backups only happen if you turn them on or save one yourself. Deleting the app deletes the diary unless you have a Poopita or iPhone backup, and a lost recovery key can't be replaced.",
       ],
     },
     faq: {
@@ -144,7 +144,7 @@ export const en: Messages = {
         {
           question: "Is it private?",
           answer: [
-            "Your diary never leaves your iPhone. The only thing the app ever sends is an anonymous crash report, without any diary content.",
+            "Your diary stays on your iPhone. The app only sends anonymous crash reports, without any diary content. If you turn on iCloud backup, an encrypted copy goes to your own iCloud Drive, and only your recovery key can open it.",
           ],
         },
         { question: "Do I need an account?", answer: ["No. Open the app and start logging."] },
@@ -157,7 +157,7 @@ export const en: Messages = {
         {
           question: "What happens if I lose my phone?",
           answer: [
-            "Restore it from your Poopita backup with your recovery key. Without a Poopita or iPhone backup, the diary is gone with it. We never have a copy.",
+            "Restore it from your iCloud or file backup with your recovery key. Without a Poopita or iPhone backup, the diary is gone with it. We never have a copy.",
           ],
         },
       ],
@@ -192,9 +192,9 @@ export const en: Messages = {
         id: "on-your-device",
         heading: "What stays on your device",
         paragraphs: [
-          "Everything you put into Poopita stays on your iPhone: logs, no-poop check-ins, notes, reminders, app lock and appearance settings. It is not sent to us, to iCloud or to anyone else, and we can't see, recover or delete it for you.",
+          "Everything you put into Poopita stays on your iPhone: logs, no-poop check-ins, notes, reminders, app lock and appearance settings. It is not sent to us or to anyone else, and we can't see, recover or delete it for you.",
           "Exports (the CSV file and the PDF for your doctor) are created on your iPhone and go only where you choose to share them.",
-          "Backups are encrypted on your iPhone with a recovery key that only you hold. You choose where the backup file goes, and we never receive it. Without the key, nobody can open it, including us.",
+          "Backups are encrypted on your iPhone with a recovery key that only you hold. If you turn on iCloud backup, the encrypted file is kept in your own iCloud Drive; otherwise you choose where it goes. We never receive it, and without the key nobody can open it, including us and Apple.",
         ],
       },
       {

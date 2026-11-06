@@ -23,6 +23,7 @@ public enum AppError: Error, Equatable, Sendable {
     case backupKeyMismatch
     case backupFromNewerVersion
     case invalidRecoveryKey
+    case cloudUnavailable
     case unexpected
 
     public var userMessage: String {
@@ -71,6 +72,8 @@ public enum AppError: Error, Equatable, Sendable {
             String(localized: "error.backupFromNewerVersion", bundle: .module)
         case .invalidRecoveryKey:
             String(localized: "error.invalidRecoveryKey", bundle: .module)
+        case .cloudUnavailable:
+            String(localized: "error.cloudUnavailable", bundle: .module)
         case .unexpected:
             String(localized: "error.unexpected", bundle: .module)
         }
@@ -113,6 +116,7 @@ extension AppError {
         case .backupKeyMismatch: "backupKeyMismatch"
         case .backupFromNewerVersion: "backupFromNewerVersion"
         case .invalidRecoveryKey: "invalidRecoveryKey"
+        case .cloudUnavailable: "cloudUnavailable"
         }
     }
 }

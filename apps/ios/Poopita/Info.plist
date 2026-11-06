@@ -36,6 +36,18 @@
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock your private diary.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.ayungavis.Poopita</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Poopita</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>None</string>
+		</dict>
+	</dict>
 	<key>SentryDSN</key>
 	<string>$(SENTRY_DSN)</string>
 	<key>SentryEnvironment</key>

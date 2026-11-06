@@ -154,6 +154,7 @@ public struct RootView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .background {
                 appLock?.didEnterBackground()
+                Task { await backup?.backUpIfNeeded() }
                 return
             }
             appLock?.willEnterForeground()

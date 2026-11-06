@@ -164,6 +164,22 @@
         }
       }
     },
+    "backup.cloud.saved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backed up to iCloud"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dicadangkan ke iCloud"
+          }
+        }
+      }
+    },
     "backup.key.confirm" : {
       "localizations" : {
         "en" : {
@@ -320,6 +336,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check-in tanpa BAB yang ditambahkan"
+          }
+        }
+      }
+    },
+    "backup.restore.chooseFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a file…"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih berkas…"
+          }
+        }
+      }
+    },
+    "backup.restore.cloud %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud backup from %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan iCloud dari %@"
           }
         }
       }
@@ -1952,6 +2000,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hari ini sudah memiliki catatan. Ubah atau hapus catatannya sebelum mengonfirmasi tidak BAB."
+          }
+        }
+      }
+    },
+    "error.cloudUnavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud isn't available. Sign in to iCloud and turn on iCloud Drive in Settings, then try again."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud tidak tersedia. Masuk ke iCloud dan nyalakan iCloud Drive di Pengaturan, lalu coba lagi."
           }
         }
       }
@@ -4233,13 +4297,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing is uploaded or synced."
+            "value" : "Nothing is uploaded unless you turn on backup."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tidak ada yang diunggah atau disinkronkan."
+            "value" : "Tidak ada yang diunggah kecuali Anda menyalakan cadangan."
           }
         }
       }
@@ -5044,6 +5108,54 @@
         }
       }
     },
+    "settings.backup.automatic" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back up to iCloud automatically"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangkan ke iCloud otomatis"
+          }
+        }
+      }
+    },
+    "settings.backup.automatic.off" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps an encrypted copy in your iCloud Drive."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menyimpan salinan terenkripsi di iCloud Drive Anda."
+          }
+        }
+      }
+    },
+    "settings.backup.automatic.on" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backs up to your iCloud Drive when you leave Poopita, at most once a day."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dicadangkan ke iCloud Drive Anda saat Anda keluar dari Poopita, paling sering sekali sehari."
+          }
+        }
+      }
+    },
     "settings.backup.create" : {
       "localizations" : {
         "en" : {
@@ -5065,13 +5177,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backups are encrypted on this iPhone. Save the file anywhere you like; only your recovery key can open it."
+            "value" : "Backups are encrypted on this iPhone before they're saved anywhere. Only your recovery key can open them."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cadangan dienkripsi di iPhone ini. Simpan berkasnya di mana saja; hanya kunci pemulihan Anda yang bisa membukanya."
+            "value" : "Cadangan dienkripsi di iPhone ini sebelum disimpan di mana pun. Hanya kunci pemulihan Anda yang bisa membukanya."
           }
         }
       }

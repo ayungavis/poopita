@@ -4,7 +4,9 @@ import Observation
 @MainActor
 @Observable
 final class BackupModel {
-    private(set) var state = BackupViewData(status: BackupModel.status(lastBackup: nil), hasRecoveryKey: false)
+    private(set) var state = BackupModel.viewData(
+        lastBackup: nil, hasRecoveryKey: false, isAutomatic: false, isCloudAvailable: true, cloudBackup: nil
+    )
     private(set) var keySetup: RecoveryKeySetupViewData?
     private(set) var keyDisplay: RecoveryKeyDisplayViewData?
     private(set) var exportFile: BackupFileViewData?
@@ -16,6 +18,7 @@ final class BackupModel {
     private let now: () -> Date
     private var pendingKey: RecoveryKey?
     private var confirmedKey: RecoveryKey?
+    private var isEnablingAutomatic = false
     private var openedFile: Data?
     private var openedBackup: DiaryBackup?
 
@@ -27,7 +30,46 @@ final class BackupModel {
 
     func refresh() async {
         let hasKey = await (try? repository.storedKey()) != nil
-        state = BackupViewData(status: Self.status(lastBackup: repository.lastBackupDate()), hasRecoveryKey: hasKey)
+        let isCloudAvailable = await repository.isCloudAvailable()
+        let cloudBackup = isCloudAvailable ? await repository.cloudBackupDate() : nil
+        state = Self.viewData(
+            lastBackup: repository.lastBackupDate(), hasRecoveryKey: hasKey, isAutomatic: repository.isAutomatic(),
+            isCloudAvailable: isCloudAvailable, cloudBackup: cloudBackup
+        )
+    }
+
+    func setAutomatic(_ isOn: Bool) async {
+        guard isOn else {
+            do {
+                try repository.setAutomatic(false)
+            } catch {
+                show(error, operation: "backup.automatic")
+            }
+            await refresh()
+            return
+        }
+        await perform {
+            guard await self.repository.isCloudAvailable() else { throw AppError.cloudUnavailable }
+            if let key = try await self.repository.storedKey() {
+                try await self.enableAutomatic(with: key)
+            } else {
+                let key = RecoveryKey.generate()
+                self.pendingKey = key
+                self.isEnablingAutomatic = true
+                self.keySetup = Self.setupViewData(key: key, errorMessage: nil)
+            }
+        }
+    }
+
+    func backUpIfNeeded() async {
+        guard !isWorking else { return }
+        do {
+            if try await repository.backUpToCloudIfNeeded(now: now()) {
+                await refresh()
+            }
+        } catch {
+            Log.report(error, context: Log.Context(operation: "backup.automatic"))
+        }
     }
 
     func createBackup() async {
@@ -62,14 +104,23 @@ final class BackupModel {
     func keySetupDismissed() async {
         guard let key = confirmedKey else { return }
         confirmedKey = nil
+        let enablesAutomatic = isEnablingAutomatic
+        isEnablingAutomatic = false
         await perform {
-            try await self.prepareExport(with: key)
+            if enablesAutomatic {
+                try await self.enableAutomatic(with: key)
+            } else {
+                try await self.prepareExport(with: key)
+            }
         }
     }
 
     func cancelKeySetup() {
         pendingKey = nil
         keySetup = nil
+        if confirmedKey == nil {
+            isEnablingAutomatic = false
+        }
     }
 
     func finishExport(saved: Bool) {
@@ -100,6 +151,63 @@ final class BackupModel {
         keyDisplay = nil
     }
 
+    func dismissError() {
+        errorMessage = nil
+    }
+
+    private func enableAutomatic(with key: RecoveryKey) async throws {
+        try repository.setAutomatic(true)
+        do {
+            try await repository.backUpToCloud(createdAt: now(), key: key)
+        } catch {
+            try? repository.setAutomatic(false)
+            await refresh()
+            throw error
+        }
+        undoModel.record(String(localized: "backup.cloud.saved", bundle: .module), undoable: false)
+        await refresh()
+    }
+
+    private func prepareExport(with key: RecoveryKey) async throws {
+        let date = now()
+        let file = try await repository.makeBackup(createdAt: date, key: key)
+        exportFile = BackupFileViewData(data: file, fileName: Self.fileName(date: date))
+    }
+
+    private func perform(_ work: @MainActor () async throws -> Void) async {
+        guard !isWorking else { return }
+        errorMessage = nil
+        isWorking = true
+        defer { isWorking = false }
+        do {
+            try await work()
+        } catch {
+            show(error, operation: "backup")
+        }
+    }
+
+    private func show(_ error: any Error, operation: String) {
+        Log.report(error, context: Log.Context(operation: operation))
+        errorMessage = AppError(wrapping: error).userMessage
+    }
+
+    @concurrent
+    private nonisolated static func read(_ url: URL) async throws -> Data {
+        let isScoped = url.startAccessingSecurityScopedResource()
+        defer {
+            if isScoped {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        do {
+            return try Data(contentsOf: url, options: .mappedIfSafe)
+        } catch {
+            throw AppError.backupUnreadable
+        }
+    }
+}
+
+extension BackupModel {
     func importFile(_ result: Result<URL, any Error>) async {
         guard case let .success(url) = result else {
             if case let .failure(error) = result {
@@ -108,17 +216,13 @@ final class BackupModel {
             return
         }
         await perform {
-            let file = try await Self.read(url)
-            self.openedFile = file
-            guard let key = try await self.repository.storedKey() else {
-                self.restore = RestoreViewData(id: UUID(), step: .enterKey(errorMessage: nil))
-                return
-            }
-            do {
-                try await self.open(file, key: key)
-            } catch AppError.backupKeyMismatch {
-                self.restore = RestoreViewData(id: UUID(), step: .enterKey(errorMessage: nil))
-            }
+            try await self.openFile(Self.read(url))
+        }
+    }
+
+    func restoreFromCloud() async {
+        await perform {
+            try await self.openFile(self.repository.readCloudBackup())
         }
     }
 
@@ -169,8 +273,17 @@ final class BackupModel {
         openedBackup = nil
     }
 
-    func dismissError() {
-        errorMessage = nil
+    private func openFile(_ file: Data) async throws {
+        openedFile = file
+        guard let key = try await repository.storedKey() else {
+            restore = RestoreViewData(id: UUID(), step: .enterKey(errorMessage: nil))
+            return
+        }
+        do {
+            try await open(file, key: key)
+        } catch AppError.backupKeyMismatch {
+            restore = RestoreViewData(id: UUID(), step: .enterKey(errorMessage: nil))
+        }
     }
 
     private func open(_ file: Data, key: RecoveryKey) async throws {
@@ -181,47 +294,31 @@ final class BackupModel {
             id: restore?.id ?? UUID(), step: .preview(Self.previewViewData(backup: backup, merge: merge))
         )
     }
-
-    private func prepareExport(with key: RecoveryKey) async throws {
-        let date = now()
-        let file = try await repository.makeBackup(createdAt: date, key: key)
-        exportFile = BackupFileViewData(data: file, fileName: Self.fileName(date: date))
-    }
-
-    private func perform(_ work: @MainActor () async throws -> Void) async {
-        guard !isWorking else { return }
-        errorMessage = nil
-        isWorking = true
-        defer { isWorking = false }
-        do {
-            try await work()
-        } catch {
-            show(error, operation: "backup")
-        }
-    }
-
-    private func show(_ error: any Error, operation: String) {
-        Log.report(error, context: Log.Context(operation: operation))
-        errorMessage = AppError(wrapping: error).userMessage
-    }
-
-    @concurrent
-    private nonisolated static func read(_ url: URL) async throws -> Data {
-        let isScoped = url.startAccessingSecurityScopedResource()
-        defer {
-            if isScoped {
-                url.stopAccessingSecurityScopedResource()
-            }
-        }
-        do {
-            return try Data(contentsOf: url, options: .mappedIfSafe)
-        } catch {
-            throw AppError.backupUnreadable
-        }
-    }
 }
 
 extension BackupModel {
+    static func viewData(
+        lastBackup: Date?, hasRecoveryKey: Bool, isAutomatic: Bool, isCloudAvailable: Bool, cloudBackup: Date?
+    ) -> BackupViewData {
+        let automaticDetail: String = if isAutomatic, !isCloudAvailable {
+            AppError.cloudUnavailable.userMessage
+        } else if isAutomatic {
+            String(localized: "settings.backup.automatic.on", bundle: .module)
+        } else {
+            String(localized: "settings.backup.automatic.off", bundle: .module)
+        }
+        return BackupViewData(
+            status: status(lastBackup: lastBackup), hasRecoveryKey: hasRecoveryKey, isAutomatic: isAutomatic,
+            automaticDetail: automaticDetail,
+            cloudBackup: cloudBackup.map {
+                String(
+                    localized: "backup.restore.cloud \($0.formatted(.dateTime.day().month(.abbreviated).year()))",
+                    bundle: .module
+                )
+            }
+        )
+    }
+
     static func status(lastBackup: Date?) -> String {
         guard let lastBackup else { return String(localized: "settings.backup.never", bundle: .module) }
         let date = lastBackup.formatted(.dateTime.day().month(.abbreviated).year())

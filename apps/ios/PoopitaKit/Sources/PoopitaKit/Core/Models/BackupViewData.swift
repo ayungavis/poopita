@@ -9,6 +9,9 @@ extension UTType {
 struct BackupViewData: Equatable, Sendable {
     let status: String
     let hasRecoveryKey: Bool
+    let isAutomatic: Bool
+    let automaticDetail: String
+    let cloudBackup: String?
 }
 
 struct RecoveryKeySetupViewData: Identifiable, Equatable, Sendable {

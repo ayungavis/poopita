@@ -69,7 +69,8 @@ public final class AppContainer {
             return backup
         }
         let repository = try LocalBackupRepository(
-            diary: diaryRepository(), secrets: KeychainSecretStore(), store: UserDefaultsValueStore()
+            diary: diaryRepository(), secrets: KeychainSecretStore(), store: UserDefaultsValueStore(),
+            cloud: ICloudDriveBackupService()
         )
         let model = try BackupModel(repository: repository, undoModel: undoModel(), now: { .now })
         backup = model

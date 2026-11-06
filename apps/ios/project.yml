@@ -38,6 +38,15 @@ targets:
           CODE_SIGN_IDENTITY: Apple Distribution
           DEVELOPMENT_TEAM: QHL64K2LPL
           PROVISIONING_PROFILE_SPECIFIER: Poopita Apple Distribution
+    entitlements:
+      path: Poopita/Poopita.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.ayungavis.Poopita
+        com.apple.developer.icloud-services:
+          - CloudDocuments
+        com.apple.developer.ubiquity-container-identifiers:
+          - iCloud.com.ayungavis.Poopita
     info:
       path: Poopita/Info.plist
       properties:
@@ -58,6 +67,11 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
         NSFaceIDUsageDescription: "Unlock your private diary."
+        NSUbiquitousContainers:
+          iCloud.com.ayungavis.Poopita:
+            NSUbiquitousContainerIsDocumentScopePublic: true
+            NSUbiquitousContainerName: Poopita
+            NSUbiquitousContainerSupportedFolderLevels: None
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: com.ayungavis.poopita.backup
             UTTypeDescription: Poopita Backup

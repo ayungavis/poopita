@@ -160,18 +160,19 @@ enum BackupFixtures {
     struct Repositories {
         let diary: LocalDiaryRepository
         let backup: LocalBackupRepository
+        let cloud: MemoryCloudBackupService
     }
 
-    static func repository() throws -> Repositories {
+    static func repository(cloud: MemoryCloudBackupService = MemoryCloudBackupService()) throws -> Repositories {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         let diary = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
         let suite = "BackupTests.\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suite))
         defaults.removePersistentDomain(forName: suite)
         let backup = LocalBackupRepository(
-            diary: diary, secrets: MemorySecretStore(), store: UserDefaultsValueStore(defaults: defaults)
+            diary: diary, secrets: MemorySecretStore(), store: UserDefaultsValueStore(defaults: defaults), cloud: cloud
         )
-        return Repositories(diary: diary, backup: backup)
+        return Repositories(diary: diary, backup: backup, cloud: cloud)
     }
 
     nonisolated static func backup() throws -> DiaryBackup {

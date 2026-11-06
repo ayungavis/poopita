@@ -114,24 +114,76 @@ struct RestoreBackupView: View {
 }
 
 extension View {
-    func restoreBackupFlow(_ backup: BackupModel, isImporting: Binding<Bool>, restored: @escaping () -> Void) -> some View {
-        fileImporter(isPresented: isImporting, allowedContentTypes: [.poopitaBackup, .data]) { result in
-            Task { await backup.importFile(result) }
-        }
-        .sheet(item: Binding(get: { backup.restore }, set: {
-            if $0 == nil {
-                backup.cancelRestore()
-            }
-        })) { data in
-            RestoreBackupView(
-                data: data, isWorking: backup.isWorking, submitKey: { text in Task { await backup.submitKey(text) } },
-                confirm: {
-                    if backup.confirmRestore() {
-                        restored()
+    func restoreBackupFlow(_ backup: BackupModel, isRequested: Binding<Bool>, restored: @escaping () -> Void) -> some View {
+        modifier(RestoreBackupFlow(backup: backup, isRequested: isRequested, restored: restored))
+    }
+}
+
+private struct RestoreBackupFlow: ViewModifier {
+    let backup: BackupModel
+    @Binding var isRequested: Bool
+    let restored: () -> Void
+    @State private var isImporting = false
+
+    func body(content: Content) -> some View {
+        let cloudBackup = backup.state.cloudBackup
+        content
+            .task { await backup.refresh() }
+            .confirmationDialog(
+                Text("settings.backup.restore", bundle: .module),
+                isPresented: Binding(get: { isRequested && cloudBackup != nil }, set: {
+                    if !$0 {
+                        isRequested = false
                     }
-                },
-                cancel: { backup.cancelRestore() }
+                }),
+                titleVisibility: .visible
+            ) {
+                sources(cloudBackup: cloudBackup)
+            }
+            .fileImporter(
+                isPresented: Binding(get: { isImporting || (isRequested && cloudBackup == nil) }, set: {
+                    if !$0 {
+                        isImporting = false
+                        isRequested = false
+                    }
+                }),
+                allowedContentTypes: [.poopitaBackup, .data],
+                onCompletion: { result in Task { await backup.importFile(result) } }
             )
+            .sheet(item: Binding(get: { backup.restore }, set: {
+                if $0 == nil {
+                    backup.cancelRestore()
+                }
+            }), content: sheet)
+    }
+
+    @ViewBuilder
+    private func sources(cloudBackup: String?) -> some View {
+        if let cloudBackup {
+            Button {
+                isRequested = false
+                Task { await backup.restoreFromCloud() }
+            } label: {
+                Text(verbatim: cloudBackup)
+            }
         }
+        Button {
+            isRequested = false
+            isImporting = true
+        } label: {
+            Text("backup.restore.chooseFile", bundle: .module)
+        }
+    }
+
+    private func sheet(_ data: RestoreViewData) -> some View {
+        RestoreBackupView(
+            data: data, isWorking: backup.isWorking, submitKey: { text in Task { await backup.submitKey(text) } },
+            confirm: {
+                if backup.confirmRestore() {
+                    restored()
+                }
+            },
+            cancel: { backup.cancelRestore() }
+        )
     }
 }

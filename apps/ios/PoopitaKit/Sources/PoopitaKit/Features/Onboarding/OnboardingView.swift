@@ -28,7 +28,7 @@ struct OnboardingView: View {
         .tint(AppColor.accent)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: data.step)
         .sensoryFeedback(.selection, trigger: data.step)
-        .restoreBackupFlow(backup, isImporting: $isImporting) { viewModel.finish() }
+        .restoreBackupFlow(backup, isRequested: $isImporting) { viewModel.finish() }
     }
 
     @ViewBuilder
