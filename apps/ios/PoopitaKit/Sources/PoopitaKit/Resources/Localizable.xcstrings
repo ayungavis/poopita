@@ -164,6 +164,278 @@
         }
       }
     },
+    "backup.key.confirm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buat cadangan"
+          }
+        }
+      }
+    },
+    "backup.key.confirmPrompt %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To confirm you saved it, type group %lld of your key"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untuk memastikan sudah tersimpan, ketik kelompok ke-%lld dari kunci Anda"
+          }
+        }
+      }
+    },
+    "backup.key.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You'll need this key to restore your diary on a new iPhone. Poopita never has a copy, so we can't recover it for you. If you lose both your iPhone and this key, the backup can't be opened."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda memerlukan kunci ini untuk memulihkan catatan di iPhone baru. Poopita tidak pernah menyimpan salinannya, jadi kami tidak bisa memulihkannya untuk Anda. Jika iPhone dan kunci ini sama-sama hilang, cadangan tidak bisa dibuka."
+          }
+        }
+      }
+    },
+    "backup.key.mismatch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That doesn't match. Check the key you saved."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak cocok. Periksa kunci yang Anda simpan."
+          }
+        }
+      }
+    },
+    "backup.key.share" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save key"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan kunci"
+          }
+        }
+      }
+    },
+    "backup.key.shareText %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poopita recovery key: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci pemulihan Poopita: %@"
+          }
+        }
+      }
+    },
+    "backup.key.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save your recovery key"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan kunci pemulihan"
+          }
+        }
+      }
+    },
+    "backup.key.viewMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep this key somewhere safe and private, like your password manager. Anyone with this key and your backup file can read your diary."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan kunci ini di tempat yang aman dan pribadi, misalnya pengelola kata sandi. Siapa pun yang memiliki kunci ini dan berkas cadangan Anda bisa membaca catatan Anda."
+          }
+        }
+      }
+    },
+    "backup.restore.already" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs already on this iPhone"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan yang sudah ada di iPhone ini"
+          }
+        }
+      }
+    },
+    "backup.restore.checkIns" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No-poop check-ins to add"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check-in tanpa BAB yang ditambahkan"
+          }
+        }
+      }
+    },
+    "backup.restore.confirm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulihkan"
+          }
+        }
+      }
+    },
+    "backup.restore.from %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup from %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan dari %@"
+          }
+        }
+      }
+    },
+    "backup.restore.keyPrompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter the recovery key you saved when you made this backup."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masukkan kunci pemulihan yang Anda simpan saat membuat cadangan ini."
+          }
+        }
+      }
+    },
+    "backup.restore.logs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs to add"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan yang ditambahkan"
+          }
+        }
+      }
+    },
+    "backup.restore.merge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing on this iPhone is removed. If a log is in both, the one on this iPhone stays. You can undo right after restoring."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada yang dihapus dari iPhone ini. Jika catatan ada di keduanya, yang di iPhone ini dipertahankan. Anda bisa membatalkan tepat setelah memulihkan."
+          }
+        }
+      }
+    },
+    "backup.restored" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diary restored"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catatan dipulihkan"
+          }
+        }
+      }
+    },
+    "backup.saved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup saved"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan tersimpan"
+          }
+        }
+      }
+    },
     "checkIn.completed" : {
       "localizations" : {
         "en" : {
@@ -1604,6 +1876,54 @@
         }
       }
     },
+    "error.backupFromNewerVersion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup was made with a newer Poopita. Update the app, then try again."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan ini dibuat dengan Poopita versi lebih baru. Perbarui aplikasi, lalu coba lagi."
+          }
+        }
+      }
+    },
+    "error.backupKeyMismatch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This recovery key doesn't open this backup."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci pemulihan ini tidak bisa membuka cadangan ini."
+          }
+        }
+      }
+    },
+    "error.backupUnreadable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This isn't a Poopita backup, or the file is damaged."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini bukan cadangan Poopita, atau berkasnya rusak."
+          }
+        }
+      }
+    },
     "error.badRequest" : {
       "localizations" : {
         "en" : {
@@ -1696,6 +2016,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pilih tanggal, waktu, dan zona waktu kejadian yang valid."
+          }
+        }
+      }
+    },
+    "error.invalidRecoveryKey" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That isn't a complete recovery key. It has 52 letters and numbers."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itu bukan kunci pemulihan yang lengkap. Kunci terdiri dari 52 huruf dan angka."
           }
         }
       }
@@ -3796,6 +4132,22 @@
         }
       }
     },
+    "onboarding.restore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I have a backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saya punya cadangan"
+          }
+        }
+      }
+    },
     "onboarding.skip" : {
       "localizations" : {
         "en" : {
@@ -4688,6 +5040,118 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buka kunci catatan pribadi Anda."
+          }
+        }
+      }
+    },
+    "settings.backup.create" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buat cadangan"
+          }
+        }
+      }
+    },
+    "settings.backup.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups are encrypted on this iPhone. Save the file anywhere you like; only your recovery key can open it."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan dienkripsi di iPhone ini. Simpan berkasnya di mana saja; hanya kunci pemulihan Anda yang bisa membukanya."
+          }
+        }
+      }
+    },
+    "settings.backup.key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery key"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunci pemulihan"
+          }
+        }
+      }
+    },
+    "settings.backup.last %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terakhir: %@"
+          }
+        }
+      }
+    },
+    "settings.backup.never" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not backed up yet"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum dicadangkan"
+          }
+        }
+      }
+    },
+    "settings.backup.restore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore from a backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulihkan dari cadangan"
+          }
+        }
+      }
+    },
+    "settings.backup.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadangan"
           }
         }
       }

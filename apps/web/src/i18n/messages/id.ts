@@ -2,6 +2,7 @@ import { site } from "../../config/site";
 import type { Messages } from "./types";
 
 const effective = "Berlaku sejak 4 November 2026";
+const privacyEffective = "Berlaku sejak 6 November 2026";
 
 export const id: Messages = {
   common: {
@@ -134,7 +135,7 @@ export const id: Messages = {
       title: "Batasan yang jujur",
       items: [
         "Poopita adalah catatan pribadi, bukan alat medis. Aplikasi ini tidak mendiagnosis atau mengobati apa pun. Jika ada yang mengkhawatirkan, bicarakan dengan dokter.",
-        "Belum ada cadangan. Menghapus aplikasi berarti menghapus catatan. Pindah ke iPhone baru dengan Mulai Cepat atau cadangan iPhone ikut membawanya.",
+        "Cadangan adalah berkas yang Anda simpan sendiri; belum ada cadangan otomatis. Menghapus aplikasi berarti menghapus catatan, kecuali Anda sudah membuat cadangan atau punya cadangan iPhone.",
       ],
     },
     faq: {
@@ -160,7 +161,7 @@ export const id: Messages = {
         {
           question: "Bagaimana jika ponsel saya hilang?",
           answer: [
-            "Tanpa cadangan iPhone, catatan ikut hilang. Kami tidak pernah punya salinannya. Cadangan Poopita terenkripsi sedang direncanakan.",
+            "Pulihkan dari cadangan Poopita dengan kunci pemulihan Anda. Tanpa cadangan Poopita atau cadangan iPhone, catatan ikut hilang. Kami tidak pernah punya salinannya.",
           ],
         },
       ],
@@ -177,7 +178,7 @@ export const id: Messages = {
         "Poopita menyimpan catatan Anda di iPhone. Baca apa yang tetap di perangkat, laporan crash anonim yang dapat dikirim aplikasi, dan hak Anda.",
     },
     title: "Kebijakan privasi",
-    effective,
+    effective: privacyEffective,
     summary: [
       "Catatan Anda tetap di iPhone. Kami tidak pernah melihatnya.",
       "Tanpa akun, tanpa iklan, dan tanpa pelacakan.",
@@ -197,6 +198,7 @@ export const id: Messages = {
         paragraphs: [
           "Semua yang Anda masukkan ke Poopita tetap di iPhone Anda: catatan, konfirmasi tidak BAB, catatan singkat, pengingat, serta pengaturan kunci dan tampilan. Data itu tidak dikirim ke kami, ke iCloud, atau ke siapa pun, dan kami tidak dapat melihat, memulihkan, atau menghapusnya untuk Anda.",
           "Ekspor (file CSV dan PDF untuk dokter) dibuat di iPhone Anda dan hanya dikirim ke tempat yang Anda pilih.",
+          "Cadangan dienkripsi di iPhone Anda dengan kunci pemulihan yang hanya Anda pegang. Anda yang memilih tempat menyimpan berkas cadangan, dan kami tidak pernah menerimanya. Tanpa kunci itu, tidak ada yang bisa membukanya, termasuk kami.",
         ],
       },
       {
@@ -313,7 +315,7 @@ export const id: Messages = {
         id: "your-data",
         heading: "Data Anda",
         paragraphs: [
-          "Catatan Anda hanya disimpan di iPhone Anda. Belum ada cadangan Poopita, jadi cadangkan iPhone Anda jika tidak ingin kehilangannya. Kami tidak dapat memulihkan catatan untuk Anda.",
+          "Catatan Anda hanya disimpan di iPhone Anda. Untuk menyimpan salinan, buat cadangan terenkripsi di Pengaturan › Cadangan dan simpan kunci pemulihan Anda dengan aman. Kami tidak dapat memulihkan catatan atau kunci pemulihan yang hilang untuk Anda.",
         ],
       },
       {
@@ -364,7 +366,7 @@ export const id: Messages = {
       {
         question: "Saya pindah ke iPhone baru. Apakah catatan saya ikut?",
         answer: [
-          "Ya, jika Anda pindah dengan Mulai Cepat atau memulihkan dari cadangan iPhone. Belum ada cadangan Poopita tersendiri, jadi tanpa cadangan iPhone, ponsel yang hilang berarti catatan yang hilang. Kami tidak pernah punya salinannya.",
+          "Ya, jika Anda pindah dengan Mulai Cepat atau memulihkan dari cadangan iPhone. Anda juga bisa membuat cadangan di Pengaturan › Cadangan dan memulihkannya di iPhone baru dengan kunci pemulihan Anda. Kami tidak pernah punya salinannya.",
         ],
       },
       {

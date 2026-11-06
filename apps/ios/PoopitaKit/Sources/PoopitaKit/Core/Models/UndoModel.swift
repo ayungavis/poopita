@@ -12,10 +12,13 @@ final class UndoModel {
         self.repository = repository
     }
 
-    func record(_ message: String, undoable: Bool = true) {
+    func record(_ message: String, undoable: Bool = true, reloads: Bool = false) {
         toast = UndoToastViewData(
             id: UUID(), message: message, canUndo: undoable && repository.canUndo, staysUntilDismissed: false
         )
+        if reloads {
+            revision += 1
+        }
     }
 
     func undo() {

@@ -10,6 +10,7 @@ public struct RootView: View {
     @State private var insightsModel: InsightsViewModel?
     @State private var settingsModel: SettingsViewModel?
     @State private var remindersModel: RemindersViewModel?
+    @State private var backup: BackupModel?
     @State private var undoModel: UndoModel?
     @State private var onboardingModel: OnboardingViewModel?
     @State private var appLock: AppLockModel?
@@ -26,7 +27,7 @@ public struct RootView: View {
 
     public var body: some View {
         Group {
-            if let model, let historyModel, let insightsModel, let settingsModel, let remindersModel, let appLock {
+            if let model, let historyModel, let insightsModel, let settingsModel, let remindersModel, let backup, let appLock {
                 AppLockGateView(appLock: appLock, asksOnAppear: true) {
                     VStack(spacing: 0) {
                         TabView(selection: $selectedTab) {
@@ -34,7 +35,11 @@ public struct RootView: View {
                                 NavigationStack {
                                     TodayView(viewModel: model) { isShowingSettings = true }
                                         .navigationDestination(isPresented: $isShowingSettings) {
-                                            SettingsView(viewModel: settingsModel, reminders: remindersModel) {
+                                            SettingsView(
+                                                viewModel: settingsModel,
+                                                reminders: remindersModel,
+                                                backup: backup
+                                            ) {
                                                 isShowingSettings = false
                                             }
                                         }
@@ -97,7 +102,7 @@ public struct RootView: View {
                     }
                     .fullScreenModal(isPresented: onboardingBinding) {
                         if let onboardingModel {
-                            OnboardingView(viewModel: onboardingModel, reminders: remindersModel)
+                            OnboardingView(viewModel: onboardingModel, reminders: remindersModel, backup: backup)
                         }
                     }
                 }
@@ -222,6 +227,7 @@ public struct RootView: View {
             insightsModel = try container.makeInsightsViewModel()
             settingsModel = try container.makeSettingsViewModel()
             remindersModel = try container.remindersViewModel()
+            backup = try container.backupModel()
             undoModel = try container.undoModel()
             onboardingModel = try container.makeOnboardingViewModel()
             appLock = try container.appLockModel()

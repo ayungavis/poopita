@@ -8,6 +8,7 @@ public final class AppContainer {
     private var appearance: AppearanceModel?
     private var appLock: AppLockModel?
     private var reminders: RemindersViewModel?
+    private var backup: BackupModel?
     private let reminderResponses = UserNotificationsResponseService()
 
     public init() {
@@ -60,6 +61,18 @@ public final class AppContainer {
             service: UserNotificationsReminderService(), now: { .now }, timeZone: { .current }
         )
         reminders = model
+        return model
+    }
+
+    func backupModel() throws -> BackupModel {
+        if let backup {
+            return backup
+        }
+        let repository = try LocalBackupRepository(
+            diary: diaryRepository(), secrets: KeychainSecretStore(), store: UserDefaultsValueStore()
+        )
+        let model = try BackupModel(repository: repository, undoModel: undoModel(), now: { .now })
+        backup = model
         return model
     }
 

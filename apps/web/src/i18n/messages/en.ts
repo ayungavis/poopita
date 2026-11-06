@@ -2,6 +2,7 @@ import { site } from "../../config/site";
 import type { Messages } from "./types";
 
 const effective = "Effective 4 November 2026";
+const privacyEffective = "Effective 6 November 2026";
 
 export const en: Messages = {
   common: {
@@ -133,7 +134,7 @@ export const en: Messages = {
       title: "Honest limits",
       items: [
         "Poopita is a diary, not a medical device. It doesn't diagnose or treat anything. If something worries you, talk to a doctor.",
-        "There is no backup yet. Deleting the app deletes the diary. Moving to a new iPhone with Quick Start or an iPhone backup brings it along.",
+        "Backups are files you save yourself; there is no automatic backup yet. Deleting the app deletes the diary unless you made a backup or have an iPhone backup.",
       ],
     },
     faq: {
@@ -156,7 +157,7 @@ export const en: Messages = {
         {
           question: "What happens if I lose my phone?",
           answer: [
-            "Without an iPhone backup, the diary is gone with it. We never have a copy. An encrypted Poopita backup is planned.",
+            "Restore it from your Poopita backup with your recovery key. Without a Poopita or iPhone backup, the diary is gone with it. We never have a copy.",
           ],
         },
       ],
@@ -173,7 +174,7 @@ export const en: Messages = {
         "Poopita keeps your diary on your iPhone. Read what stays on your device, the anonymous crash reports the app may send, and your rights.",
     },
     title: "Privacy policy",
-    effective,
+    effective: privacyEffective,
     summary: [
       "Your diary stays on your iPhone. We never see it.",
       "There is no account, no advertising and no tracking.",
@@ -193,6 +194,7 @@ export const en: Messages = {
         paragraphs: [
           "Everything you put into Poopita stays on your iPhone: logs, no-poop check-ins, notes, reminders, app lock and appearance settings. It is not sent to us, to iCloud or to anyone else, and we can't see, recover or delete it for you.",
           "Exports (the CSV file and the PDF for your doctor) are created on your iPhone and go only where you choose to share them.",
+          "Backups are encrypted on your iPhone with a recovery key that only you hold. You choose where the backup file goes, and we never receive it. Without the key, nobody can open it, including us.",
         ],
       },
       {
@@ -309,7 +311,7 @@ export const en: Messages = {
         id: "your-data",
         heading: "Your data",
         paragraphs: [
-          "Your diary is stored only on your iPhone. There is no Poopita backup yet, so keep your iPhone backed up if you don't want to lose it. We can't recover a diary for you.",
+          "Your diary is stored only on your iPhone. To keep a copy, create an encrypted backup in Settings › Backup and keep your recovery key safe. We can't recover a diary or a lost recovery key for you.",
         ],
       },
       {
@@ -360,7 +362,7 @@ export const en: Messages = {
       {
         question: "I'm moving to a new iPhone. Will my diary come along?",
         answer: [
-          "Yes, if you move with Quick Start or restore from an iPhone backup. There is no separate Poopita backup yet, so without an iPhone backup a lost phone means a lost diary. We never have a copy.",
+          "Yes, if you move with Quick Start or restore from an iPhone backup. You can also create a backup in Settings › Backup and restore it on the new iPhone with your recovery key. We never have a copy.",
         ],
       },
       {

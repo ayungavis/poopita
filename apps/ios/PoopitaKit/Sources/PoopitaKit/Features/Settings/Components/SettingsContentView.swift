@@ -4,6 +4,7 @@ import SwiftUI
 struct SettingsContentView: View {
     let viewModel: SettingsViewModel
     let reminders: RemindersViewModel
+    let backup: BackupModel
     let data: SettingsViewData
     let close: () -> Void
 
@@ -22,6 +23,7 @@ struct SettingsContentView: View {
                     cancelLanguageChange: viewModel.cancelLanguageChange
                 )
                 privacySection
+                SettingsBackupView(backup: backup)
                 SettingsDataView(csvExport: viewModel.csvExport, pdfExport: viewModel.pdfExport)
                 helpSection
                 footer

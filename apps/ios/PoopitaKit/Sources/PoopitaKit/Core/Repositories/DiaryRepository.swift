@@ -10,6 +10,7 @@ protocol DiaryRepository {
     func save(_ entry: DiaryEntry) throws -> DiaryEntrySaveResult
     func delete(id: UUID) throws
     func deleteAll() throws
+    func replaceAll(entries: [DiaryEntry], checkIns: [NoPoopCheckIn]) throws
     func undo() throws
 }
 
@@ -80,6 +81,15 @@ final class LocalDiaryRepository: DiaryRepository {
         undoState = (previous, updated)
     }
 
+    func replaceAll(entries: [DiaryEntry], checkIns: [NoPoopCheckIn]) throws {
+        try Task.checkCancellation()
+        try DiaryIntegrity.check(entries: entries, checkIns: checkIns)
+        let previous = try snapshot()
+        let updated = DiarySnapshot(entries: entries, checkIns: checkIns)
+        try store.write(updated, key: "diary")
+        undoState = (previous, updated)
+    }
+
     func undo() throws {
         guard let undoState else { throw AppError.nothingToUndo }
         guard try snapshot() == undoState.saved else { throw AppError.conflict }
@@ -91,20 +101,7 @@ final class LocalDiaryRepository: DiaryRepository {
         guard let saved = try store.read(DiarySnapshot.self, key: "diary") else {
             return DiarySnapshot(entries: [], checkIns: [])
         }
-        guard Set(saved.entries.map(\.id)).count == saved.entries.count,
-              Set(saved.checkIns.map(\.day)).count == saved.checkIns.count,
-              !saved.entries.contains(where: { entry in
-                  saved.checkIns.contains { $0.day == DiaryDay(occurrence: entry.occurrence) }
-              })
-        else {
-            throw AppError.invalidStoredData
-        }
-        do {
-            try saved.entries.forEach { try $0.validate() }
-            try saved.checkIns.forEach { try $0.validate() }
-        } catch {
-            throw AppError.invalidStoredData
-        }
+        try DiaryIntegrity.check(entries: saved.entries, checkIns: saved.checkIns)
         return saved
     }
 }

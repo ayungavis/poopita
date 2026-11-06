@@ -19,6 +19,10 @@ public enum AppError: Error, Equatable, Sendable {
     case invalidCheckIn
     case checkInConflict
     case nothingToUndo
+    case backupUnreadable
+    case backupKeyMismatch
+    case backupFromNewerVersion
+    case invalidRecoveryKey
     case unexpected
 
     public var userMessage: String {
@@ -59,6 +63,14 @@ public enum AppError: Error, Equatable, Sendable {
             String(localized: "error.checkInConflict", bundle: .module)
         case .nothingToUndo:
             String(localized: "error.nothingToUndo", bundle: .module)
+        case .backupUnreadable:
+            String(localized: "error.backupUnreadable", bundle: .module)
+        case .backupKeyMismatch:
+            String(localized: "error.backupKeyMismatch", bundle: .module)
+        case .backupFromNewerVersion:
+            String(localized: "error.backupFromNewerVersion", bundle: .module)
+        case .invalidRecoveryKey:
+            String(localized: "error.invalidRecoveryKey", bundle: .module)
         case .unexpected:
             String(localized: "error.unexpected", bundle: .module)
         }
@@ -97,6 +109,10 @@ extension AppError {
         case .invalidCheckIn: "invalidCheckIn"
         case .checkInConflict: "checkInConflict"
         case .nothingToUndo: "nothingToUndo"
+        case .backupUnreadable: "backupUnreadable"
+        case .backupKeyMismatch: "backupKeyMismatch"
+        case .backupFromNewerVersion: "backupFromNewerVersion"
+        case .invalidRecoveryKey: "invalidRecoveryKey"
         }
     }
 }

@@ -58,6 +58,14 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
         NSFaceIDUsageDescription: "Unlock your private diary."
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.ayungavis.poopita.backup
+            UTTypeDescription: Poopita Backup
+            UTTypeConformsTo:
+              - public.data
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - poopitabackup
     dependencies:
       - package: PoopitaKit
         product: PoopitaKit

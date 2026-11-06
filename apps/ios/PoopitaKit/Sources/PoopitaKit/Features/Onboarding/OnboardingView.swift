@@ -5,6 +5,8 @@ struct OnboardingView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let viewModel: OnboardingViewModel
     let reminders: RemindersViewModel
+    let backup: BackupModel
+    @State private var isImporting = false
 
     var body: some View {
         let data = viewModel.state
@@ -26,6 +28,7 @@ struct OnboardingView: View {
         .tint(AppColor.accent)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: data.step)
         .sensoryFeedback(.selection, trigger: data.step)
+        .restoreBackupFlow(backup, isImporting: $isImporting) { viewModel.finish() }
     }
 
     @ViewBuilder
@@ -55,6 +58,23 @@ struct OnboardingView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            if step == .welcome {
+                Button { isImporting = true } label: {
+                    Text("onboarding.restore", bundle: .module)
+                        .font(AppFont.body.weight(.semibold))
+                        .foregroundStyle(AppColor.accent)
+                        .frame(maxWidth: .infinity, minHeight: Spacing.touchTarget)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .disabled(backup.isWorking)
+            }
+            if let error = backup.errorMessage {
+                Text(verbatim: error)
+                    .font(AppFont.caption)
+                    .foregroundStyle(AppColor.destructive)
+                    .multilineTextAlignment(.center)
+            }
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.bottom, Spacing.sm)
