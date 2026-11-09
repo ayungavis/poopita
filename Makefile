@@ -5,6 +5,12 @@ DEST      ?= platform=iOS Simulator,name=iPhone 18 Pro
 BUNDLE_ID  = com.ayungavis.Poopita
 BUILD_LOG  = /tmp/poopita-build.log
 TEST_FLAGS ?=
+SIM_NAME   = $(shell printf '%s' '$(DEST)' | sed -n 's/.*name=\([^,]*\).*/\1/p')
+LPAREN    := (
+SIM_UDID   = $(shell xcrun simctl list devices available | grep -F '    $(SIM_NAME) $(LPAREN)' | sort -t '$(LPAREN)' -k 3 \
+                 | sed -nE 's/.*\(([0-9A-F-]{36})\).*/\1/p' | head -1)
+USE_SIM    = SIM='$(SIM_UDID)'; test -n "$$SIM" || { echo "No simulator named '$(SIM_NAME)' (DEST=$(DEST))"; exit 1; }; \
+             xcrun simctl bootstatus "$$SIM" -b > /dev/null
 
 .DEFAULT_GOAL := help
 
@@ -39,8 +45,8 @@ ios-build: ios-generate ## Build for the iPhone simulator
 		&& grep -E '^\*\* BUILD' $(BUILD_LOG) \
 		|| (tail -30 $(BUILD_LOG); exit 1)
 
-ios-storage-smoke: ## Check real storage on the booted simulator
-	@set -eu; \
+ios-storage-smoke: ## Check real storage on the DEST simulator
+	@set -eu; $(USE_SIM); \
 	SMOKE_DIR=$$(mktemp -d /tmp/poopita-storage-smoke.XXXXXX); \
 	trap 'rm -rf "$$SMOKE_DIR"' EXIT; \
 	SDK_PATH=$$(xcrun --sdk iphonesimulator --show-sdk-path); \
@@ -50,20 +56,21 @@ ios-storage-smoke: ## Check real storage on the booted simulator
 		$(PACKAGE)/Sources/PoopitaKit/Core/Stores/SwiftDataValueStore.swift \
 		$(PACKAGE)/Sources/PoopitaKit/Utilities/ProtectedStorage.swift \
 		apps/ios/SmokeTests/StorageSmoke.swift -o "$$SMOKE_DIR/StorageSmoke"; \
-	xcrun simctl spawn booted "$$SMOKE_DIR/StorageSmoke"
+	xcrun simctl spawn "$$SIM" "$$SMOKE_DIR/StorageSmoke"
 
 ios-startup-smoke: ## Read-only Today startup check; app must be running without a debugger
-	@set -eu; \
-	APP_PID=$$(xcrun simctl spawn booted launchctl list \
+	@set -eu; $(USE_SIM); \
+	APP_PID=$$(xcrun simctl spawn "$$SIM" launchctl list \
 		| awk '$$3 ~ /^UIKitApplication:com\.ayungavis\.Poopita\[/ { print $$1 }'); \
-	test -n "$$APP_PID" || { echo "Poopita is not running on the booted simulator"; exit 1; }; \
+	test -n "$$APP_PID" || { echo "Poopita is not running on $(SIM_NAME)"; exit 1; }; \
 	xcrun lldb --batch -p "$$APP_PID" -s apps/ios/SmokeTests/StartupSmoke.lldb
 
-ios-run: ios-build ios-storage-smoke ## Build, check storage, install, and launch on the booted simulator
-	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -showBuildSettings 2>/dev/null \
+ios-run: ios-build ios-storage-smoke ## Build, check storage, install, and launch on the DEST simulator
+	@$(USE_SIM); \
+	APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -showBuildSettings 2>/dev/null \
 		| awk '$$1 == "BUILT_PRODUCTS_DIR" { print $$3; exit }'); \
-	xcrun simctl install booted "$$APP/$(SCHEME).app" && \
-	xcrun simctl launch booted $(BUNDLE_ID)
+	xcrun simctl install "$$SIM" "$$APP/$(SCHEME).app" && \
+	xcrun simctl launch "$$SIM" $(BUNDLE_ID)
 
 ios-validate: ios-format ios-lint ios-test ios-build ## format → lint → test → build
 	@echo "✅ iOS OK — format, lint, test, build all green"
