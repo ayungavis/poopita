@@ -22,7 +22,7 @@ env:
 
 jobs:
   lint:
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - run: make ios-lint
 
   test:
-    runs-on: macos-26
+    runs-on: xcode-27
     # `script` gives the test binary a pty so a hang shows its last line.
     timeout-minutes: 20
     steps:
@@ -38,7 +38,7 @@ jobs:
       - run: script -q /dev/null make ios-test TEST_FLAGS=--no-parallel
 
   build:
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
