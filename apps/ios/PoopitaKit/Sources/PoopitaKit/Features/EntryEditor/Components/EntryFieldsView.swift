@@ -7,6 +7,9 @@ struct EntryFieldsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xl) {
+            if let summary = viewModel.repeatSummary {
+                EntryRepeatButtonView(summary: summary, action: viewModel.repeatLastTime)
+            }
             section(.type, title: Text("entry.typeLabel", bundle: .module), accessory: guideLink) {
                 EntryTileGridView(
                     choices: EntryChoiceViewData.types, selected: viewModel.draft.stoolType.map(String.init),

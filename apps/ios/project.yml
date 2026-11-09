@@ -72,6 +72,10 @@ targets:
             NSUbiquitousContainerIsDocumentScopePublic: true
             NSUbiquitousContainerName: Poopita
             NSUbiquitousContainerSupportedFolderLevels: None
+        CFBundleURLTypes:
+          - CFBundleURLName: com.ayungavis.Poopita
+            CFBundleURLSchemes:
+              - poopita
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: com.ayungavis.poopita.backup
             UTTypeDescription: Poopita Backup
@@ -85,5 +89,40 @@ targets:
         product: PoopitaKit
       - package: Sentry
         product: Sentry
+      - target: PoopitaWidgets
     scheme:
       testTargets: []
+
+  PoopitaWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: PoopitaWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ayungavis.Poopita.Widgets
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          DEVELOPMENT_TEAM: QHL64K2LPL
+          PROVISIONING_PROFILE_SPECIFIER: Poopita Widgets Apple Distribution
+    info:
+      path: PoopitaWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Poopita
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    dependencies:
+      - package: PoopitaKit
+        product: PoopitaKit
+      - package: PoopitaKit
+        product: DesignSystem
+

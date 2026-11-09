@@ -15,13 +15,16 @@ final class EntryEditorViewModel: Identifiable {
     private let now: () -> Date
     private let initialDraft: EntryEditorViewData
     private var original: DiaryEntry?
+    private let previous: EntryEditorViewData?
 
     init(repository: any DiaryRepository, entryID: UUID, draft: EntryEditorViewData, now: @escaping () -> Date) throws {
         self.repository = repository
         id = entryID
         self.now = now
-        let original = try repository.entries().first { $0.id == entryID }
+        let entries = try repository.entries()
+        let original = entries.first { $0.id == entryID }
         self.original = original
+        previous = original == nil ? Self.previousComplete(in: entries) : nil
         let initial = original.map(Self.viewData) ?? draft
         guard let zone = TimeZone(identifier: initial.timeZoneIdentifier) else { throw AppError.invalidOccurrence }
         displayTimeZone = zone
@@ -64,6 +67,15 @@ final class EntryEditorViewModel: Identifiable {
         let names = missingFields.map(\.title)
         guard !names.isEmpty else { return nil }
         return String(localized: "entry.missing \(names.formatted(.list(type: .and)))", bundle: .module)
+    }
+
+    var repeatSummary: String? {
+        Self.repeatSummary(previous: previous, draft: draft)
+    }
+
+    func repeatLastTime() {
+        guard let previous else { return }
+        updateDraft(Self.repeating(previous, onto: draft))
     }
 
     func selectType(_ value: String) {
@@ -147,6 +159,31 @@ final class EntryEditorViewModel: Identifiable {
             blood: entry.blood?.rawValue, color: entry.color?.rawValue, duration: entry.duration?.rawValue,
             note: entry.note
         )
+    }
+
+    static func previousComplete(in entries: [DiaryEntry]) -> EntryEditorViewData? {
+        entries.first { $0.stoolType != nil && $0.amount != nil && $0.effort != nil && $0.blood != nil }
+            .map(viewData)
+    }
+
+    static func repeating(_ previous: EntryEditorViewData, onto draft: EntryEditorViewData) -> EntryEditorViewData {
+        var draft = draft
+        draft.stoolType = previous.stoolType
+        draft.amount = previous.amount
+        draft.effort = previous.effort
+        draft.blood = previous.blood
+        return draft
+    }
+
+    static func repeatSummary(previous: EntryEditorViewData?, draft: EntryEditorViewData) -> String? {
+        guard let previous, repeating(previous, onto: draft) != draft else { return nil }
+        let titles = [
+            EntryChoiceViewData.types.first { $0.id == previous.stoolType.map(String.init) },
+            EntryChoiceViewData.amounts.first { $0.id == previous.amount },
+            EntryChoiceViewData.efforts.first { $0.id == previous.effort },
+            EntryChoiceViewData.bloods.first { $0.id == previous.blood },
+        ].compactMap { $0?.title }
+        return titles.formatted(.list(type: .and, width: .narrow))
     }
 
     static func whenLabels(

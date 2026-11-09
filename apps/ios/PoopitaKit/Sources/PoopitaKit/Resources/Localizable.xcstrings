@@ -1556,6 +1556,38 @@
         }
       }
     },
+    "entry.repeat" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same as last time"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sama seperti terakhir"
+          }
+        }
+      }
+    },
+    "entry.repeat.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fills in type, amount, effort and blood from your last log."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengisi jenis, jumlah, usaha, dan darah dari catatan terakhir Anda."
+          }
+        }
+      }
+    },
     "entry.saveChanges" : {
       "localizations" : {
         "en" : {
@@ -5579,6 +5611,86 @@
         }
       }
     },
+    "settings.guide.doctor.blood" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blood in or on your stool, or black, tar-like stool"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ada darah pada tinja, atau tinja hitam seperti ter"
+          }
+        }
+      }
+    },
+    "settings.guide.doctor.change" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A change in your usual that lasts more than two weeks"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perubahan dari kebiasaan Anda yang berlangsung lebih dari dua minggu"
+          }
+        }
+      }
+    },
+    "settings.guide.doctor.color" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pale, white or clay-coloured stool"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tinja pucat, putih, atau berwarna seperti tanah liat"
+          }
+        }
+      }
+    },
+    "settings.guide.doctor.pain" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strong belly pain, fever or weight loss you can't explain"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakit perut hebat, demam, atau berat badan turun tanpa sebab"
+          }
+        }
+      }
+    },
+    "settings.guide.doctor.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When to talk to a doctor"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapan perlu ke dokter"
+          }
+        }
+      }
+    },
     "settings.guide.harder" : {
       "localizations" : {
         "en" : {
@@ -6183,6 +6295,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ sejak catatan terakhir"
+          }
+        }
+      }
+    },
+    "widget.log.description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens Poopita straight to a new log."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Membuka Poopita langsung ke catatan baru."
+          }
+        }
+      }
+    },
+    "widget.log.detail" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to add one"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketuk untuk menambah"
+          }
+        }
+      }
+    },
+    "widget.log.name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick log"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat cepat"
+          }
+        }
+      }
+    },
+    "widget.log.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat"
           }
         }
       }

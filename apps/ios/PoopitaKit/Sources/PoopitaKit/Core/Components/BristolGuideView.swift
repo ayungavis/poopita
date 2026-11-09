@@ -28,6 +28,7 @@ struct BristolGuideView: View {
                         .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
                     }
                 }
+                doctorCard
                 Text(verbatim: guide.note)
                     .font(AppFont.caption)
                     .foregroundStyle(AppColor.textSecondary)
@@ -38,6 +39,34 @@ struct BristolGuideView: View {
         }
         .background(AppColor.background)
         .navigationTitle(Text("settings.help.bristol", bundle: .module))
+    }
+
+    private var doctorCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Label {
+                Text(verbatim: guide.doctorTitle)
+                    .font(AppFont.body.weight(.semibold))
+                    .foregroundStyle(AppColor.textPrimary)
+            } icon: {
+                Image(systemName: "stethoscope")
+                    .foregroundStyle(AppColor.accent)
+            }
+            .accessibilityAddTraits(.isHeader)
+            ForEach(guide.doctorSigns, id: \.self) { sign in
+                HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
+                    Text(verbatim: "•")
+                        .accessibilityHidden(true)
+                    Text(verbatim: sign)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .font(AppFont.body)
+                .foregroundStyle(AppColor.textPrimary)
+            }
+        }
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColor.surface, in: RoundedRectangle(cornerRadius: Spacing.md))
+        .accessibilityElement(children: .combine)
     }
 
     private func rowView(_ row: BristolGuideViewData.Row) -> some View {

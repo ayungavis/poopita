@@ -19,6 +19,7 @@ public struct RootView: View {
     @State private var selectedTab = RootTab.today
     @State private var isShowingSettings = false
     @State private var isShowingFrequency = false
+    @State private var pendingRoute: RemindersRoute?
 
     public init(container: AppContainer) {
         self.container = container
@@ -136,14 +137,14 @@ public struct RootView: View {
         .onChange(of: remindersModel?.route, initial: true) { _, route in
             guard let route else { return }
             remindersModel?.consumeRoute()
-            isShowingSettings = false
-            isShowingFrequency = false
-            switch route {
-            case .log:
-                selectedTab = .today
-                model?.presentLogSheet()
-            case .insights:
-                selectedTab = .insights
+            open(route)
+        }
+        .onOpenURL { url in
+            guard let route = QuickLogLink.route(for: url) else { return }
+            if model == nil {
+                pendingRoute = route
+            } else {
+                open(route)
             }
         }
         .onChange(of: undoModel?.revision) {
@@ -221,6 +222,18 @@ public struct RootView: View {
         model?.presentLogSheet()
     }
 
+    private func open(_ route: RemindersRoute) {
+        isShowingSettings = false
+        isShowingFrequency = false
+        switch route {
+        case .log:
+            selectedTab = .today
+            model?.presentLogSheet()
+        case .insights:
+            selectedTab = .insights
+        }
+    }
+
     private func openDiary() {
         do {
             model = try container.makeTodayViewModel()
@@ -233,6 +246,10 @@ public struct RootView: View {
             onboardingModel = try container.makeOnboardingViewModel()
             appLock = try container.appLockModel()
             errorMessage = nil
+            if let pendingRoute {
+                self.pendingRoute = nil
+                open(pendingRoute)
+            }
         } catch {
             errorMessage = AppError(wrapping: error).userMessage
         }
