@@ -85,6 +85,22 @@ struct HistoryFlowTests {
         #expect(Self.loaded(model.state)?.isShowingToday == true)
     }
 
+    @Test func movingIntoThisMonthNeverSelectsAFutureDay() throws {
+        let zone = try #require(TimeZone(secondsFromGMT: 0))
+        let clock = try date("2026-11-09T12:00:00Z")
+        let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: fixture()))
+        let model = try HistoryViewModel(
+            repository: repository, undoModel: UndoModel(repository: repository),
+            now: { clock }, timeZone: { zone }
+        )
+        model.load()
+        model.moveMonth(-1)
+        model.select(id: "2026-10-16")
+        model.moveMonth(1)
+        #expect(Self.loaded(model.state)?.monthLabel == "November 2026")
+        #expect(Self.loaded(model.state)?.selected.dayID == "2026-11-09")
+    }
+
     @Test func saveDeleteAndUndoKeepTheSelectedHistoryDay() throws {
         let zone = try #require(TimeZone(secondsFromGMT: 0))
         let clock = try date("2026-10-20T12:00:00Z")

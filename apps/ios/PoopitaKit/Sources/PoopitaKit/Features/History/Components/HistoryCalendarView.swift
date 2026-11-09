@@ -36,6 +36,8 @@ struct HistoryCalendarView: View {
                 Text(verbatim: item.number)
                     .font(AppFont.title.weight(.regular))
                     .foregroundStyle(numberColor(item))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                     .padding(.horizontal, Spacing.xs)
                     .background {
                         if item.mark == .unrecorded, !item.isSelected {

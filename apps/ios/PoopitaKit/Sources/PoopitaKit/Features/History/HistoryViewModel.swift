@@ -82,7 +82,7 @@ final class HistoryViewModel {
               let newSelection = try? DiaryDay(date: selectedDate, timeZone: timeZone())
         else { return }
         month = interval.start
-        selectedDay = newSelection
+        selectedDay = min(newSelection, todayDay())
         load()
     }
 
