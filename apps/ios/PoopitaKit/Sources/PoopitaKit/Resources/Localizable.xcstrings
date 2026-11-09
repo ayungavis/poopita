@@ -548,54 +548,6 @@
         }
       }
     },
-    "checkIn.noneSoFar" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None so far today"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB sejauh ini"
-          }
-        }
-      }
-    },
-    "checkIn.partial" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partial check-in"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laporan sebagian hari"
-          }
-        }
-      }
-    },
-    "checkIn.partialDetail %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None reported by %@. The rest of that day is unconfirmed."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB sampai %@. Sisa hari tersebut belum dikonfirmasi."
-          }
-        }
-      }
-    },
     "checkIn.saved" : {
       "localizations" : {
         "en" : {
@@ -2324,22 +2276,6 @@
         }
       }
     },
-    "history.legend.noneSoFar" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None so far"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB"
-          }
-        }
-      }
-    },
     "history.legend.noPoop" : {
       "localizations" : {
         "en" : {
@@ -2624,22 +2560,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld hari bulan ini"
-          }
-        }
-      }
-    },
-    "insights.breakdown.noneSoFar" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None so far (partial)"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB (sebagian)"
           }
         }
       }
@@ -4052,22 +3972,6 @@
         }
       }
     },
-    "onboarding.marks.noneSoFar" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not yet, and the day was never confirmed."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum BAB, dan hari itu tidak pernah dipastikan."
-          }
-        }
-      }
-    },
     "onboarding.marks.noPoop" : {
       "localizations" : {
         "en" : {
@@ -4416,22 +4320,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Catat sekarang"
-          }
-        }
-      }
-    },
-    "reminders.action.noneSoFar" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None so far today"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Belum ada hari ini"
           }
         }
       }
@@ -6231,38 +6119,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Belum ada catatan"
-          }
-        }
-      }
-    },
-    "today.notYet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I haven't gone yet"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saya belum BAB"
-          }
-        }
-      }
-    },
-    "today.notYetNote %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You said you hadn't gone yet at %@"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kamu bilang belum BAB pukul %@"
           }
         }
       }

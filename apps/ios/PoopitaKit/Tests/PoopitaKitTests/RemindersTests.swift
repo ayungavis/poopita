@@ -97,7 +97,7 @@ struct RemindersTests {
     }
 
     @Test func mapsNotificationActionsAndOffersSnoozeOnlyWhileItFits() {
-        #expect(ReminderCategory.response(action: ReminderCategory.noneSoFar, category: ReminderCategory.daily) == .noneSoFar)
+        #expect(ReminderCategory.response(action: "poopita.noneSoFar", category: ReminderCategory.daily) == nil)
         #expect(
             ReminderCategory.response(action: ReminderCategory.defaultAction, category: ReminderCategory.weeklySummary)
                 == .opened(.weeklySummary)
@@ -123,16 +123,15 @@ struct RemindersTests {
         #expect(late.allSatisfy { !$0.allowsSnooze })
     }
 
-    @Test func noneSoFarSavesAPartialCheckInAndDropsTodaysReminder() async throws {
+    @Test func anOldPartialCheckInNoLongerSkipsTodaysReminder() throws {
         let fixture = try Self.model()
         fixture.model.setEnabled(true)
-        #expect(fixture.model.plan().first.map { Self.calendar.isDate($0.date, inSameDayAs: Self.now) } == true)
-
-        await fixture.model.handle(.noneSoFar)
-        let checkIn = try #require(try fixture.diary.checkIns().first)
-        #expect(checkIn.coverage == .partial)
-        #expect(fixture.model.revision == 1)
-        #expect(fixture.model.plan().allSatisfy { $0.kind != .daily || !Self.calendar.isDate($0.date, inSameDayAs: Self.now) })
+        let report = try OccurrenceTime(instant: Self.now, timeZone: Self.zone)
+        let isToday = { (reminder: PlannedReminder) in
+            reminder.kind == .daily && Self.calendar.isDate(reminder.date, inSameDayAs: Self.now)
+        }
+        try fixture.diary.saveCheckIn(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
+        #expect(fixture.model.plan().contains(where: isToday))
     }
 
     @Test func snoozeAddsOneHourAtMostTwiceADay() async throws {

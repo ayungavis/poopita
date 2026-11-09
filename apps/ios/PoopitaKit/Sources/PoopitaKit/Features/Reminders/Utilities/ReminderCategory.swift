@@ -4,7 +4,6 @@ enum ReminderCategory {
     static let weeklySummary = "poopita.weeklySummary"
     static let gap = "poopita.gap"
     static let logNow = "poopita.logNow"
-    static let noneSoFar = "poopita.noneSoFar"
     static let snooze = "poopita.snooze"
     static let defaultAction = "com.apple.UNNotificationDefaultActionIdentifier"
 
@@ -19,7 +18,6 @@ enum ReminderCategory {
     static func response(action: String, category: String) -> ReminderResponse? {
         switch (action, category) {
         case (logNow, _): .logNow
-        case (noneSoFar, _): .noneSoFar
         case (snooze, _): .snooze
         case (defaultAction, daily), (defaultAction, dailyLastCall): .opened(.daily)
         case (defaultAction, weeklySummary): .opened(.weeklySummary)

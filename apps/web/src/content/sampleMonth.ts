@@ -5,7 +5,7 @@ export type DayMark =
   | { kind: "logged"; types: readonly BristolType[] }
   | { kind: "none" }
   | { kind: "unknown" }
-  | { kind: "partial" }
+  | { kind: "open" }
   | { kind: "future" };
 
 export interface SampleDay {
@@ -45,7 +45,7 @@ const marks: readonly DayMark[] = [
   logged(4),
   none,
   logged(3),
-  { kind: "partial" },
+  { kind: "open" },
   { kind: "future" },
   { kind: "future" },
   { kind: "future" },

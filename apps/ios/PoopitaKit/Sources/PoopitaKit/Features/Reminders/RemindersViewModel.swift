@@ -91,7 +91,7 @@ final class RemindersViewModel {
 
     func plan() -> [PlannedReminder] {
         let entries = (try? diary.entries()) ?? []
-        let checkIns = (try? diary.checkIns()) ?? []
+        let checkIns = ((try? diary.checkIns()) ?? []).filter { $0.coverage == .completed }
         let loggedDays = Set(entries.map { DiaryDay(occurrence: $0.occurrence) } + checkIns.map(\.day))
         let lastActivity = (entries.map(\.occurrence.instant) + checkIns.map(\.reportedAt.instant)).max()
         let context = ReminderPlanner.Context(
@@ -106,16 +106,6 @@ final class RemindersViewModel {
             route = .insights
         case .opened, .logNow:
             route = .log
-        case .noneSoFar:
-            do {
-                let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
-                try diary.saveCheckIn(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
-                revision += 1
-            } catch AppError.checkInConflict {
-                Log.app.info("None so far skipped: today already has a log")
-            } catch {
-                Log.report(error, context: Log.Context(operation: "reminders.noneSoFar"))
-            }
         case .snooze:
             snooze()
         }

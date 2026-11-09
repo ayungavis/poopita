@@ -32,14 +32,14 @@ struct HistoryFlowTests {
         let days = Dictionary(uniqueKeysWithValues: data.calendar.days.compactMap(\.self).map { ($0.dayID, $0.mark) })
         #expect(days["2026-10-03"] == .logs(2))
         #expect(days["2026-10-04"] == .noPoop)
-        #expect(days["2026-10-05"] == .noneSoFar)
+        #expect(days["2026-10-05"] == .unrecorded)
         #expect(days["2026-10-06"] == .unrecorded)
         #expect(days["2026-10-20"] == .open)
         #expect(days["2026-10-21"] == .future)
         #expect(Self.entries(data.selected)?.count == 2)
         #expect(data.selected.countLabel == "2 logs")
         #expect(data.logSummary == "2 logs in October")
-        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-06", label: "14 days not recorded"))
+        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-05", label: "15 days not recorded"))
         #expect(days["2026-10-02"] == .untracked)
     }
 

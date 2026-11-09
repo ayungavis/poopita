@@ -121,7 +121,7 @@ struct CheckInFlowTests {
         return data
     }
 
-    @Test func midnightRetainsPartialCoverageUntilExplicitConfirmationAndCancellationWritesNothing() async throws {
+    @Test func anOldPartialCheckInReadsAsNotRecordedUntilConfirmedAndCancellationWritesNothing() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
@@ -130,20 +130,21 @@ struct CheckInFlowTests {
         let model = try CheckInViewModel(repository: repository, now: { clock }, timeZone: { zone })
         try model.load()
         #expect(Self.data(model.state)?.today.status == "Not recorded")
-        let cancelled = Task { model.recordToday() }
+        let cancelled = Task { model.confirmSelectedDay() }
         cancelled.cancel()
         #expect(await cancelled.value == false)
         #expect(try repository.checkIns().isEmpty)
-        #expect(model.recordToday())
+        let report = try OccurrenceTime(instant: clock, timeZone: zone)
+        let partial = NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial)
+        try repository.saveCheckIn(partial)
         try model.load()
-        #expect(Self.data(model.state)?.today.status == "None so far today")
-        let partial = try #require(try repository.checkIns().first)
+        #expect(Self.data(model.state)?.today.status == "Not recorded")
         clock = clock.addingTimeInterval(120)
         try model.load()
         #expect(Self.data(model.state)?.today.status == "Not recorded")
         #expect(try repository.checkIns() == [partial])
         model.selectDate(partial.reportedAt.instant)
-        #expect(Self.data(model.state)?.selected.status == "Partial check-in")
+        #expect(Self.data(model.state)?.selected.status == "Not recorded")
         #expect(Self.data(model.state)?.selected.canRecord == true)
         #expect(model.confirmSelectedDay())
         try model.load()
@@ -172,7 +173,8 @@ struct CheckInFlowTests {
         let date = Date(timeIntervalSince1970: 1_793_511_000)
         let model = try CheckInViewModel(repository: repository, now: { date }, timeZone: { .gmt })
         try model.load()
-        #expect(model.recordToday())
+        let report = try OccurrenceTime(instant: date, timeZone: .gmt)
+        try repository.saveCheckIn(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
         let selection = model.selectedDate
         #expect(!model.confirmSelectedDay())
         #expect(model.errorMessage == AppError.storageWrite.userMessage)
@@ -192,9 +194,9 @@ struct CheckInFlowTests {
         let model = TodayViewModel(repository: repository, undoModel: undo, now: { date }, timeZone: { .gmt })
         model.load()
         await model.loadTask?.value
-        let checkInModel = try #require(model.checkIn)
-        #expect(checkInModel.recordToday())
-        model.savedCheckIn()
+        let report = try OccurrenceTime(instant: date, timeZone: .gmt)
+        try repository.saveCheckIn(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
+        model.load()
         await model.loadTask?.value
         let checkIn = try #require(try repository.checkIns().first)
         let composer = try #require(model.composer)

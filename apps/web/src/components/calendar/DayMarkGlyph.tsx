@@ -8,9 +8,8 @@ export function DayMarkGlyph({ mark }: { mark: DayMark }) {
       return <LoggedGlyph types={mark.types} />;
     case "none":
       return <TickGlyph />;
-    case "partial":
-      return <DiamondGlyph />;
     case "unknown":
+    case "open":
     case "untracked":
     case "future":
       return null;
@@ -36,14 +35,6 @@ function TickGlyph() {
   return (
     <svg className="day-tick" viewBox="0 0 24 24" aria-hidden focusable="false">
       <path d="M5 12.5 L10 17 L19 7.5" />
-    </svg>
-  );
-}
-
-function DiamondGlyph() {
-  return (
-    <svg className="day-diamond" viewBox="0 0 24 24" aria-hidden focusable="false">
-      <path d="M12 4 L19 12 L12 20 L5 12 Z" />
     </svg>
   );
 }

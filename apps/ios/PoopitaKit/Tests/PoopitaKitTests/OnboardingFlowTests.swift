@@ -68,7 +68,7 @@ struct OnboardingFlowTests {
 
     @Test func theSampleWeekEndsTodayAndShowsEveryMark() {
         let data = OnboardingViewModel.viewData(step: .marks, now: Self.now, timeZone: Self.zone)
-        #expect(data.sampleWeek.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .noneSoFar])
+        #expect(data.sampleWeek.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .logs(1)])
         #expect(data.sampleWeek.map(\.isToday) == [false, false, false, false, true])
         var day = Date.FormatStyle.dateTime.day()
         day.timeZone = Self.zone

@@ -75,7 +75,7 @@ export const id: Messages = {
             plain: "Sama seperti lupa",
             poopita: "Dikonfirmasi dengan satu ketukan",
           },
-          { situation: "Hari ini, sebelum BAB", plain: "Sudah 0", poopita: "Belum BAB" },
+          { situation: "Hari ini, sebelum BAB", plain: "Sudah 0", poopita: "Belum selesai" },
         ],
       },
     },

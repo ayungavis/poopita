@@ -74,7 +74,7 @@ export const en: Messages = {
             plain: "Looks like forgetting",
             poopita: "Confirmed with one tap",
           },
-          { situation: "Today, before you go", plain: "Already 0", poopita: "None so far" },
+          { situation: "Today, before you go", plain: "Already 0", poopita: "Still open" },
         ],
       },
     },

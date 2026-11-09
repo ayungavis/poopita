@@ -367,10 +367,6 @@ a.pill:active {
   box-shadow: inset 0 0 0 1.5px var(--color-text-primary);
 }
 
-.rhythm-cell[data-tone="partial"] {
-  box-shadow: inset 0 0 0 2px var(--poopita-rust);
-}
-
 .rhythm-cell[data-tone="unknown"] {
   background-image: repeating-linear-gradient(135deg, var(--poopita-stripe) 0 1.5px, transparent 1.5px 6px);
 }

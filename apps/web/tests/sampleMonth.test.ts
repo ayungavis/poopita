@@ -13,9 +13,9 @@ describe("sample month", () => {
     expect(days).toEqual(sampleMonth.days.map((entry) => entry.day));
   });
 
-  test("today is the one partial day, and days after it are still to come", () => {
-    const partial = sampleMonth.days.filter((entry) => entry.mark.kind === "partial");
-    expect(partial.map((entry) => entry.day)).toEqual([sampleMonth.today]);
+  test("today is the one open day, and days after it are still to come", () => {
+    const open = sampleMonth.days.filter((entry) => entry.mark.kind === "open");
+    expect(open.map((entry) => entry.day)).toEqual([sampleMonth.today]);
     expect(
       sampleMonth.days
         .filter((entry) => entry.day > sampleMonth.today)

@@ -293,7 +293,6 @@ private extension HistoryDayViewData {
         switch mark {
         case let .logs(count): TodayViewModel.logCount(count)
         case .noPoop: String(localized: "checkIn.completed", bundle: .module)
-        case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
         case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
         case .untracked, .future, .open: nil
         }

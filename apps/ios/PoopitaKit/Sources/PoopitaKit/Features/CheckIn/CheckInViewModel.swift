@@ -50,17 +50,6 @@ final class CheckInViewModel {
     }
 
     @discardableResult
-    func recordToday() -> Bool {
-        do {
-            let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
-            return try save(NoPoopCheckIn(day: DiaryDay(occurrence: report), reportedAt: report, coverage: .partial))
-        } catch {
-            errorMessage = AppError(wrapping: error).userMessage
-            return false
-        }
-    }
-
-    @discardableResult
     func confirmSelectedDay() -> Bool {
         do {
             let report = try OccurrenceTime(instant: now(), timeZone: timeZone())
@@ -109,26 +98,12 @@ final class CheckInViewModel {
             return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.hasEntries", bundle: .module),
                                       detail: String(localized: "checkIn.entriesDetail", bundle: .module), canRecord: false)
         }
-        guard let checkIn = checkIns.first(where: { $0.day == day }) else {
+        guard checkIns.contains(where: { $0.day == day && $0.coverage == .completed }) else {
             return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.unknown", bundle: .module),
                                       detail: String(localized: "checkIn.unknownDetail", bundle: .module),
                                       canRecord: day <= today)
         }
-        if checkIn.coverage == .completed {
-            return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.completed", bundle: .module),
-                                      detail: String(localized: "checkIn.completedDetail", bundle: .module), canRecord: false)
-        }
-        guard let zone = TimeZone(secondsFromGMT: checkIn.reportedAt.utcOffsetSeconds) else {
-            throw AppError.invalidStoredData
-        }
-        var timeStyle = Date.FormatStyle.dateTime.year().month(.abbreviated).day().hour().minute()
-        timeStyle.timeZone = zone
-        let reported = checkIn.reportedAt.instant.formatted(timeStyle)
-        return CheckInDayViewData(
-            dateLabel: label,
-            status: day == today ? String(localized: "checkIn.noneSoFar", bundle: .module)
-                : String(localized: "checkIn.partial", bundle: .module),
-            detail: String(localized: "checkIn.partialDetail \(reported)", bundle: .module), canRecord: day < today
-        )
+        return CheckInDayViewData(dateLabel: label, status: String(localized: "checkIn.completed", bundle: .module),
+                                  detail: String(localized: "checkIn.completedDetail", bundle: .module), canRecord: false)
     }
 }

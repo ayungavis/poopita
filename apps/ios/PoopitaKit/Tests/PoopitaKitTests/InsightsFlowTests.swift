@@ -19,7 +19,7 @@ struct InsightsFlowTests {
         #expect(data.changes.isEmpty)
         #expect(data.consistency.rows.count == 4)
         #expect(data.consistency.lead == "0 hard and 0 loose of 5 logs, all under the 25% line.")
-        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-29", label: "1 day not recorded"))
+        #expect(data.unrecorded == HistoryUnrecordedViewData(dayID: "2026-10-29", label: "2 days not recorded"))
         #expect(data.types.map(\.id) == [4, 3])
         #expect(data.types.first?.days == "Mon, Tue, Sat")
         #expect(data.types.first?.count == "3 logs")
@@ -29,7 +29,7 @@ struct InsightsFlowTests {
         #expect(when.startMinute == 300)
         #expect(when.endMinute == 1320)
         #expect(when.columns[3].isUnrecorded)
-        #expect(when.columns[4].checkInMinute == 20 * 60 + 10)
+        #expect(when.columns[4].isUnrecorded)
         #expect(when.columns[5].nowMinute == 9 * 60 + 41)
         #expect(when.columns[1].logMinutes == [7 * 60 + 20, 21 * 60 + 5])
 
@@ -39,7 +39,7 @@ struct InsightsFlowTests {
         #expect(frequency.bars[3].isUnrecorded)
         #expect(frequency.bars[1].ratio == 1)
         #expect(frequency.breakdownTitle == "This week's 7 days")
-        #expect(frequency.breakdown.map(\.count) == ["3", "1", "1", "1", "1"])
+        #expect(frequency.breakdown.map(\.count) == ["3", "1", "2", "1"])
     }
 
     @Test func aChangeFromYourUsualLeadsAndRedFlagsAreSummarised() throws {
@@ -122,7 +122,7 @@ struct InsightsFlowTests {
         #expect(year.when.columns.count == 3)
         #expect(year.frequency.bars.count == 12)
         #expect(year.when.columns[0].logMinutes.count == 5)
-        #expect(year.when.columns[0].unknownCount == 1)
+        #expect(year.when.columns[0].unknownCount == 2)
         #expect(year.when.columns[2].isUnrecorded == false)
         #expect(year.when.isAggregated)
         #expect(year.usual.rows.isEmpty)

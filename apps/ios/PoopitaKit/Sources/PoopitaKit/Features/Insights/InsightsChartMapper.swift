@@ -5,7 +5,7 @@ extension InsightsViewModel {
         let columns = context.source.period == .year
             ? trackedMonths(context).map { yearColumn($0, context: context) }
             : context.days.map { dayColumn($0, context: context) }
-        let minutes = columns.flatMap { $0.logMinutes + [$0.checkInMinute].compactMap(\.self) }
+        let minutes = columns.flatMap(\.logMinutes)
         let start = min(5 * 60, (minutes.min() ?? 5 * 60) / 60 * 60)
         let end = min(24 * 60, max(22 * 60, ((minutes.max() ?? 0) / 60 + 1) * 60))
         let marks = stride(from: 0, through: 24, by: 6).map { $0 * 60 }.filter { $0 > start && $0 < end }.map {
@@ -53,7 +53,6 @@ extension InsightsViewModel {
     private nonisolated static func dayColumn(_ day: DiaryDay, context: InsightsContext) -> InsightsColumnViewData {
         let mark = context.marks.mark(day)
         let logs = (context.marks.logs[day] ?? []).sorted { $0.occurrence.instant < $1.occurrence.instant }
-        let checkIn = context.marks.checkIns[day]
         let nowParts = context.calendar.dateComponents([.hour, .minute], from: context.source.now)
         let times = logs.map { clock($0.occurrence.hour * 60 + $0.occurrence.minute, .dateTime.hour().minute(), context) }
             .joined(separator: ", ")
@@ -62,7 +61,6 @@ extension InsightsViewModel {
             cell: context.source.period == .week ? cell(day, context) : nil,
             label: context.source.period == .month && day.day % 7 == 1 ? String(day.day) : nil,
             logMinutes: logs.map { $0.occurrence.hour * 60 + $0.occurrence.minute },
-            checkInMinute: checkIn?.coverage == .partial ? checkIn.map { $0.reportedAt.hour * 60 + $0.reportedAt.minute } : nil,
             nowMinute: day == context.today ? (nowParts.hour ?? 0) * 60 + (nowParts.minute ?? 0) : nil,
             isUnrecorded: mark == .unrecorded,
             isConfirmedNone: mark == .noPoop,
@@ -79,7 +77,6 @@ extension InsightsViewModel {
             cell: nil,
             label: days.first.map { context.format(context.date($0), .dateTime.month(.abbreviated)) },
             logMinutes: logs.map { $0.occurrence.hour * 60 + $0.occurrence.minute },
-            checkInMinute: nil,
             nowMinute: nil,
             isUnrecorded: isUnrecorded(days, context: context),
             isConfirmedNone: false,
@@ -99,7 +96,6 @@ extension InsightsViewModel {
     private nonisolated static func status(_ day: DiaryDay?, _ context: InsightsContext) -> String {
         switch day.map(context.marks.mark) {
         case .noPoop: String(localized: "checkIn.completed", bundle: .module)
-        case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
         case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
         default: String(localized: "insights.noLogs", bundle: .module)
         }
@@ -189,7 +185,6 @@ extension InsightsViewModel {
         return [
             row("logged", .logs(1), "insights.breakdown.logged", logged),
             row("noPoop", .noPoop, "insights.breakdown.noPoop", marks.count { $0 == .noPoop }),
-            row("noneSoFar", .noneSoFar, "insights.breakdown.noneSoFar", marks.count { $0 == .noneSoFar }),
             row("unrecorded", .unrecorded, "insights.breakdown.unrecorded", marks.count { $0 == .unrecorded }),
             row("future", nil, "insights.breakdown.future", marks.count { $0 == .future || $0 == .open }),
         ] + untracked(marks)

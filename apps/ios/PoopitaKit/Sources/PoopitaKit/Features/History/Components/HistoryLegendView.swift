@@ -16,7 +16,6 @@ struct HistoryLegendView: View {
     private var items: some View {
         item(.logs(2), "history.legend.logs")
         item(.noPoop, "history.legend.noPoop")
-        item(.noneSoFar, "history.legend.noneSoFar")
         item(.unrecorded, "history.legend.unrecorded")
     }
 

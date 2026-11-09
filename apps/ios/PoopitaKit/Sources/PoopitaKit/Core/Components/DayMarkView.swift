@@ -18,11 +18,6 @@ struct DayMarkView: View {
             Circle()
                 .stroke(isSelected ? AppColor.onInk : AppColor.textSecondary, lineWidth: Spacing.borderWidth)
                 .frame(width: Spacing.sm, height: Spacing.sm)
-        case .noneSoFar:
-            Rectangle()
-                .stroke(isSelected ? AppColor.onInk : AppColor.partial, lineWidth: Spacing.borderWidth)
-                .frame(width: Spacing.xs + Spacing.borderWidth * 2, height: Spacing.xs + Spacing.borderWidth * 2)
-                .rotationEffect(.degrees(45))
         case .unrecorded:
             HatchView(color: isSelected ? AppColor.onInk : AppColor.marker)
                 .frame(width: Spacing.lg, height: Spacing.sm)

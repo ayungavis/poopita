@@ -121,16 +121,6 @@ struct InsightsWhenChartView: View {
             )
             context.stroke(Path(ellipseIn: circle), with: .color(AppColor.textSecondary), lineWidth: Spacing.borderWidth)
         }
-        if let minute = column.checkInMinute {
-            let center = CGPoint(x: size.width / 2, y: y(minute, in: size))
-            var diamond = Path()
-            diamond.move(to: CGPoint(x: center.x, y: center.y - Spacing.sm))
-            diamond.addLine(to: CGPoint(x: center.x + Spacing.sm, y: center.y))
-            diamond.addLine(to: CGPoint(x: center.x, y: center.y + Spacing.sm))
-            diamond.addLine(to: CGPoint(x: center.x - Spacing.sm, y: center.y))
-            diamond.closeSubpath()
-            context.stroke(diamond, with: .color(AppColor.partial), lineWidth: Spacing.borderWidth)
-        }
         if let minute = column.nowMinute, minute >= data.startMinute, minute <= data.endMinute {
             let lineY = y(minute, in: size)
             var line = Path()

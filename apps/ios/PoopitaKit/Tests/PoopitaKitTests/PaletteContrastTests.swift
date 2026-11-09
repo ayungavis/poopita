@@ -64,7 +64,7 @@ struct PaletteContrastTests {
         }
     }
 
-    @Test(arguments: ["marker", "partial"])
+    @Test(arguments: ["marker"])
     func dayMarkersMeetGraphicContrast(marker: String) throws {
         for appearance in Appearance.allCases {
             let ratio = try contrast(marker, on: "background", appearance)

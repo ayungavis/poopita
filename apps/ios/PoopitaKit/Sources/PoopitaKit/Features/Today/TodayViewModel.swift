@@ -112,13 +112,6 @@ final class TodayViewModel {
         }
     }
 
-    func recordCheckInToday() {
-        guard let checkIn else { return }
-        if checkIn.recordToday() {
-            savedCheckIn()
-        }
-    }
-
     func edit(id: UUID) {
         do {
             guard let entry = try repository.entries().first(where: { $0.id == id }) else { throw AppError.notFound }
@@ -278,9 +271,9 @@ extension TodayViewModel {
             dayState: dayState(
                 hasLogs: !dayEntries.isEmpty,
                 latestEntry: latestEntry,
-                checkIn: checkIns.first { $0.day == activeDay },
+                checkIn: checkIns.first { $0.day == activeDay && $0.coverage == .completed },
                 pastWeekday: activeDay == today ? nil : activeDate.formatted(shortWeekdayStyle),
-                isFirstDay: entries.isEmpty && checkIns.isEmpty,
+                isFirstDay: entries.isEmpty && !checkIns.contains { $0.coverage == .completed },
                 now: date
             ),
             timeline: timeline(
@@ -351,8 +344,6 @@ extension TodayViewModel {
                 .logs(logs)
             } else if coverage == .completed {
                 .noPoop
-            } else if coverage == .partial {
-                .noneSoFar
             } else if day > today {
                 .future
             } else if day == today {
@@ -380,7 +371,6 @@ extension TodayViewModel {
         switch mark {
         case let .logs(count): logCount(count)
         case .noPoop: String(localized: "checkIn.completed", bundle: .module)
-        case .noneSoFar: String(localized: "checkIn.partial", bundle: .module)
         case .unrecorded: String(localized: "checkIn.unknown", bundle: .module)
         case .untracked, .future, .open: nil
         }

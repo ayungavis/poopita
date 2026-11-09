@@ -41,21 +41,16 @@ final class UserNotificationsResponseService: NSObject, ReminderResponseService,
             identifier: ReminderCategory.logNow, title: String(localized: "reminders.action.logNow", bundle: .module),
             options: .foreground, icon: UNNotificationActionIcon(systemImageName: "plus")
         )
-        let noneSoFar = UNNotificationAction(
-            identifier: ReminderCategory.noneSoFar,
-            title: String(localized: "reminders.action.noneSoFar", bundle: .module),
-            options: [], icon: UNNotificationActionIcon(systemImageName: "diamond")
-        )
         let snooze = UNNotificationAction(
             identifier: ReminderCategory.snooze, title: String(localized: "reminders.action.snooze", bundle: .module),
             options: [], icon: UNNotificationActionIcon(systemImageName: "clock")
         )
         return [
             UNNotificationCategory(
-                identifier: ReminderCategory.daily, actions: [logNow, noneSoFar, snooze], intentIdentifiers: []
+                identifier: ReminderCategory.daily, actions: [logNow, snooze], intentIdentifiers: []
             ),
             UNNotificationCategory(
-                identifier: ReminderCategory.dailyLastCall, actions: [logNow, noneSoFar], intentIdentifiers: []
+                identifier: ReminderCategory.dailyLastCall, actions: [logNow], intentIdentifiers: []
             ),
             UNNotificationCategory(identifier: ReminderCategory.weeklySummary, actions: [], intentIdentifiers: []),
             UNNotificationCategory(identifier: ReminderCategory.gap, actions: [logNow], intentIdentifiers: []),

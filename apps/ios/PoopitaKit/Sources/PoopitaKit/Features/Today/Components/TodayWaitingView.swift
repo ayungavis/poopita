@@ -4,11 +4,8 @@ import SwiftUI
 struct TodayWaitingView: View {
     let headline: String
     let detail: String?
-    let partialNote: String?
-    let canCheckIn: Bool
     let hours: [TodayTimelineHourViewData]
     let nowMinute: Int
-    let checkIn: () -> Void
     @ScaledMetric(relativeTo: .body) private var hourHeight = Spacing.timelineHour
     @ScaledMetric(relativeTo: .caption) private var labelWidth = Spacing.timelineLabel
 
@@ -41,26 +38,6 @@ struct TodayWaitingView: View {
                 Text(verbatim: detail)
                     .font(AppFont.caption)
                     .foregroundStyle(AppColor.textSecondary)
-            }
-            if let partialNote {
-                HStack(spacing: Spacing.sm) {
-                    DayMarkView(mark: .noneSoFar, isSelected: false)
-                    Text(verbatim: partialNote)
-                        .font(AppFont.caption)
-                        .foregroundStyle(AppColor.textSecondary)
-                }
-                .padding(.top, Spacing.sm)
-            } else if canCheckIn {
-                Button(action: checkIn) {
-                    Text("today.notYet", bundle: .module)
-                        .font(AppFont.body.weight(.medium))
-                        .foregroundStyle(AppColor.textPrimary)
-                        .padding(.horizontal, Spacing.xl)
-                        .frame(minHeight: Spacing.buttonHeight)
-                        .background(AppColor.partial.opacity(0.35), in: Capsule())
-                }
-                .buttonStyle(.plain)
-                .padding(.top, Spacing.sm)
             }
         }
         .padding(Spacing.lg)

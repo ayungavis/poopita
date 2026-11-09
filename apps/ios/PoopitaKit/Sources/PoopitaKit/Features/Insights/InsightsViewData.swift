@@ -84,7 +84,6 @@ struct InsightsColumnViewData: Equatable, Sendable, Identifiable {
     let cell: InsightsDayCellViewData?
     let label: String?
     let logMinutes: [Int]
-    let checkInMinute: Int?
     let nowMinute: Int?
     let isUnrecorded: Bool
     let isConfirmedNone: Bool

@@ -35,7 +35,7 @@ export function LogSection({ log }: { log: Landing["log"] }) {
   );
 }
 
-const comparisonMarks: readonly DayMark[] = [{ kind: "unknown" }, { kind: "none" }, { kind: "partial" }];
+const comparisonMarks: readonly DayMark[] = [{ kind: "unknown" }, { kind: "none" }, { kind: "open" }];
 
 export function DaysSection({ locale, days }: { locale: Locale; days: Landing["days"] }) {
   const { comparison } = days;
@@ -125,9 +125,8 @@ export function RemindersSection({ reminders }: { reminders: Landing["reminders"
   return (
     <FeatureSection id="reminders" title={reminders.title} body={reminders.body} layout="stacked">
       <div className="reminder-scene">
-        <span className="day day-large" data-kind="partial" data-today="" aria-hidden>
+        <span className="day day-large" data-kind="open" data-today="" aria-hidden>
           <span className="day-number">28</span>
-          <DayMarkGlyph mark={{ kind: "partial" }} />
         </span>
         <div className="notification">
           <AppIcon alt="" size={40} />

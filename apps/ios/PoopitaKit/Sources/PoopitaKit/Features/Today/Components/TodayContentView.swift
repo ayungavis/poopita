@@ -80,12 +80,11 @@ struct TodayContentView: View {
                 contentHeight: geometry.contentSize.height
             )
         } action: { _, geometry in
-            guard scenePhase == .active else { return }
-            updateScroll {
-                $0.offset = geometry.offset
-                $0.height = geometry.height
+            let isActive = scenePhase == .active
+            updateScroll { $0.apply(geometry, isActive: isActive) }
+            if isActive {
+                centerOnFocus()
             }
-            centerOnFocus()
         }
     }
 
@@ -165,12 +164,11 @@ struct TodayContentView: View {
                 focusMoved: reportFocus
             )
             .transition(.opacity)
-        case let .waiting(headline, detail, partialNote, canCheckIn):
+        case let .waiting(headline, detail):
             let nowMinute = data.timeline.now?.minute ?? 0
             VStack(spacing: 0) {
                 TodayWaitingView(
-                    headline: headline, detail: detail, partialNote: partialNote, canCheckIn: canCheckIn,
-                    hours: data.timeline.hours, nowMinute: nowMinute, checkIn: viewModel.recordCheckInToday
+                    headline: headline, detail: detail, hours: data.timeline.hours, nowMinute: nowMinute
                 )
                 TodayTimelineView(
                     timeline: data.timeline, startMinute: nowMinute, edit: viewModel.edit(id:),

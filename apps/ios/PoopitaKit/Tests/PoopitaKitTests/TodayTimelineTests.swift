@@ -58,7 +58,7 @@ struct TodayTimelineTests {
             entries: entries, checkIns: checkIns, date: Self.now, timeZone: .gmt
         )
 
-        #expect(data.weekDays.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .noneSoFar, .logs(2), .future])
+        #expect(data.weekDays.map(\.mark) == [.logs(1), .logs(2), .noPoop, .unrecorded, .unrecorded, .logs(2), .future])
         #expect(data.weekDays.map(\.dayNumber) == ["26", "27", "28", "29", "30", "31", "1"])
         #expect(data.sinceLastLog == "1 hour, 31 minutes since last log")
         #expect(data.fillIn?.dayID == "2026-10-29")
@@ -144,10 +144,10 @@ struct TodayTimelineTests {
         #expect(try repository.checkIns().contains { $0.day.id == "2026-10-29" && $0.coverage == .completed })
         guard case let .loaded(confirmed) = model.state else { Issue.record("Expected loaded diary"); return }
         #expect(confirmed.weekDays[3].mark == .noPoop)
-        #expect(confirmed.fillIn == nil)
+        #expect(confirmed.fillIn?.dayID == "2026-10-30")
     }
 
-    @Test func aPartialPastDayStaysPartialUntilTheUserConfirmsIt() async throws {
+    @Test func anOldPartialCheckInReadsAsNotRecordedAndCanBeConfirmed() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let (model, _) = try Self.makeModel(directory)
@@ -160,13 +160,13 @@ struct TodayTimelineTests {
         guard case let .pastDay(status, _, _, canConfirm, mark) = data.dayState else {
             Issue.record("Expected a past-day card"); return
         }
-        #expect(status == "Partial check-in")
-        #expect(mark == .noneSoFar)
+        #expect(status == "Not recorded")
+        #expect(mark == .unrecorded)
         #expect(canConfirm)
-        #expect(data.weekDays[4].mark == .noneSoFar)
+        #expect(data.weekDays[4].mark == .unrecorded)
     }
 
-    @Test func todayWithoutLogsCountsUpAndRecordsAPartialCheckIn() async throws {
+    @Test func todayWithoutLogsCountsUpFromTheLastLog() async throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { DiaryPersistenceTests.removeFixture(directory) }
         let repository = try LocalDiaryRepository(store: SwiftDataValueStore(directory: directory))
@@ -180,19 +180,10 @@ struct TodayTimelineTests {
         model.load()
         await model.loadTask?.value
         guard case let .loaded(data) = model.state,
-              case let .waiting(headline, detail, partialNote, _) = data.dayState
+              case let .waiting(headline, detail) = data.dayState
         else { Issue.record("Expected the waiting state"); return }
         #expect(headline.contains("3 days") && headline.contains("12 hours"))
         #expect(detail?.hasPrefix("since your last log, Tuesday at ") == true)
-        #expect(partialNote == nil)
-
-        model.recordCheckInToday()
-        await model.loadTask?.value
-        guard case let .loaded(updated) = model.state,
-              case let .waiting(_, _, note, _) = updated.dayState
-        else { Issue.record("Expected the waiting state"); return }
-        #expect(note != nil)
-        #expect(updated.weekDays[5].mark == .noneSoFar)
     }
 
     @Test func futureDaysCannotBeSelected() async throws {

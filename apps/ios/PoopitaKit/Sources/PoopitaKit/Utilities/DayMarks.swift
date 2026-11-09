@@ -8,7 +8,7 @@ struct DayMarks {
 
     init(entries: [DiaryEntry], checkIns: [NoPoopCheckIn], today: DiaryDay) {
         logs = Dictionary(grouping: entries) { DiaryDay(occurrence: $0.occurrence) }
-        self.checkIns = Dictionary(checkIns.map { ($0.day, $0) }) { first, _ in first }
+        self.checkIns = Dictionary(checkIns.filter { $0.coverage == .completed }.map { ($0.day, $0) }) { first, _ in first }
         self.today = today
         firstDay = (Array(logs.keys) + Array(self.checkIns.keys)).min()
     }
@@ -17,17 +17,15 @@ struct DayMarks {
         if let count = logs[day]?.count {
             return .logs(count)
         }
-        switch checkIns[day]?.coverage {
-        case .completed: return .noPoop
-        case .partial: return .noneSoFar
-        case nil:
-            if day > today {
-                return .future
-            }
-            if day == today {
-                return .open
-            }
-            return firstDay.map { day < $0 } ?? true ? .untracked : .unrecorded
+        if checkIns[day] != nil {
+            return .noPoop
         }
+        if day > today {
+            return .future
+        }
+        if day == today {
+            return .open
+        }
+        return firstDay.map { day < $0 } ?? true ? .untracked : .unrecorded
     }
 }

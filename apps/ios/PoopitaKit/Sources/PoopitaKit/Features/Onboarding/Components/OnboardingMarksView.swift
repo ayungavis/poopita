@@ -40,9 +40,6 @@ struct OnboardingMarksView: View {
                 OnboardingRowView(title: "history.legend.noPoop", detail: "onboarding.marks.noPoop") {
                     DayMarkView(mark: .noPoop, isSelected: false)
                 }
-                OnboardingRowView(title: "history.legend.noneSoFar", detail: "onboarding.marks.noneSoFar") {
-                    DayMarkView(mark: .noneSoFar, isSelected: false)
-                }
                 OnboardingRowView(title: "history.legend.unrecorded", detail: "onboarding.marks.unrecorded") {
                     DayMarkView(mark: .unrecorded, isSelected: false)
                 }

@@ -48,7 +48,7 @@ final class OnboardingViewModel {
 extension OnboardingViewModel {
     static func viewData(step: OnboardingViewData.Step, now: Date, timeZone: TimeZone) -> OnboardingViewData {
         let calendar = TodayViewModel.calendar(timeZone)
-        let marks: [DayMarkViewData] = [.logs(1), .logs(2), .noPoop, .unrecorded, .noneSoFar]
+        let marks: [DayMarkViewData] = [.logs(1), .logs(2), .noPoop, .unrecorded, .logs(1)]
         var weekday = Date.FormatStyle.dateTime.weekday(.narrow)
         weekday.timeZone = timeZone
         var number = Date.FormatStyle.dateTime.day()

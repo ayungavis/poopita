@@ -56,4 +56,18 @@ struct TodayScrollStateTests {
         #expect(!state.hidesHeader(ofHeight: 120))
         #expect(!state.hidesHeader(ofHeight: 160))
     }
+
+    @Test func aLaunchMeasuredBeforeTheAppTurnsActiveStillCentersOnNow() {
+        var state = TodayScrollState(focusY: 900)
+        state.apply(.init(offset: 0, height: 600, contentHeight: 2000), isActive: false)
+        #expect(state.nextTarget() == 600)
+    }
+
+    @Test func anInactiveSceneKeepsTheOffsetItHadWhileScrolled() {
+        var state = TodayScrollState(offset: 400)
+        state.apply(.init(offset: 0, height: 600, contentHeight: 2000), isActive: false)
+        #expect(state.offset == 400)
+        state.apply(.init(offset: 120, height: 600, contentHeight: 2000), isActive: true)
+        #expect(state.offset == 120)
+    }
 }

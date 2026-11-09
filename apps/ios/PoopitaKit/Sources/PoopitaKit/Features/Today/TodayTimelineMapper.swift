@@ -13,14 +13,10 @@ extension TodayViewModel {
             return .logged
         }
         guard let weekday = pastWeekday else {
-            let partialNote = try checkIn.map {
-                try String(localized: "today.notYetNote \(timeLabel($0.reportedAt))", bundle: .module)
-            }
             guard let latestEntry else {
                 return .waiting(
                     headline: String(localized: "today.hero.empty", bundle: .module),
-                    detail: isFirstDay ? String(localized: "today.firstDay", bundle: .module) : nil,
-                    partialNote: partialNote, canCheckIn: !isFirstDay
+                    detail: isFirstDay ? String(localized: "today.firstDay", bundle: .module) : nil
                 )
             }
             let seconds = max(0, now.timeIntervalSince(latestEntry.occurrence.instant))
@@ -31,32 +27,22 @@ extension TodayViewModel {
             let lastTime = try timeLabel(latestEntry.occurrence)
             return .waiting(
                 headline: headline,
-                detail: String(localized: "today.sinceLastLog \(lastDay) \(lastTime)", bundle: .module),
-                partialNote: partialNote, canCheckIn: true
+                detail: String(localized: "today.sinceLastLog \(lastDay) \(lastTime)", bundle: .module)
             )
         }
         let logLabel = String(localized: "today.logFor \(weekday)", bundle: .module)
-        switch checkIn?.coverage {
-        case .completed:
+        if checkIn?.coverage == .completed {
             return .pastDay(
                 status: String(localized: "checkIn.completed", bundle: .module),
                 detail: String(localized: "checkIn.completedDetail", bundle: .module),
                 logLabel: logLabel, canConfirm: false, mark: .noPoop
             )
-        case .partial:
-            let reported = try checkIn.map { try timeLabel($0.reportedAt) } ?? ""
-            return .pastDay(
-                status: String(localized: "checkIn.partial", bundle: .module),
-                detail: String(localized: "checkIn.partialDetail \(reported)", bundle: .module),
-                logLabel: logLabel, canConfirm: true, mark: .noneSoFar
-            )
-        case nil:
-            return .pastDay(
-                status: String(localized: "checkIn.unknown", bundle: .module),
-                detail: String(localized: "checkIn.unknownDetail", bundle: .module),
-                logLabel: logLabel, canConfirm: true, mark: .unrecorded
-            )
         }
+        return .pastDay(
+            status: String(localized: "checkIn.unknown", bundle: .module),
+            detail: String(localized: "checkIn.unknownDetail", bundle: .module),
+            logLabel: logLabel, canConfirm: true, mark: .unrecorded
+        )
     }
 
     static let nowLabelClearance = 20
