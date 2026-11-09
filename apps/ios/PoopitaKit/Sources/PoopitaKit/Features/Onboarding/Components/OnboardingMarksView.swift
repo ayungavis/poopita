@@ -35,7 +35,7 @@ struct OnboardingMarksView: View {
             .accessibilityHidden(true)
             CardSectionView(nil) {
                 OnboardingRowView(title: "history.legend.logs", detail: "onboarding.marks.logs") {
-                    DayMarkView(mark: .logs(2), isSelected: false)
+                    DayTileSwatchView()
                 }
                 OnboardingRowView(title: "history.legend.noPoop", detail: "onboarding.marks.noPoop") {
                     DayMarkView(mark: .noPoop, isSelected: false)

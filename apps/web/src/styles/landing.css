@@ -659,7 +659,8 @@ a.pill:active {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero-calendar .day > :not(.day-number) {
+  .hero-calendar .day > :not(.day-number),
+  .hero-calendar .day[data-kind="logged"]::before {
     animation: mark-in 360ms var(--ease-settle) calc(var(--i, 0) * 18ms) both;
   }
 

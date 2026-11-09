@@ -90,6 +90,26 @@
   stroke: var(--color-text-primary);
 }
 
+.day[data-kind="logged"]::before {
+  content: "";
+  position: absolute;
+  inset: clamp(2px, 0.5vw, 4px);
+  border-radius: clamp(6px, 1.2vw, 10px);
+  background: var(--poopita-entry);
+}
+
+.day[data-kind="logged"] > * {
+  position: relative;
+}
+
+.day[data-kind="logged"] .day-number {
+  color: var(--color-text-primary);
+}
+
+.day[data-kind="logged"] .day-dots {
+  color: var(--poopita-on-entry);
+}
+
 .day[data-kind="unknown"] {
   background-image: repeating-linear-gradient(135deg, var(--poopita-stripe) 0 1.5px, transparent 1.5px 7px);
 }

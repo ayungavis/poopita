@@ -14,11 +14,7 @@ struct HistoryLegendView: View {
 
     @ViewBuilder
     private var items: some View {
-        item("history.legend.logs") {
-            RoundedRectangle(cornerRadius: Spacing.xs)
-                .fill(AppColor.entry)
-                .frame(width: Spacing.lg, height: Spacing.md)
-        }
+        item("history.legend.logs") { DayTileSwatchView() }
         item("history.legend.noPoop") { DayMarkView(mark: .noPoop, isSelected: false) }
         item("history.legend.unrecorded") { DayMarkView(mark: .unrecorded, isSelected: false) }
     }
