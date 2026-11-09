@@ -4,8 +4,10 @@ import SwiftUI
 struct HistoryCalendarView: View {
     let data: HistoryCalendarViewData
     let select: (String) -> Void
+    @Environment(\.colorSchemeContrast) private var contrast
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: Spacing.xs), count: 7)
+    private let tile = RoundedRectangle(cornerRadius: Spacing.md)
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: Spacing.xs) {
@@ -29,30 +31,57 @@ struct HistoryCalendarView: View {
     }
 
     private func dayButton(_ item: HistoryDayViewData) -> some View {
-        let shape = RoundedRectangle(cornerRadius: Spacing.lg)
-        return Button { select(item.dayID) } label: {
+        Button { select(item.dayID) } label: {
             VStack(spacing: Spacing.xs) {
                 Text(verbatim: item.number)
                     .font(AppFont.title.weight(.regular))
                     .foregroundStyle(numberColor(item))
-                DayMarkView(mark: item.mark, isSelected: item.isSelected)
+                    .padding(.horizontal, Spacing.xs)
+                    .background {
+                        if item.mark == .unrecorded, !item.isSelected {
+                            RoundedRectangle(cornerRadius: Spacing.sm).fill(AppColor.background)
+                        }
+                    }
+                DayMarkView(mark: item.mark, isSelected: item.isSelected, isOnTile: true)
                     .frame(height: Spacing.sm)
             }
             .frame(maxWidth: .infinity, minHeight: Spacing.buttonHeight)
-            .background {
-                if item.isSelected {
-                    shape.fill(AppColor.ink)
-                } else if item.isToday {
-                    shape.strokeBorder(AppColor.ink, lineWidth: Spacing.borderWidth)
+            .background { background(item) }
+            .overlay {
+                if item.isToday, !item.isSelected {
+                    tile.strokeBorder(AppColor.ink, lineWidth: Spacing.borderWidth)
                 }
             }
-            .contentShape(shape)
+            .contentShape(tile)
         }
         .buttonStyle(.plain)
         .disabled(item.mark == .future)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: item.accessibilityLabel))
         .accessibilityAddTraits(item.isSelected ? .isSelected : [])
+    }
+
+    @ViewBuilder
+    private func background(_ item: HistoryDayViewData) -> some View {
+        if item.isSelected {
+            tile.fill(AppColor.ink)
+        } else {
+            switch item.mark {
+            case .logs:
+                tile.fill(AppColor.entry)
+                    .overlay {
+                        if contrast == .increased {
+                            tile.strokeBorder(AppColor.marker, lineWidth: Spacing.borderWidth)
+                        }
+                    }
+            case .unrecorded:
+                HatchView(color: AppColor.marker)
+                    .clipShape(tile)
+                    .overlay { tile.strokeBorder(AppColor.marker, lineWidth: Spacing.borderWidth) }
+            case .noPoop, .untracked, .future, .open:
+                EmptyView()
+            }
+        }
     }
 
     private func numberColor(_ item: HistoryDayViewData) -> Color {

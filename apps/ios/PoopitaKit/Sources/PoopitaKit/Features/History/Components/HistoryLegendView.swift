@@ -14,14 +14,18 @@ struct HistoryLegendView: View {
 
     @ViewBuilder
     private var items: some View {
-        item(.logs(2), "history.legend.logs")
-        item(.noPoop, "history.legend.noPoop")
-        item(.unrecorded, "history.legend.unrecorded")
+        item("history.legend.logs") {
+            RoundedRectangle(cornerRadius: Spacing.xs)
+                .fill(AppColor.entry)
+                .frame(width: Spacing.lg, height: Spacing.md)
+        }
+        item("history.legend.noPoop") { DayMarkView(mark: .noPoop, isSelected: false) }
+        item("history.legend.unrecorded") { DayMarkView(mark: .unrecorded, isSelected: false) }
     }
 
-    private func item(_ mark: DayMarkViewData, _ title: LocalizedStringKey) -> some View {
+    private func item(_ title: LocalizedStringKey, @ViewBuilder swatch: () -> some View) -> some View {
         HStack(spacing: Spacing.xs) {
-            DayMarkView(mark: mark, isSelected: false)
+            swatch()
                 .accessibilityHidden(true)
             Text(title, bundle: .module)
                 .fixedSize()

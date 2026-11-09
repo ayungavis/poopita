@@ -51,7 +51,7 @@ private func contrast(_ foreground: String, on background: String, _ appearance:
 
 struct PaletteContrastTests {
     @Test(arguments: [
-        ("textPrimary", "background"), ("textPrimary", "surface"), ("textPrimary", "track"),
+        ("textPrimary", "background"), ("textPrimary", "surface"), ("textPrimary", "track"), ("textPrimary", "entry"),
         ("textSecondary", "background"), ("textSecondary", "surface"),
         ("accent", "background"), ("accent", "surface"), ("accent", "entry"),
         ("destructive", "background"), ("destructive", "surface"),
