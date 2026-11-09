@@ -27,6 +27,8 @@ jobs:
       BUNDLE_ID: com.ayungavis.Poopita
       TEAM_ID: QHL64K2LPL
       PROVISIONING_PROFILE_NAME: Poopita Apple Distribution
+      WIDGETS_BUNDLE_ID: com.ayungavis.Poopita.Widgets
+      WIDGETS_PROVISIONING_PROFILE_NAME: Poopita Widgets Apple Distribution
       BUILD_NUMBER: ${{ github.run_number }}
       API_BASE_URL: ${{ secrets.API_BASE_URL }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
@@ -76,6 +78,15 @@ jobs:
           api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
+      - name: Download widget extension provisioning profiles
+        uses: Apple-Actions/download-provisioning-profiles@v6
+        with:
+          profile-type: IOS_APP_STORE
+          bundle-id: ${{ env.WIDGETS_BUNDLE_ID }}
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
       - name: Create export options plist
         run: |
           mkdir -p .build
@@ -94,6 +105,8 @@ jobs:
             <dict>
               <key>${BUNDLE_ID}</key>
               <string>${PROVISIONING_PROFILE_NAME}</string>
+              <key>${WIDGETS_BUNDLE_ID}</key>
+              <string>${WIDGETS_PROVISIONING_PROFILE_NAME}</string>
             </dict>
             <key>stripSwiftSymbols</key>
             <true/>

@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Log a poop in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -18,6 +19,7 @@
       }
     },
     "Log in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -34,6 +36,7 @@
       }
     },
     "New ${applicationName} log" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

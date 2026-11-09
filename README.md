@@ -124,6 +124,7 @@ Apple-side prerequisites (team `QHL64K2LPL`):
 1. Register the explicit bundle ID `com.ayungavis.Poopita` (Certificates, Identifiers & Profiles).
 2. Create the app record in App Store Connect with that bundle ID.
 3. Create an **App Store Connect** provisioning profile named exactly `Poopita Apple Distribution`, signed by the Apple Distribution certificate in the `.p12`.
+4. For the widget extension, register the explicit bundle ID `com.ayungavis.Poopita.Widgets` and create an **App Store Connect** profile for it named exactly `Poopita Widgets Apple Distribution`, signed by the same certificate.
 
 ### Website deployment
 
